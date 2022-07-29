@@ -1,0 +1,49 @@
+.allUsers {
+    background-color: #ffdc7c;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 50px;
+    width: 500px;
+}
+p {
+    background-color: #ffe6b6;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: block;
+    margin: auto;
+    width:70%;
+}
+
+.singleUser {
+    margin-bottom:30px;
+    font-weight: 300;
+}
+
+.showMessage {
+    margin-bottom:30px;
+}
+.heading {
+    background-color:#ffe6b6;
+    text-decoration: none;
+}
+
+.userNotFound {
+    display: none;
+}
+
+.dontShowMessage {
+    display: none;
+}
+
+.singleUserMessage {
+    margin-bottom:30px;
+    font-weight: 300;
+}
+
+.carousel-indicators { 
+    visibility: hidden; 
+
+}

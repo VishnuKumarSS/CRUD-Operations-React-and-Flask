@@ -1,0 +1,22 @@
+.home {
+    background-color: rgb(234, 234, 234);
+    padding: 2rem;
+    border-radius:1rem ;
+    align-items: center;
+    justify-content: center;
+}
+
+.homeButton {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: block;
+    margin: auto;
+    width:70%;
+}
+
+h1 {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 2rem;
+}
