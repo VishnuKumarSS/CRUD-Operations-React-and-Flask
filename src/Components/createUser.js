@@ -33,7 +33,7 @@ function CreateUser() {
         console.log('config error: ',error.config)
       }
     );
-    navigate(`/`);  // this will navigate to the homepage of the application when the form is submitted.
+    navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
     console.log("Typed NAME : ", username);
     console.log("Typed AGE : ", userage);
     console.log("Typed CITY : ", usercity);

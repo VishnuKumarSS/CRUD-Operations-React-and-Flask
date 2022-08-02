@@ -36,6 +36,7 @@ function UpdateUser() {
         );
 
       navigate(`/`);  // this will navigate to the homepage of the application when the form is submitted.
+      // navigate(-1);
       console.log("Typed NAME : ", username);
       console.log("Typed AGE : ", userage);
       console.log("Typed CITY : ", usercity);
