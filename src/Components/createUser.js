@@ -22,10 +22,10 @@ function CreateUser() {
     }).catch(
       (error) => {
         if (error.response) {
-          console.log('error response')
+          console.log('Error Response.')
         }
         else if (error.request) {
-          console.log('error request')
+          console.log('Error Request.')
         }
         else {
           console.log('else part error')
@@ -59,7 +59,7 @@ function CreateUser() {
           <Form.Label style={{ marginLeft:10 }}>City</Form.Label>
           <Form.Control name="usercity" maxLength="12"  onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
         </Form.Group>
-        { username.length > 0 && usercity.length >0 
+        { username && userage && usercity
         ? 
         <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
           Submit
@@ -69,7 +69,6 @@ function CreateUser() {
           Submit
         </Button>
         }
-
 
       </Form>
 

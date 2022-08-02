@@ -4,6 +4,8 @@
     border-radius:1rem ;
     align-items: center;
     justify-content: center;
+    width: 500px;
+    text-align: center;
 }
 
 .homeButton {

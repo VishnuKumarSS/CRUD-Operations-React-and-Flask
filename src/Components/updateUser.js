@@ -70,7 +70,7 @@ function UpdateUser() {
         </Form.Group>
 
         
-        { username.length > 0 
+        { username && userage && usercity
         ? 
         <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
           Submit
