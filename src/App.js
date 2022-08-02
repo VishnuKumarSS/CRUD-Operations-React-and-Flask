@@ -1,7 +1,9 @@
-import GetUser from "./Components/getuser";
-import CreateUser from "./Components/createuser";
+import GetUser from "./Components/getUser";
+import CreateUser from "./Components/createUser";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Components/home";
+import UpdateUser from "./Components/updateUser";
+// import DeleteUser from "./Components/deleteUser";
 
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
             {/* <Route path=":search" element={<GetSingleUser />} /> */}
             <Route path="/adduser" element={<CreateUser />} />
             <Route path="/allusers" element={<GetUser />} />
+            <Route path="/update" element={<UpdateUser />} />
+            {/* <Route path="/delete" element={<DeleteUser />} /> */}
           </Routes>
         </div>
       </div>

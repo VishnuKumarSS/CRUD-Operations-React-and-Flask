@@ -47,13 +47,13 @@ class SearchUser(Resource):
         if user_delete: 
             db.session.delete(user_delete)
             db.session.commit()
-
         return 'User is deleted'
     
     @marshal_with(resource_fields)
     def put(self, username):
         parsed_user = user_put_req.parse_args()
-        user = UserData.query.filter_by(username=parsed_user["username"]).first()
+        user = UserData.query.filter_by(username=username).first()
+        # user = UserData.query.filter_by(username=parsed_user["username"]).first()
         if not user: # if user is not there, then...
             abort(409, message='User is not there to update.')
         

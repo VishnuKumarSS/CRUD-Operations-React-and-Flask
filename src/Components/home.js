@@ -5,7 +5,7 @@ import "../styling/home.css"
 export default function Home() {
   return (
     <div className="home">
-      <h1 >HOME PAGE</h1>
+      <h1>HOME PAGE</h1>
       <nav >
 
         <Link style={{ textDecoration:"none" }} to="/allusers">

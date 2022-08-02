@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {Form, Button} from 'react-bootstrap';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styling/createuser.css"
+import "../styling/createAndUpdateUser.css"
 
 function CreateUser() {
 
@@ -39,35 +39,37 @@ function CreateUser() {
     console.log("Typed CITY : ", usercity);
   };
 
-  function afterSubmission(event) {
-    // This function solely used to stop the page refreshing while searching the user using the react bootstrap. 
-    // We need the preventDefault in onSubmit event listener to make the react bootstrap work by stoping the window from refreshing..
-    event.preventDefault();
-  }
-
   return (
     <div className='createUser'>
+      <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Create User</h1>
 
-      <Form onSubmit={afterSubmission}>
+      <Form onSubmit={(eve)=> eve.preventDefault()}>
 
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>UserName</Form.Label>
-          <Form.Control name="username" onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
+          <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicUserage">
           <Form.Label style={{ marginLeft:10 }}>Age</Form.Label>
-          <Form.Control type="number" name="userage" onChange={(e)=> setUserage(e.target.value)}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
+          <Form.Control type="number" name="userage" onChange={(e)=> setUserage(e.target.value.slice(0, 3))}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>City</Form.Label>
-          <Form.Control name="usercity" onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+          <Form.Control name="usercity" maxLength="12"  onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
         </Form.Group>
-
-        <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "white", marginTop: 16, borderRadius:16}}>
+        { username.length > 0 && usercity.length >0 
+        ? 
+        <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
+          Submit
+        </Button> 
+        : 
+        <Button style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", marginTop: 16, borderRadius:16}}>
           Submit
         </Button>
+        }
+
 
       </Form>
 
