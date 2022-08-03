@@ -13,8 +13,10 @@ function UpdateUser() {
   const [usercity, setUsercity] = useState("");
 
   const [updateUserNameURL, setUpdateUserNameURL ] = useState("");
+
   const sendDataToAPI = (eventt) => {
     eventt.preventDefault()// to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
+    console.log('abc',username.trim())
 
     axios.put(`/${updateUserNameURL}`, {
       username,
@@ -49,6 +51,7 @@ function UpdateUser() {
     setUsername(localStorage.getItem('LocalStorageUserName')); // here we are getting that LocalStorageUserName that we set while setting the username in the getUser.js
     setUserage(localStorage.getItem('LocalStorageUserAge'));
     setUsercity(localStorage.getItem('LocalStorageUserCity'));
+
   }, [])
 
   return (
@@ -57,19 +60,18 @@ function UpdateUser() {
       <Form>
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>UserName</Form.Label>
-          <Form.Control name="username" value={username || ""} onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
-        </Form.Group>
+          <Form.Control name="username" value={username || ""} maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
+         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicUserage">
           <Form.Label style={{ marginLeft:10 }}>Age</Form.Label>
-          <Form.Control type="number" value={userage || ""} name="userage" onChange={(e)=> setUserage(e.target.value)}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
+          <Form.Control type="number" value={userage || ""} name="userage" onChange={(e)=> setUserage(e.target.value.slice(0,3))}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>City</Form.Label>
-          <Form.Control name="usercity" value={usercity || ""} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+          <Form.Control name="usercity" value={usercity || ""} maxLength="12" onChange={(e)=> setUsercity(e.target.value.trim())}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
         </Form.Group>
-
         
         { username && userage && usercity
         ? 

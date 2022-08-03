@@ -4,17 +4,30 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styling/createAndUpdateUser.css"
 
+
+
 function CreateUser() {
 
   let navigate = useNavigate();
   
+  // const [validated, setValidated] = useState(false);
+
+  // const handleSubmit = (event) => {
+  //   const form = event.currentTarget;
+  //   if (form.checkValidity() === false) {
+  //     event.preventDefault();
+  //     event.stopPropagation();
+  //   }
+
+  //   setValidated(true);
+  // };
+
   const [username, setUsername] = useState("");
   const [userage, setUserage] = useState(null);
   const [usercity, setUsercity] = useState("");
 
   const sendDataToAPI = (eventt) => {
     eventt.preventDefault() // to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
-    
     axios.post("/adduser", {
       username,
       userage,
@@ -43,11 +56,12 @@ function CreateUser() {
     <div className='createUser'>
       <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Create User</h1>
 
-      <Form onSubmit={(eve)=> eve.preventDefault()}>
+      <Form  >
 
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>UserName</Form.Label>
-          <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
+          {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
+          <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicUserage">
@@ -57,7 +71,8 @@ function CreateUser() {
 
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>City</Form.Label>
-          <Form.Control name="usercity" maxLength="12"  onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+          <Form.Control name="usercity" maxLength="12"  onChange={(e)=> setUsercity(e.target.value.trim())}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+          
         </Form.Group>
         { username && userage && usercity
         ? 

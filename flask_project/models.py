@@ -17,5 +17,5 @@ class UserData(db.Model):
     def __str__(self):
         return f"{self.username} - {self.userage} - {self.usercity}"
     
-    
+# db.drop_all()
 # db.create_all()
