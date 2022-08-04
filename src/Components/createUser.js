@@ -46,10 +46,17 @@ function CreateUser() {
         console.log('config error: ',error.config)
       }
     );
-    navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
     console.log("Typed NAME : ", username);
     console.log("Typed AGE : ", userage);
     console.log("Typed CITY : ", usercity);
+    return(
+      <>
+        <h1>User is created</h1>
+      </>
+
+    )
+    // navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
+  
   };
 
   return (
@@ -61,17 +68,24 @@ function CreateUser() {
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>UserName</Form.Label>
           {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-          <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} />
+          <Form.Control name="username" maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicUserage">
           <Form.Label style={{ marginLeft:10 }}>Age</Form.Label>
-          <Form.Control type="number" name="userage" onChange={(e)=> setUserage(e.target.value.slice(0, 3))}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
+          <Form.Control type="number" maxLength="3" name="userage" 
+          onChange={(e)=> {
+            return(
+              // console.log(userage),
+              setUserage(e.target.value.slice(0, 3)),
+              e.target.value  = e.target.value.slice(0,3)
+            )}}  
+            placeholder="Enter your age here" style={{borderRadius: 16 }} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>City</Form.Label>
-          <Form.Control name="usercity" maxLength="12"  onChange={(e)=> setUsercity(e.target.value.trim())}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+          <Form.Control name="usercity" maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
           
         </Form.Group>
         { username && userage && usercity

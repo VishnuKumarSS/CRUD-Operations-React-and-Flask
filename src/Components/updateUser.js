@@ -63,16 +63,29 @@ function UpdateUser() {
           <Form.Control name="username" value={username || ""} maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
          </Form.Group>
 
+         {/* <input type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" onKeyDown="if(this.value.length==10 && event.keyCode!=8) return false;"></input> */}
+        
         <Form.Group className="mb-3" controlId="formBasicUserage">
           <Form.Label style={{ marginLeft:10 }}>Age</Form.Label>
-          <Form.Control type="number" value={userage || ""} name="userage" onChange={(e)=> setUserage(e.target.value.slice(0,3))}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
+          <Form.Control type="number" value={userage || ""} name="userage" onChange={(e)=> 
+            
+            
+            
+            
+            
+            
+            
+            
+            setUserage(e.target.value.slice(0,3))}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
         </Form.Group>
+
 
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label style={{ marginLeft:10 }}>City</Form.Label>
-          <Form.Control name="usercity" value={usercity || ""} maxLength="12" onChange={(e)=> setUsercity(e.target.value.trim())}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+          <Form.Control name="usercity" value={usercity || ""} maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
         </Form.Group>
         
+
         { username && userage && usercity
         ? 
         <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>

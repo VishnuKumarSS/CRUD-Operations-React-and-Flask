@@ -1,5 +1,4 @@
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
-# from parso import parse
 from models import *
 
 user_post_req = reqparse.RequestParser()
