@@ -14,6 +14,7 @@ export default function GetUser() {
     const [ matchingUsers, setMatchingUsers ] = useState([]);
     const [ exactUser, setExactUser ] = useState([]);
 
+    const [confirm, setConfirm] = useState(false);
 
     useEffect(() => {
         axios.get('/allusers')
@@ -111,12 +112,15 @@ export default function GetUser() {
     console.log('EXACT USER (OUTSIDE) : ', exactUser)
     console.log('MATCHING USERS (OUTSIDE) : ', matchingUsers)
 
+    const toggleButton = () => {
+      setConfirm(!confirm)
+    }
 
     return (
     <div className="allUsers" >
     <h1 style={{textAlign: 'center', marginBottom: '20px'}}>All Users</h1>
 
-      <Form >
+      <Form style={{}}>
       <Form.Group className="mb-3" controlId="formBasicCheckbox">
         <Form.Control 
           style={{borderRadius:16}}
@@ -127,7 +131,7 @@ export default function GetUser() {
         />
       </Form.Group> 
 
-      <Button variant="primary" type="submit" onClick={onSearchUser} style={{color: "#000", backgroundColor: "#90CAF9", border: "2px solid #fff",margin: "auto", marginLeft:175, marginBottom:20, borderRadius:16}} >
+      <Button variant="primary" type="submit" onClick={onSearchUser} style={{alignItems:'center', display: 'flex',color: "#000", backgroundColor: "#90CAF9", border: "2px solid #fff",margin: "auto", marginBottom:20, borderRadius:16}} >
         Submit
       </Button>
       </Form>
@@ -223,7 +227,7 @@ export default function GetUser() {
           }
     <Table borderless >
     {/* <Table borderless style={{textAlign: 'center'}}> */}
-      <thead >
+      <thead  >
         <tr className='heading' >
           <th className="heading" style={{color: "black", borderTopLeftRadius:16, borderBottomLeftRadius:16}}  >ID</th>
           <th className="heading" style={{color: "black"}} >USER NAME</th>
@@ -233,7 +237,7 @@ export default function GetUser() {
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
         </tr>
       </thead>
-      <tbody >
+      <tbody  >
         {Object.keys(allUsers).map(key => {
             return(
                 <tr key={key} >
@@ -253,13 +257,36 @@ export default function GetUser() {
                                     )
                                   }
                                   } 
-                                style={{backgroundColor: "#c7ffe5", borderRadius:"1rem", border: 'none', fontSize:'12px', color: '#3a3a3a'}}>Update</button>
+                                style={{ backgroundColor: "#c7ffe5", borderRadius:"1rem", border: '1.5px solid #000', fontSize:'12px', color: '#3a3a3a'}}>Update</button>
                       </Link>
                     </td>
                     <td>
-                      {/* <Link style={{ textDecoration:"none" }} to="/delete"> */}
-                        <button onClick={()=> onDelete(allUsers[key]['username'])} style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: 'none', fontSize:'12px', color:'#3a3a3a'}}>Delete</button>
-                      {/* </Link> */}
+
+                      {
+                      !confirm 
+                      ?
+                        <button 
+                            onClick={toggleButton} 
+                            style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '1.5px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                          Delete
+                        </button>
+                      :
+                      <div onClick={toggleButton} className="overlay">
+                        <div class='innerOverlay'>
+                          <h1 style={{marginBottom:'20px', textAlign:'center'}}> Confirm Delete </h1>
+                          <button 
+                              onClick={toggleButton} 
+                              style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                            Cancel
+                          </button>
+                          <button 
+                              onClick={()=> onDelete(allUsers[key]['username'])} 
+                              style={{margin:"10px",width:"150px" ,backgroundColor: "#ff8585", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                            Confirm
+                          </button>           
+                        </div>
+                      </div>
+                      }
                     </td>
                 </tr>
             )

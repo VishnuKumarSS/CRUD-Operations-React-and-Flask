@@ -3,7 +3,7 @@
     border-radius: 1rem;
     padding: 2rem;
     margin-bottom: 50px;
-    width: 500px;
+    width: auto;
 }
 p {
     background-color: #ffe6b6;
@@ -46,5 +46,30 @@ p {
 
 .carousel-indicators { 
     visibility: hidden; 
+
+}
+
+.overlay {
+    background: rgb(49, 49, 49, 0.8);
+    width: 100vw; 
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position:fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.innerOverlay {
+    background: #ffdc7c;
+    padding: 3rem;
+    margin: auto;
+    border-radius: 2rem;
+
+    /* width: 100%; */
+    /* display: flex;
+    align-items: center; */
 
 }
