@@ -2,10 +2,14 @@ import React , { useEffect, useState }from 'react'
 import axios from 'axios';
 import { Table, Button, Form, Carousel } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 
 import "../styling/getUser.css"
 
 export default function GetUser() {
+
+    let navigate = useNavigate();
+
     const [allUsers, setAllUsers] = useState([{}]); // to get all the users
 
     const [ searchUser, setSearchUser ] = useState(""); // text in the search bar
@@ -16,16 +20,24 @@ export default function GetUser() {
 
     const [confirm, setConfirm] = useState(false);
 
+    const [error, setError] = useState(null);
+    
     useEffect(() => {
         axios.get('/allusers')
         .then((getData => {
-            // console.log(getData.data);
+            // console.log(getData);
             setAllUsers(getData.data);
         }))
+        .catch(err => {
+          console.log(err);
+          console.log(err.message);
+          setError(err.message);
+        })
     }, []);
  
 
     function onSearchUser(eve) {
+      
       eve.preventDefault();
       setUserFound(null); // if the searchUser is empty then we are setting the userFound to null
       console.log("Entered the Search Function...")
@@ -98,6 +110,11 @@ export default function GetUser() {
           // console.log(getData.data);
           setAllUsers(getData.data);
       }))
+      .catch(err => {
+        console.log(err);
+        console.log(err.message);
+        setError(err.message);
+      })
     }
 
     const onDelete = (name) => {
@@ -105,37 +122,58 @@ export default function GetUser() {
       .then(()=> {
         getData(); // this will get the updated data after deleting a particular user with his username.
       })
-      
     }
 
 
-    console.log('EXACT USER (OUTSIDE) : ', exactUser)
-    console.log('MATCHING USERS (OUTSIDE) : ', matchingUsers)
+    // console.log('EXACT USER (OUTSIDE) : ', exactUser)
+    // console.log('MATCHING USERS (OUTSIDE) : ', matchingUsers)
 
     const toggleButton = () => {
       setConfirm(!confirm)
     }
 
     return (
-    <div className="allUsers" >
-    <h1 style={{textAlign: 'center', marginBottom: '20px'}}>All Users</h1>
-
-      <Form style={{}}>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Control 
-          style={{borderRadius:16}}
-          type="Text" 
-          label="Check me out" 
-          placeholder="Type something here..."
-          onChange={(e) => setSearchUser(e.target.value.toLowerCase())}
-        />
-      </Form.Group> 
-
-      <Button variant="primary" type="submit" onClick={onSearchUser} style={{alignItems:'center', display: 'flex',color: "#000", backgroundColor: "#90CAF9", border: "2px solid #fff",margin: "auto", marginBottom:20, borderRadius:16}} >
-        Submit
-      </Button>
-      </Form>
+      <div className="allUsers" >
+      {
+      error 
+      ? 
+        // <div>
+        //   <h1>{error}</h1></div>
+          <div onClick={()=>{
+            return(
+            toggleButton,
+            navigate("/")
+            )}}  
+    className="overlay">
+    <div className='innerOverlay'>
+      <h1>{error}</h1>
+      <button onClick={toggleButton} 
+      
+              style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+        Go Back
+      </button>
+    </div>
+    </div>
+          
+      :
+        <>
+      <h1 style={{textAlign: 'center', marginBottom: '20px'}}>All Users</h1>
   
+        <Form style={{}}>
+        <Form.Group className="mb-3" controlId="formBasicCheckbox">
+          <Form.Control 
+            style={{borderRadius:16}}
+            type="Text" 
+            label="Check me out" 
+            placeholder="Type something here..."
+            onChange={(e) => setSearchUser(e.target.value.toLowerCase())}
+          />
+        </Form.Group> 
+  
+        <Button variant="primary" type="submit" onClick={onSearchUser} style={{alignItems:'center', display: 'flex',color: "#000", backgroundColor: "#90CAF9", border: "2px solid #fff",margin: "auto", marginBottom:20, borderRadius:16}} >
+          Submit
+        </Button>
+        </Form>
       { userFound === true ? 
         <div className={(userFound === true) ? 'userFound' : 'userNotFound'}>
           <div className='singleUser'>
@@ -257,7 +295,7 @@ export default function GetUser() {
                                     )
                                   }
                                   } 
-                                style={{ backgroundColor: "#c7ffe5", borderRadius:"1rem", border: '1.5px solid #000', fontSize:'12px', color: '#3a3a3a'}}>Update</button>
+                                style={{ backgroundColor: "#c7ffe5", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color: '#3a3a3a'}}>Update</button>
                       </Link>
                     </td>
                     <td>
@@ -267,12 +305,12 @@ export default function GetUser() {
                       ?
                         <button 
                             onClick={toggleButton} 
-                            style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '1.5px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                            style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
                           Delete
                         </button>
                       :
                       <div onClick={toggleButton} className="overlay">
-                        <div class='innerOverlay'>
+                        <div className='innerOverlay'>
                           <h1 style={{marginBottom:'20px', textAlign:'center'}}> Confirm Delete </h1>
                           <button 
                               onClick={toggleButton} 
@@ -281,7 +319,7 @@ export default function GetUser() {
                           </button>
                           <button 
                               onClick={()=> onDelete(allUsers[key]['username'])} 
-                              style={{margin:"10px",width:"150px" ,backgroundColor: "#ff8585", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                              style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
                             Confirm
                           </button>           
                         </div>
@@ -294,7 +332,10 @@ export default function GetUser() {
       </tbody>
     </Table>
 
-    </div>
+    </>
+      }
+  </div>
+
   )
 }
 

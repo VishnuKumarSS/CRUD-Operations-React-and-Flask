@@ -37,55 +37,60 @@ export default function GetUser() {
     }, []);
  
 
-    function onSearchUser() {
-      // eve.preventDefault();
+    function onSearchUser(eve) {
+      
+      eve.preventDefault();
       setUserFound(null); // if the searchUser is empty then we are setting the userFound to null
       console.log("Entered the Search Function...")
       if (searchUser !== ""){
         setUserFound(false);
         setMatchingUsers([]); // while pressing submit button.. setting it to an empty array...For not getting collapsed with the next iteration.
         setExactUser([]); // while pressing submit button.. setting it to an empty array...For not getting collapsed with the next iteration.
-        // eve.preventDefault();
+        eve.preventDefault();
   
         let matchingUsersArray = []
         let exactUserArray = []
   
         let id = Object.keys(allUsers) // returns all the user keys of the object in an array.
-          
+        
+        console.log('allUsers :',allUsers)
+  
+        // exact user
         let exactUserId = id.filter(key => allUsers[key]['username'].toLowerCase() === searchUser)
-        .map((keyy) => {
-          setUserFound(true)
-          exactUserArray.push({
-            "id" : keyy,
-            "username" :  allUsers[keyy]['username'],
-            "userage" :  allUsers[keyy]['userage'],
-            "usercity" :  allUsers[keyy]['usercity']
-          })
-          return(
-            setExactUser(exactUserArray),
-            keyy // here we are returning key to exclude this exact user key from the related user list in the upcoming operations.
-          )
+          .map((keyy) => {
+            setUserFound(true)
+            exactUserArray.push({
+              "id" : keyy,
+              "username" :  allUsers[keyy]['username'],
+              "userage" :  allUsers[keyy]['userage'],
+              "usercity" :  allUsers[keyy]['usercity']
+            })
+            return(
+              setExactUser(exactUserArray),
+              keyy // here we are returning key to exclude this exact user key from the related user list in the upcoming operations.
+            )
           }
           )
-
-          id.filter(key => {
-            let relatedUser = allUsers[key]["username"].toLowerCase();
-            let foundRelatedUser = relatedUser.includes(searchUser);
-            return( 
-              foundRelatedUser && key !== exactUserId[0]
-            )
-            })
-            .map((keyy) => {
-              matchingUsersArray.push({
-                "id": keyy,  
-                "username" : allUsers[keyy]["username"],
-                "userage" : allUsers[keyy]["userage"],
-                "usercity" : allUsers[keyy]["usercity"]
-              })
-              return(
-                setMatchingUsers(matchingUsersArray)
-              )
+        
+        // matching user
+        id.filter(key => {
+          let relatedUser = allUsers[key]["username"].toLowerCase();
+          let foundRelatedUser = relatedUser.includes(searchUser);
+          return( 
+            foundRelatedUser && key !== exactUserId[0]
+          )
           })
+          .map((keyy) => {
+            matchingUsersArray.push({
+              "id": keyy,  
+              "username" : allUsers[keyy]["username"],
+              "userage" : allUsers[keyy]["userage"],
+              "usercity" : allUsers[keyy]["usercity"]
+            })
+            return(
+              setMatchingUsers(matchingUsersArray)
+            )
+        })
       }
     }
 
@@ -121,9 +126,6 @@ export default function GetUser() {
       .then(()=> {
         getData(); // this will get the updated data after deleting a particular user with his username.
       })
-      // .then(()=>{
-      //   onSearchUser();
-      // })
     }
 
     // console.log('EXACT USER (OUTSIDE) : ', exactUser)
@@ -135,7 +137,6 @@ export default function GetUser() {
 
     return (
       <div className="allUsers" >
-
       {
       error 
       ? 
@@ -153,26 +154,13 @@ export default function GetUser() {
             Go Back
           </button>
       </div>
-      </div>  
+      </div>
+          
       :
-
-      // allUsers.length===0
-      // ?
-      // <div>
-      // <h1>No Users Found</h1>
-      // </div>
-      // :
-
       <>
-      {userFound=== null ?
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>All Users</h1>
-        :
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Matching Users</h1>
-      }
+      <h1 style={{textAlign: 'center', marginBottom: '20px'}}>All Users</h1>
   
-      <Form onSubmit={(eve)=>{
-        eve.preventDefault();
-      }}>
+      <Form style={{}}>
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Control 
               style={{borderRadius:16}}
@@ -184,12 +172,10 @@ export default function GetUser() {
           </Form.Group> 
     
           <Button variant="primary" type="submit" onClick={onSearchUser} style={{alignItems:'center', display: 'flex',color: "#000", backgroundColor: "#90CAF9", border: "2px solid #fff",margin: "auto", marginBottom:20, borderRadius:16}} >
-            Search
+            Submit
           </Button>
       </Form>
-      { userFound !== null
-      ?
-      <div>
+
       { userFound === true ? 
         <div className={(userFound === true) ? 'userFound' : 'userNotFound'}>
           <div className='singleUser'>
@@ -231,7 +217,7 @@ export default function GetUser() {
 
                             {
                             !confirm 
-                            &&
+                            ?
                               <button 
                                   onClick={()=>{
                                     return(
@@ -242,6 +228,22 @@ export default function GetUser() {
                                   style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
                                 Delete
                               </button>
+                            :
+                            <div onClick={toggleButton} className="overlay">
+                              <div className='innerOverlay'>
+                                <h1 style={{marginBottom:'20px', textAlign:'center'}}> Confirm Delete </h1>
+                                <button 
+                                    onClick={toggleButton} 
+                                    style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                                  Cancel
+                                </button>
+                                <button 
+                                    onClick={()=> onDelete(deleteUser)} 
+                                    style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
+                                  Confirm
+                                </button>           
+                              </div>
+                            </div>
                             }
                           </td>
                       </tr>
@@ -275,7 +277,7 @@ export default function GetUser() {
 
                             {
                             !confirm 
-                            &&
+                            ?
                               <button 
                                   onClick={()=>{
                                     return(
@@ -286,7 +288,22 @@ export default function GetUser() {
                                   style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
                                 Delete
                               </button>
-                            
+                            :
+                            <div onClick={toggleButton} className="overlay">
+                              <div className='innerOverlay'>
+                                <h1 style={{marginBottom:'20px', textAlign:'center'}}> Confirm Delete </h1>
+                                <button 
+                                    onClick={toggleButton} 
+                                    style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                                  Cancel
+                                </button>
+                                <button 
+                                    onClick={()=> onDelete(deleteUser)} 
+                                    style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
+                                  Confirm
+                                </button>           
+                              </div>
+                            </div>
                             }
                           </td>
                       </tr>
@@ -414,7 +431,7 @@ export default function GetUser() {
 
                             {
                             !confirm 
-                            &&
+                            ?
                               <button 
                                     onClick={()=>{
                                       return(
@@ -425,6 +442,22 @@ export default function GetUser() {
                                   style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
                                 Delete
                               </button>
+                            :
+                            <div onClick={toggleButton} className="overlay">
+                              <div className='innerOverlay'>
+                                <h1 style={{marginBottom:'20px', textAlign:'center'}}> Confirm Delete </h1>
+                                <button 
+                                    onClick={toggleButton} 
+                                    style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                                  Cancel
+                                </button>
+                                <button 
+                                    onClick={()=> onDelete(deleteUser)}
+                                    style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
+                                  Confirm
+                                </button>           
+                              </div>
+                            </div>
                             }
                           </td>
                       </tr>
@@ -436,8 +469,7 @@ export default function GetUser() {
                 }
           </div>
           }
-    </div>
-    : 
+          
     <Table borderless >
       <thead  >
         <tr className='heading' >
@@ -449,7 +481,7 @@ export default function GetUser() {
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody  >
         {Object.keys(allUsers).map(key => {
             return(
                 <tr key={key} >
@@ -476,7 +508,7 @@ export default function GetUser() {
 
                       {
                       !confirm 
-                      &&
+                      ?
                         <button 
                             onClick={()=>{
                               return(
@@ -487,8 +519,25 @@ export default function GetUser() {
                             style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
                           Delete
                         </button>
-                      
-                      
+                      :
+                      <div onClick={toggleButton} className="overlay">
+                        <div className='innerOverlay'>
+                          <h1 style={{marginBottom:'20px', textAlign:'center'}}> Confirm Delete </h1>
+                          <button 
+                              onClick={toggleButton} 
+                              style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+                            Cancel
+                          </button>
+
+                          {/* {console.log(deleteUser)} */}
+
+                          <button 
+                              onClick={()=> onDelete(deleteUser)} 
+                              style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
+                            Confirm
+                          </button>           
+                        </div>
+                      </div>
                       }
                     </td>
                 </tr>
@@ -496,39 +545,9 @@ export default function GetUser() {
         })}
       </tbody>
     </Table>
-      }
 
     </>
       }
-      {
-      confirm 
-      &&
-      <div onClick={toggleButton} className="overlay">
-          <div className='innerOverlay'>
-            <h1 style={{marginBottom:'20px', textAlign:'center'}}> Confirm Delete </h1>
-            <button 
-                onClick={toggleButton} 
-                style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
-              Cancel
-            </button>
-
-            {/* {console.log(deleteUser)} */}
-
-            <button 
-                onClick={()=> {
-                  console.log("main delete button triggered.!")
-                  if (userFound !== null){
-                    navigate("/")
-                  }
-                  return(
-                  onDelete(deleteUser)
-                )}}
-                style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
-              Confirm
-            </button>           
-          </div>
-        </div>
-        }
   </div>
 
   )

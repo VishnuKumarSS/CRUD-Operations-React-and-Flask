@@ -17,27 +17,23 @@ function UpdateUser() {
 
   const [ updated, setUpdated ] = useState(false); // to show the user is updated message on the screen.
 
+  const [error, setError] = useState(null); // to show the error message
+  const [confirm, setConfirm] = useState(false)
+
   const sendDataToAPI = (eventt) => {
     eventt.preventDefault()// to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
     axios.put(`/${updateUserNameURL}`, {
       username,
       userage,
       usercity,
-      }).catch(
-          (error) => {
-            if (error.response) {
-              console.log('error response')
-            }
-            else if (error.request) {
-              console.log('error request')
-            }
-            else {
-              console.log('else part error')
-            }
-            console.log('config error: ',error.config)
-          }
-        );
-        setUpdated(true);
+      })
+      .catch(error => {
+        console.log(error);
+        console.log(error.message);
+        setError(error.message);
+      })
+      
+      setUpdated(true);
 
       // navigate(`/`);  // this will navigate to the homepage of the application when the form is submitted.
       // navigate(-1);
@@ -56,8 +52,32 @@ function UpdateUser() {
 
   }, [])
 
+  // for toggling the popup message
+  const toggleButton = () => {
+    setConfirm(!confirm)
+  }
+  
   return (
     <div className='updateUser'>
+        {
+        error
+        ?
+        <div onClick={()=>{
+                return(
+                toggleButton,
+                navigate("/allusers")
+                )}}  
+        className="overlay">
+        <div className='innerOverlay'>
+          <h1>{error}</h1>
+          <button onClick={toggleButton} 
+                  style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+            Go Back
+          </button>
+        </div>
+        </div>
+        : 
+        <>
       { 
         updated
         ?
@@ -106,6 +126,8 @@ function UpdateUser() {
 
           </Form>
         </>
+      }
+      </>
       }
     </div>
   );
