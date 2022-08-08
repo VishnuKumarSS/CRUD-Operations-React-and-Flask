@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-flask": "cd flask_project && venv/bin/python",
+    "start-flask": "cd flask_project && my-env/bin/python",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
