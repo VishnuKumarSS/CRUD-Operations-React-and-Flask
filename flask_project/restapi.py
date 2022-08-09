@@ -1,3 +1,4 @@
+from email import message
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
 
@@ -50,14 +51,23 @@ class SearchUser(Resource):
     
     @marshal_with(resource_fields)
     def put(self, username):
+        # parsed user is the text that we are typing in input, and username is the text which is coming from what we are passing in to the url route
         parsed_user = user_put_req.parse_args()
         user = UserData.query.filter_by(username=username).first()
+        search_user = UserData.query.filter_by(username=parsed_user["username"]).first()        
+
         # user = UserData.query.filter_by(username=parsed_user["username"]).first()
         if not user: # if user is not there, then...
             abort(409, message='User is not there to update.')
+        if not search_user == user:
+            abort(405, message='User already exist...')
         
         if parsed_user['username']:
+            # if parsed_user['username'] == username:
+            #     abort(408, message='User already exist.')
+            # else:
             user.username = parsed_user['username']
+            
         if parsed_user['userage']:
             user.userage = parsed_user['userage']
         if parsed_user['usercity']:
@@ -76,7 +86,7 @@ class AddUser(Resource):
         user = UserData.query.filter_by(username=parsed_user["username"]).first()        
         # if the username already exists, then 
         if user:
-            abort(409, message='User already exists.')
+            abort(409, message='User already exist.')
         
         # to add a user
         newuser = UserData(username=parsed_user["username"], userage=parsed_user['userage'], usercity=parsed_user['usercity']) #id=parsed_user['id'] , username = username

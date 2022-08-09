@@ -145,7 +145,7 @@ export default function GetUser() {
             )}}  
             className="overlay">
       <div className='innerOverlay'>
-          <h1>{error}</h1>
+          <h1>Failed to connect with Backend</h1>
           <button onClick={toggleButton} 
           
                   style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>

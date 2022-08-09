@@ -21,6 +21,7 @@ function CreateUser() {
 
   const [validated, setValidated] = useState(false);
 
+  // let special_char = "!@#$%^&*()+=-[]\\\';,./{}|\":<>?"
   const sendDataToAPI = (eventt) => {
     eventt.preventDefault() // to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
     axios.post("/adduser", {
@@ -30,8 +31,8 @@ function CreateUser() {
     })
     .catch(error => {
         console.log(error);
-        console.log(error.message);
-        setError(error.message);
+        console.log(error);
+        setError(error);
       })
     
     setCreated(true);
@@ -70,7 +71,13 @@ function CreateUser() {
                 )}}  
         className="overlay">
         <div className='innerOverlay'>
-          <h1>{error}</h1>
+          {error.response.status === 409
+          ?
+          <h1>{error.response.data.message}</h1>
+          :
+          <h1>Failed to Connect with Backend</h1>
+        }
+
           <button onClick={toggleButton} 
           
                   style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
@@ -105,13 +112,22 @@ function CreateUser() {
                
               <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
               {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-              <Form.Control required name="username" maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
-              <Form.Text className="text-muted" style={{marginLeft:5}}>
-                Type without any SPECIAL CHAR'S or SPACES.
-              </Form.Text>
+              <Form.Control required name="username" maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} onChange ={e => e.target.value.trim()} 
+              // onChange={(e)=> {
+              //   let last= e.target.value.slice(-1)
+              //   if (special_char.indexOf(last) === -1) {
+              //     setUsername(e.target.value)
+              //   }
+
+              // }} 
+              placeholder="Enter your name here" style={{borderRadius: 16 }} />
+             
                <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                   Please provide a valid User Name.
               </Form.Control.Feedback>
+              <Form.Text className="text-muted" style={{marginLeft:5}}>
+                Type without any SPECIAL CHAR'S or SPACES.
+              </Form.Text>                          
             </Form.Group>
   
             <Form.Group className="mb-3" controlId="formBasicUserage">
