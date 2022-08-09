@@ -1,3 +1,6 @@
+// This file is the copy of the getUser , has the carousel feature ...but it's commented out after implementing it without carousel.
+
+
 import React , { useEffect, useState }from 'react'
 import axios from 'axios';
 import { Table, Button, Form, Carousel } from 'react-bootstrap';

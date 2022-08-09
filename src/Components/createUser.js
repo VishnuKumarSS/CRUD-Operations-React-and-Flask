@@ -9,19 +9,7 @@ import "../styling/createAndUpdateUser.css"
 function CreateUser() {
 
   let navigate = useNavigate();
-  
-  // const [validated, setValidated] = useState(false);
 
-  // const handleSubmit = (event) => {
-  //   const form = event.currentTarget;
-  //   if (form.checkValidity() === false) {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //   }
-
-  //   setValidated(true);
-  // };
-  
   const [username, setUsername] = useState("");
   const [userage, setUserage] = useState(null);
   const [usercity, setUsercity] = useState("");
@@ -30,6 +18,8 @@ function CreateUser() {
 
   const [confirm, setConfirm] = useState(false);
   const [ error, setError ] = useState(null);
+
+  const [validated, setValidated] = useState(false);
 
   const sendDataToAPI = (eventt) => {
     eventt.preventDefault() // to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
@@ -58,6 +48,15 @@ function CreateUser() {
   const toggleButton = () => {
     setConfirm(!confirm)
   }
+
+  const handleFormSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setValidated(true)
+  };
   
   return (
     <div className='createUser'>
@@ -100,17 +99,24 @@ function CreateUser() {
           :
           <>
             <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Create User</h1>
-            <Form  >
+            <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
   
             <Form.Group className="mb-3" controlId="formBasicUsername">
-              <Form.Label style={{ marginLeft:10 }}>UserName</Form.Label>
+               
+              <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
               {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-              <Form.Control name="username" maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
+              <Form.Control required name="username" maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} onChange={(e)=> setUsername(e.target.value)} placeholder="Enter your name here" style={{borderRadius: 16 }} />
+              <Form.Text className="text-muted" style={{marginLeft:5}}>
+                Type without any SPECIAL CHAR'S or SPACES.
+              </Form.Text>
+               <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                  Please provide a valid User Name.
+              </Form.Control.Feedback>
             </Form.Group>
   
             <Form.Group className="mb-3" controlId="formBasicUserage">
-              <Form.Label style={{ marginLeft:10 }}>Age</Form.Label>
-              <Form.Control type="number" maxLength="3" name="userage" 
+              <Form.Label style={{ marginLeft:5 }}>Age : </Form.Label>
+              <Form.Control required type="number" maxLength="3" name="userage" 
               onChange={(e)=> {
                 return(
                   // console.log(userage),
@@ -118,20 +124,26 @@ function CreateUser() {
                   e.target.value  = e.target.value.slice(0,3)
                 )}}  
                 placeholder="Enter your age here" style={{borderRadius: 16 }} />
+              <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                  Please provide your Age.
+              </Form.Control.Feedback>
             </Form.Group>
   
             <Form.Group className="mb-3" controlId="formBasicUsername">
-              <Form.Label style={{ marginLeft:10 }}>City</Form.Label>
-              <Form.Control name="usercity" maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
-              
+              <Form.Label style={{ marginLeft:5 }}>City : </Form.Label>
+              <Form.Control required name="usercity" maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+              <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                  Please provide a valid city.
+              </Form.Control.Feedback>
             </Form.Group>
+
             { (username && userage && usercity)
             ? 
               <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
               Submit
             </Button> 
             : 
-            <Button style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", marginTop: 16, borderRadius:16}}>
+            <Button type='submit' style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", marginTop: 16, borderRadius:16}}>
               Submit
             </Button>
             }

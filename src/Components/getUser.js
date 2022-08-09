@@ -1,8 +1,9 @@
 import React , { useEffect, useState }from 'react'
 import axios from 'axios';
-import { Table, Button, Form, Carousel } from 'react-bootstrap';
+import { Table, Button, Form } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
+
 
 import "../styling/getUser.css"
 
@@ -121,9 +122,7 @@ export default function GetUser() {
       .then(()=> {
         getData(); // this will get the updated data after deleting a particular user with his username.
       })
-      // .then(()=>{
-      //   onSearchUser();
-      // })
+
     }
 
     // console.log('EXACT USER (OUTSIDE) : ', exactUser)
@@ -295,53 +294,7 @@ export default function GetUser() {
             </tbody>
             
           </Table>
-          {/* <Carousel>
-
-            <Carousel.Item interval={5000}>
-              <p style={{ backgroundColor: '#c7ffe5', color: "#000", border: "3px solid #000"}}>EXACT USER</p>
-                {exactUser.map((exactuser, index) => {
-                  return(
-                    <div key={index}>
-                      <p >
-                        USER ID : {userr['id']}
-                      </p>
-                      <p >
-                        USER NAME : { userr['username']}
-                      </p>
-                      <p >
-                        USER AGE : {userr['userage']}
-                      </p>
-                      <p >
-                        USER CITY : {userr['usercity']}
-                      </p>
-                    </div>
-                  )
-                })}
-            </Carousel.Item>
-
-            {matchingUsers.map((matchuser, i) => {
-              return(
-                  <Carousel.Item key={i} interval={2000}>
-                    <p style={{ backgroundColor: '#ff8585', color: "#000", border: "3px solid #000"}}>
-                      MATCHING USER
-                    </p>
-                      <p>
-                        USER ID : {matchuser["id"]}
-                      </p>
-                      <p>
-                        USER NAME : {matchuser["username"]}
-                      </p>
-                      <p>
-                        USER AGE : {matchuser["userage"]}
-                      </p>
-                      <p>
-                        USER CITY : {matchuser["usercity"]}
-                      </p>
-                  </Carousel.Item>
-                )
-            })}
-          </Carousel> */}
-
+        
           </div>
         </div>
         :
@@ -353,29 +306,7 @@ export default function GetUser() {
               <p style={{ backgroundColor: '#ff6969', color: "#fff"}} >USER NOT FOUND.</p>
             </div>
           :
-          // <Carousel interval={2000}>
-          // {matchingUsers.map((matchuser, i) => {
-          //         return(
-          //             <Carousel.Item key={i} >
-          //               <p style={{ backgroundColor: '#ff8585', color: "#000", border: "3px solid #000"}}>
-          //                 MATCHING USER
-          //               </p>
-          //                 <p>
-          //                   USER ID : {matchuser["id"]}
-          //                 </p>
-          //                 <p>
-          //                   USER NAME : {matchuser["username"]}
-          //                 </p>
-          //                 <p>
-          //                   USER AGE : {matchuser["userage"]}
-          //                 </p>
-          //                 <p>
-          //                   USER CITY : {matchuser["usercity"]}
-          //                 </p>
-          //             </Carousel.Item>
-          //         )
-          //       })}
-          // </Carousel>
+         
           <Table borderless >
             <thead  >
               <tr className='heading' >
