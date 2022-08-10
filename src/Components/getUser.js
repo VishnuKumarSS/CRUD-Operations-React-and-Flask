@@ -455,17 +455,17 @@ export default function GetUser() {
                   console.log("main delete button triggered.!")
                   setToastDelete(true)
                   setShow(true)
-                  if (userFound !== null){
-                    navigate("/")
+                  // if (userFound !== null){
+                  //   navigate("/allusers")
+                  //   // return(
+                  //   //   onDelete(deleteUser),
+                  //   //   document.getElementById('searchButton').click()
+                  //   // )
+                  // }
+                  onDelete(deleteUser)
 
-                    // return(
-                    //   onDelete(deleteUser),
-                    //   document.getElementById('searchButton').click()
-                    // )
-                  }
                   return(
-                    // onSearchUser(),
-                    onDelete(deleteUser)
+                    getData()
                   )
               }}
                 style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
@@ -494,4 +494,3 @@ export default function GetUser() {
 
   )
 }
-

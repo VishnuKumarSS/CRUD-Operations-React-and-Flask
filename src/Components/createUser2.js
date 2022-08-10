@@ -20,7 +20,7 @@ function CreateUser() {
     const [ error, setError ] = useState(null);
 
     const [validated, setValidated] = useState(false);
-    // const [specialChar, setSpecialChar] = useState(false);
+    const [specialChar, setSpecialChar] = useState(false);
     let special_chars = [
       '!', '@', '#', '$', '%', '^',
       '&', '*', '(', ')', '+', '=',
@@ -121,32 +121,26 @@ function CreateUser() {
                 
                 <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
                 {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-                <Form.Control required value={username || ""} name="username" maxLength="16" 
-                // onBlur={(eve)=>{
-                //   console.log('blurred')
-                //   for ( let i of special_chars ){
-                //     console.log(eve.target.value.includes(i))
-                //     if (eve.target.value.includes(i)){
-                //       return(setSpecialChar(true))
-                //     }
-                //     else{
-                //       return(
-                //         setSpecialChar(false),
-                //         setUsername(eve.target.value.trim())
-                //       )
-                //     }
-                //   }
-                //   return(
-                //     setUsername(eve.target.value.trim())
-                //   )
-                // }}
-                onBlur={(eve)=> setUsername(eve.target.value.trim())} 
-                onChange={(e)=> {
-                  let last= e.target.value.slice(-1)
-                  if (special_chars.includes(last) !== true) {
-                    setUsername(e.target.value)
+                <Form.Control required name="username" maxLength="16" 
+                onBlur={(eve)=>{
+                  console.log('blurred')
+                  for ( let i of special_chars ){
+                    console.log(eve.target.value.includes(i))
+                    if (eve.target.value.includes(i)){
+                      return(setSpecialChar(true))
+                    }
+                    else{
+                      return(
+                        setSpecialChar(false),
+                        setUsername(eve.target.value.trim())
+                      )
+                    }
                   }
-                }}  
+                  return(
+                    setUsername(eve.target.value.trim())
+                  )
+                }} 
+                onChange ={e => e.target.value.trim()} 
                 // onChange={(e)=> {
                 // let last= e.target.value.slice(-1)
                 // if (special_chars.includes(last) !== true) {
@@ -168,10 +162,16 @@ function CreateUser() {
                 //   } }
                 placeholder="Enter your name here" style={{borderRadius: 16 }} />
               
-  
+                {specialChar ? 
+                <Form.Control.Feedback type="valid" style={{ marginLeft:5 }}>
+                  Username shouldn't consist of any special characters.
+                </Form.Control.Feedback>
+                // alert("Username shouldn't contain Special Chars")
+                :
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                   Please provide a valid User Name.
                 </Form.Control.Feedback>
+               }
                 
                 <Form.Text className="text-muted" style={{marginLeft:5}}>
                   Type without any SPECIAL CHAR'S or SPACES.
@@ -180,12 +180,12 @@ function CreateUser() {
     
               <Form.Group className="mb-3" controlId="formBasicUserage">
                 <Form.Label style={{ marginLeft:5 }}>Age : </Form.Label>
-                <Form.Control required value={userage || ""} type="number" maxLength="3" name="userage" 
+                <Form.Control required type="number" maxLength="3" name="userage" 
                 onChange={(e)=> {
                   return(
                     // console.log(userage),
-                    setUserage(e.target.value.slice(0, 3))
-                    // e.target.value  = e.target.value.slice(0,3)
+                    setUserage(e.target.value.slice(0, 3)),
+                    e.target.value  = e.target.value.slice(0,3)
                   )}}  
                   placeholder="Enter your age here" style={{borderRadius: 16 }} />
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
@@ -195,14 +195,14 @@ function CreateUser() {
     
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label style={{ marginLeft:5 }}>City : </Form.Label>
-                <Form.Control required name="usercity" value={usercity || ""} maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+                <Form.Control required name="usercity" maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                     Please provide a valid city.
                 </Form.Control.Feedback>
               </Form.Group>
 
               {console.log(username, userage, usercity)}
-              { (username && userage && usercity)
+              { (username && userage && usercity && !specialChar)
               // { (username && userage && usercity && !specialChar)
 
               ? 

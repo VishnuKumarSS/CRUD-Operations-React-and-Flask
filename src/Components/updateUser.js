@@ -21,7 +21,7 @@ function UpdateUser() {
   const [confirm, setConfirm] = useState(false)
 
   const [validated, setValidated] = useState(false);
-  const [specialChar, setSpecialChar] = useState(false);
+  // const [specialChar, setSpecialChar] = useState(false);
   let special_chars = [
     '!', '@', '#', '$', '%', '^',
     '&', '*', '(', ')', '+', '=',
@@ -130,37 +130,37 @@ function UpdateUser() {
             <Form.Group className="mb-3" controlId="formBasicUsername">
               <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
               <Form.Control required name="username" value={username || ""} maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} 
-              onChange={(e)=>
-                {
-                  let last= e.target.value.slice(-1)
-                  if(special_chars.includes(last)){
-                    setSpecialChar(true)
-                    console.log("triggered")
-                  }
-                  else{
-                    setUsername(e.target.value)
-                  }
-                } }
+              // onChange={(e)=>
+              //   {
+              //     let last= e.target.value.slice(-1)
+              //     if(special_chars.includes(last)){
+              //       setSpecialChar(true)
+              //       console.log("triggered")
+              //     }
+              //     else{
+              //       setUsername(e.target.value)
+              //     }
+              //   } }
               // onChange={(e)=> setUsername(e.target.value)}
-              // onChange={(e)=> {
-              //   let last= e.target.value.slice(-1)
-              //   if (special_chars.includes(last) !== true) {
-              //     setUsername(e.target.value)
-              //   }
-              // }}  
+              onChange={(e)=> {
+                let last= e.target.value.slice(-1)
+                if (special_chars.includes(last) !== true) {
+                  setUsername(e.target.value)
+                }
+              }}  
               placeholder="Enter your name here" style={{borderRadius: 16 }} />
               
              
 
-              {specialChar || !username ?
+              {/* {specialChar && username!=="" ?
               <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                 Username shouldn't consist of any special characters.
               </Form.Control.Feedback>
-              :
+              : */}
               <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                 Please provide a valid User Name.
               </Form.Control.Feedback>
-              }
+              {/* } */}
              
               <Form.Text className="text-muted" style={{marginLeft:5}}>
                 Type without any SPECIAL CHAR'S or SPACES.
@@ -183,7 +183,20 @@ function UpdateUser() {
               </Form.Control.Feedback>
             </Form.Group>
             
-            { username && userage && usercity && !specialChar
+            {/* {special_chars.map((sChar)=> {
+              if(username.includes(sChar)){
+                return false
+                console.log('inside')
+              }
+              return true
+            })
+            ?
+            <Button type='submit' style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", marginTop: 16, borderRadius:16}}>
+              Submit
+            </Button>
+            :  */}
+            {
+            (username && userage && usercity )
             ? 
             <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
               Submit

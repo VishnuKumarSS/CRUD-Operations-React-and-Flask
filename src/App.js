@@ -18,6 +18,7 @@ function App() {
             <Route path="/allusers" element={<GetUser />} />
             <Route path="/update" element={<UpdateUser />} />
             {/* <Route path="/delete" element={<DeleteUser />} /> */}
+            {/* <Route path="/delete" element={<DeleteUser />} /> */}
           </Routes>
         </div>
       </div>

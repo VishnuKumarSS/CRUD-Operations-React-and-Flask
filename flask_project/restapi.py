@@ -57,20 +57,27 @@ class SearchUser(Resource):
         user = UserData.query.filter_by(username=username).first()
         # user = UserData.query.filter_by(username=parsed_user["username"]).first()
 
-        # allUsers = UserData.query.all()
+        allUsers = UserData.query.all()
         if not user: # if user is not there, then...
             abort(405, message='User is not there to update.')
 
+        # for us in allUsers:
+        #     if parsed_user['username'] != username: # this condition is to neglect the same updating user
+        #         if us.username == parsed_user['username']:
+        #             count += 1
+        # if count>0:
+        #     abort(409, message='Username already exist.')
+
         if parsed_user['username']:
-            # # this loop is to find whether a user already exist or not while updating
-            # for user in allUsers:
-            #     if parsed_user['username'] != username: # this condition is to neglect the same updating user
-            #         if user.username == parsed_user['username']:
-            #             count += 1
-            # if count>0:
-            #     abort(409, message='Username already exist.')
-            # else:
-            user.username = parsed_user['username']
+            # this loop is to find whether a user already exist or not while updating
+            for i in allUsers:
+                if parsed_user['username'] != username: # this condition is to neglect the same updating user
+                    if i.username == parsed_user['username']:
+                        count += 1
+            if count>0:
+                abort(409, message='Username already exist.')
+            else:
+                user.username = parsed_user['username']
         if parsed_user['userage']:
             user.userage = parsed_user['userage']
         if parsed_user['usercity']:
