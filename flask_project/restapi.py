@@ -25,13 +25,17 @@ class AllUsers(Resource):
         allusers = UserData.query.all()
         # here we are converting it to look like JSON using python dictionaries
         users = {}
+        users_list = []
+
         for user in allusers:
             users[user.id] = {
                 "username" : user.username,
                 "userage": user.userage,
                 "usercity": user.usercity,
             } 
-        return users
+            users_list.append(user.username)
+
+        return ([users, users_list])
     
 class SearchUser(Resource):    
     @marshal_with(resource_fields)

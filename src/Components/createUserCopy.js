@@ -121,30 +121,48 @@ function CreateUser() {
                 
                 <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
                 {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-                <Form.Control required name="username" maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} 
-                // onChange ={e => e.target.value.trim()} 
+                <Form.Control required name="username" maxLength="16" 
+                onBlur={(eve)=>{
+                  console.log('blurred')
+                  for ( let i of special_chars ){
+                    console.log(eve.target.value.includes(i))
+                    if (eve.target.value.includes(i)){
+                      return(setSpecialChar(true))
+                    }
+                    else{
+                      return(
+                        setSpecialChar(false),
+                        setUsername(eve.target.value.trim())
+                      )
+                    }
+                  }
+                  return(
+                    setUsername(eve.target.value.trim())
+                  )
+                }} 
+                onChange ={e => e.target.value.trim()} 
                 // onChange={(e)=> {
                 // let last= e.target.value.slice(-1)
                 // if (special_chars.includes(last) !== true) {
                 //   setUsername(e.target.value)
                 // }
                 // }}
-                onChange={(e)=>
-                  {
-                    let last= e.target.value.slice(-1)
-                    if(special_chars.includes(last)){
-                      setSpecialChar(true)
-                      console.log("found special char")
-                    }
-                    else{
-                      setUsername(e.target.value)
-                      setSpecialChar(false)
-                      console.log("not found special char : ")
-                    }
-                  } }
+                // onChange={(e)=>
+                //   {
+                //     let last= e.target.value.slice(-1)
+                //     if(special_chars.includes(last)){
+                //       setSpecialChar(true)
+                //       console.log("found special char")
+                //     }
+                //     else{
+                //       setUsername(e.target.value)
+                //       setSpecialChar(false)
+                //       console.log("not found special char : ")
+                //     }
+                //   } }
                 placeholder="Enter your name here" style={{borderRadius: 16 }} />
               
-                {specialChar ?
+                {specialChar ? 
                 <Form.Control.Feedback type="valid" style={{ marginLeft:5 }}>
                   Username shouldn't consist of any special characters.
                 </Form.Control.Feedback>
@@ -153,7 +171,7 @@ function CreateUser() {
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                   Please provide a valid User Name.
                 </Form.Control.Feedback>
-                }
+               }
                 
                 <Form.Text className="text-muted" style={{marginLeft:5}}>
                   Type without any SPECIAL CHAR'S or SPACES.
@@ -183,7 +201,10 @@ function CreateUser() {
                 </Form.Control.Feedback>
               </Form.Group>
 
+              {console.log(username, userage, usercity)}
               { (username && userage && usercity && !specialChar)
+              // { (username && userage && usercity && !specialChar)
+
               ? 
                 <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
                 Submit

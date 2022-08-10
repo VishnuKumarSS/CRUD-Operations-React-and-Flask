@@ -7,7 +7,6 @@ import "../styling/createAndUpdateUser.css"
 
 
 function CreateUser() {
-
     let navigate = useNavigate();
 
     const [username, setUsername] = useState("");
@@ -20,7 +19,7 @@ function CreateUser() {
     const [ error, setError ] = useState(null);
 
     const [validated, setValidated] = useState(false);
-    // const [specialChar, setSpecialChar] = useState(false);
+    const [specialChar, setSpecialChar] = useState(null);
     let special_chars = [
       '!', '@', '#', '$', '%', '^',
       '&', '*', '(', ')', '+', '=',
@@ -28,8 +27,8 @@ function CreateUser() {
       '.', '/', '{', '}', '|', '"',
       ':', '<', '>', '?', ' '
     ]
-    const sendDataToAPI = (eventt) => {
-    eventt.preventDefault() // to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
+    const sendDataToAPI = () => {
+    // eventt.preventDefault() // to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
     axios.post("/adduser", {
       username,
       userage,
@@ -122,56 +121,29 @@ function CreateUser() {
                 <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
                 {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
                 <Form.Control required value={username || ""} name="username" maxLength="16" 
-                // onBlur={(eve)=>{
-                //   console.log('blurred')
-                //   for ( let i of special_chars ){
-                //     console.log(eve.target.value.includes(i))
-                //     if (eve.target.value.includes(i)){
-                //       return(setSpecialChar(true))
-                //     }
-                //     else{
-                //       return(
-                //         setSpecialChar(false),
-                //         setUsername(eve.target.value.trim())
-                //       )
-                //     }
-                //   }
-                //   return(
-                //     setUsername(eve.target.value.trim())
-                //   )
-                // }}
-                onBlur={(eve)=> setUsername(eve.target.value.trim())} 
-                onChange={(e)=> {
-                  let last= e.target.value.slice(-1)
-                  if (special_chars.includes(last) !== true) {
-                    setUsername(e.target.value)
-                  }
-                }}  
+                onBlur={(eve)=> setUsername(eve.target.value.trim())}   
+                onChange={(e)=>{
+                  setUsername(e.target.value)
+                }}
                 // onChange={(e)=> {
                 // let last= e.target.value.slice(-1)
                 // if (special_chars.includes(last) !== true) {
                 //   setUsername(e.target.value)
                 // }
                 // }}
-                // onChange={(e)=>
-                //   {
-                //     let last= e.target.value.slice(-1)
-                //     if(special_chars.includes(last)){
-                //       setSpecialChar(true)
-                //       console.log("found special char")
-                //     }
-                //     else{
-                //       setUsername(e.target.value)
-                //       setSpecialChar(false)
-                //       console.log("not found special char : ")
-                //     }
-                //   } }
+            
                 placeholder="Enter your name here" style={{borderRadius: 16 }} />
               
-  
+                {specialChar ?
+                <Form.Control.Feedback type="valid" style={{ marginLeft:5 }}>
+                  Enter without special characters.
+                </Form.Control.Feedback>
+                :
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                   Please provide a valid User Name.
                 </Form.Control.Feedback>
+                }
+                
                 
                 <Form.Text className="text-muted" style={{marginLeft:5}}>
                   Type without any SPECIAL CHAR'S or SPACES.
@@ -202,18 +174,45 @@ function CreateUser() {
               </Form.Group>
 
               {console.log(username, userage, usercity)}
+
+
               { (username && userage && usercity)
               // { (username && userage && usercity && !specialChar)
 
               ? 
-                <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
+                <Button variant="primary" type="submit" 
+                onSubmit={(e)=>{e.preventDefault()}}
+                onClick={(e)=>{
+                  let count = 0
+                  for (let i of special_chars){
+                    console.log(username.includes(i))
+                    console.log(i)
+                    if (username.includes(i)){
+                      setSpecialChar(true)
+                      count = count + 1;
+                    }
+                  }
+                  if (count === 0 ){
+                    setSpecialChar(false)
+                  }
+                }} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
                 Submit
               </Button> 
               : 
               <Button type='submit' style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", marginTop: 16, borderRadius:16}}>
                 Submit
               </Button>
+              
               }
+              {console.log("count", specialChar)}
+              {/* {specialChar!==false && specialChar===true && sendDataToAPI() &&
+                <Button variant="primary" type="submit" onClick={sendDataToAPI}
+                 style={{color: "black", border: "2px solid #fff",backgroundColor: "#000", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
+                Submit
+              </Button> 
+              } */}
+               {specialChar=== false && sendDataToAPI()}
+
               </Form>
             </>
     

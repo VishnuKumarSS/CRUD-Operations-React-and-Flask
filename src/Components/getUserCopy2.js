@@ -1,8 +1,11 @@
 import React , { useEffect, useState }from 'react'
 import axios from 'axios';
-import { Table, Button, Form, Carousel } from 'react-bootstrap';
+import { Table, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
+
+// import { toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 import "../styling/getUser.css"
 
@@ -23,21 +26,33 @@ export default function GetUser() {
     const [error, setError] = useState(null);
     const [deleteUser, setDeleteUser] = useState("")
 
+    const [ toastDelete, setToastDelete ] = useState(false); // to make the toastDelete to work
+    const [show, setShow ] = useState(false); // to show and hide the the toast message
+
+    const [ afterDeletingUser, setAfterDeletingUser ] = useState(false);
+    const [ reloadMatchingUsers, setReloadMatchingUsers ] = useState(false);
+    const [ allNames, setAllNames ] = useState([]);
+    
     useEffect(() => {
         axios.get('/allusers')
         .then((getData => {
-            // console.log(getData);
-            setAllUsers(getData.data);
+            console.log('all data : ',getData);
+            setAllUsers(getData.data[0]);
+            setAllNames(getData.data[1]);
         }))
         .catch(err => {
           console.log(err);
           console.log(err.message);
           setError(err.message);
-        })
+        });
+        
     }, []);
  
-
     function onSearchUser() {
+      if (afterDeletingUser){
+        setAfterDeletingUser(false)
+        // getData()
+      }
       // eve.preventDefault();
       setUserFound(null); // if the searchUser is empty then we are setting the userFound to null
       console.log("Entered the Search Function...")
@@ -101,10 +116,18 @@ export default function GetUser() {
 
     // this is going to get the updated data and show it one the all users page
     const getData = () => {
+      // let len = allUsers.length
       axios.get('/allusers')
       .then((getData => {
-          // console.log(getData.data);
-          setAllUsers(getData.data);
+          console.log('data',getData.data[0]);
+          setAllUsers(getData.data[0]);
+          setAllNames(getData.data[1])
+          // if ( len !== getData.data[1].length){
+          if (userFound !== null){
+            setUserFound(null)
+            setReloadMatchingUsers(true);
+          }
+          // }
       }))
       .catch(err => {
         console.log(err);
@@ -112,18 +135,22 @@ export default function GetUser() {
         setError(err.message);
       })
 
+      if (afterDeletingUser){
+        setAfterDeletingUser(false);
+      }
     }
 
     const onDelete = (name) => {
-      console.log(name);
+      console.log("deleted: ",name);
       // setDeleteUser("")  
       axios.delete(`/${name}`)
       .then(()=> {
-        getData(); // this will get the updated data after deleting a particular user with his username.
-      })
-      // .then(()=>{
-      //   onSearchUser();
-      // })
+        getData();
+
+         // this will get the updated data after deleting a particular user with his username.
+      }
+      )
+
     }
 
     // console.log('EXACT USER (OUTSIDE) : ', exactUser)
@@ -133,8 +160,11 @@ export default function GetUser() {
       setConfirm(!confirm)
     }
 
+    afterDeletingUser && onSearchUser()
+
     return (
       <div className="allUsers" >
+      {console.log('this is the error', error)}
 
       {
       error 
@@ -146,9 +176,8 @@ export default function GetUser() {
             )}}  
             className="overlay">
       <div className='innerOverlay'>
-          <h1>{error}</h1>
-          <button onClick={toggleButton} 
-          
+          <h1>Failed to connect with Backend.<br/>Try to connect again.</h1>
+          <button  onClick={toggleButton} 
                   style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
             Go Back
           </button>
@@ -171,8 +200,8 @@ export default function GetUser() {
       }
   
       <Form onSubmit={(eve)=>{
-        eve.preventDefault();
-      }}>
+                        eve.preventDefault();
+                      }}>
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Control 
               style={{borderRadius:16}}
@@ -183,14 +212,16 @@ export default function GetUser() {
             />
           </Form.Group> 
     
-          <Button variant="primary" type="submit" onClick={onSearchUser} style={{alignItems:'center', display: 'flex',color: "#000", backgroundColor: "#90CAF9", border: "2px solid #fff",margin: "auto", marginBottom:20, borderRadius:16}} >
+          <Button id='searchButton' variant="primary" type="submit" onClick={onSearchUser} style={{alignItems:'center', display: 'flex',color: "#000", backgroundColor: "#90CAF9", border: "2px solid #fff",margin: "auto", marginBottom:20, borderRadius:16}} >
             Search
           </Button>
       </Form>
+      {/* { userFound !== null && reloadMatchingUsers */}
       { userFound !== null
       ?
       <div>
-      { userFound === true ? 
+      { userFound === true  
+      ? 
         <div className={(userFound === true) ? 'userFound' : 'userNotFound'}>
           <div className='singleUser'>
           <Table borderless >
@@ -295,53 +326,7 @@ export default function GetUser() {
             </tbody>
             
           </Table>
-          {/* <Carousel>
-
-            <Carousel.Item interval={5000}>
-              <p style={{ backgroundColor: '#c7ffe5', color: "#000", border: "3px solid #000"}}>EXACT USER</p>
-                {exactUser.map((exactuser, index) => {
-                  return(
-                    <div key={index}>
-                      <p >
-                        USER ID : {userr['id']}
-                      </p>
-                      <p >
-                        USER NAME : { userr['username']}
-                      </p>
-                      <p >
-                        USER AGE : {userr['userage']}
-                      </p>
-                      <p >
-                        USER CITY : {userr['usercity']}
-                      </p>
-                    </div>
-                  )
-                })}
-            </Carousel.Item>
-
-            {matchingUsers.map((matchuser, i) => {
-              return(
-                  <Carousel.Item key={i} interval={2000}>
-                    <p style={{ backgroundColor: '#ff8585', color: "#000", border: "3px solid #000"}}>
-                      MATCHING USER
-                    </p>
-                      <p>
-                        USER ID : {matchuser["id"]}
-                      </p>
-                      <p>
-                        USER NAME : {matchuser["username"]}
-                      </p>
-                      <p>
-                        USER AGE : {matchuser["userage"]}
-                      </p>
-                      <p>
-                        USER CITY : {matchuser["usercity"]}
-                      </p>
-                  </Carousel.Item>
-                )
-            })}
-          </Carousel> */}
-
+        
           </div>
         </div>
         :
@@ -353,29 +338,7 @@ export default function GetUser() {
               <p style={{ backgroundColor: '#ff6969', color: "#fff"}} >USER NOT FOUND.</p>
             </div>
           :
-          // <Carousel interval={2000}>
-          // {matchingUsers.map((matchuser, i) => {
-          //         return(
-          //             <Carousel.Item key={i} >
-          //               <p style={{ backgroundColor: '#ff8585', color: "#000", border: "3px solid #000"}}>
-          //                 MATCHING USER
-          //               </p>
-          //                 <p>
-          //                   USER ID : {matchuser["id"]}
-          //                 </p>
-          //                 <p>
-          //                   USER NAME : {matchuser["username"]}
-          //                 </p>
-          //                 <p>
-          //                   USER AGE : {matchuser["userage"]}
-          //                 </p>
-          //                 <p>
-          //                   USER CITY : {matchuser["usercity"]}
-          //                 </p>
-          //             </Carousel.Item>
-          //         )
-          //       })}
-          // </Carousel>
+         
           <Table borderless >
             <thead  >
               <tr className='heading' >
@@ -517,20 +480,45 @@ export default function GetUser() {
             <button 
                 onClick={()=> {
                   console.log("main delete button triggered.!")
+                  setToastDelete(true)
+                  setShow(true)
                   if (userFound !== null){
-                    navigate("/")
+                    // navigate(-1)
+                    setAfterDeletingUser(true)
                   }
+                  //   // return(
+                  //   //   onDelete(deleteUser),
+                  //   //   document.getElementById('searchButton').click()
+                  //   // )
+                  // }
+
                   return(
-                  onDelete(deleteUser)
-                )}}
+                    onDelete(deleteUser)
+                  )
+              }}
                 style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
               Confirm
-            </button>           
+            </button>
+
+           
           </div>
         </div>
+        }
+        {toastDelete &&
+        <ToastContainer position="top-end" style={{marginRight:20, marginTop:20}} >
+          <Toast autohide style={{color:"#fff"}} bg={'danger'} delay={4000}  onClose={() => setShow(false)} show={show}>
+            <Toast.Header>
+              <strong>
+                Success Message
+              </strong>
+            </Toast.Header>
+            <Toast.Body>
+              User is successfully deleted
+            </Toast.Body>
+          </Toast>
+          </ToastContainer>
         }
   </div>
 
   )
 }
-

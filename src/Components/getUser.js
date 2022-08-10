@@ -4,9 +4,6 @@ import { Table, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
 
-// import { toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-
 import "../styling/getUser.css"
 
 export default function GetUser() {
@@ -28,22 +25,24 @@ export default function GetUser() {
 
     const [ toastDelete, setToastDelete ] = useState(false); // to make the toastDelete to work
     const [show, setShow ] = useState(false); // to show and hide the the toast message
-    // const notify = () => toast("This is toast msg.");
 
+    // const [ allNames, setAllNames ] = useState([]);
+    
     useEffect(() => {
         axios.get('/allusers')
         .then((getData => {
-            console.log(getData.data);
-            setAllUsers(getData.data);
+            console.log('all data : ',getData);
+            setAllUsers(getData.data[0]);
+            // setAllNames(getData.data[1]);
         }))
         .catch(err => {
           console.log(err);
           console.log(err.message);
           setError(err.message);
-        })
+        });
+        
     }, []);
  
-
     function onSearchUser() {
       // eve.preventDefault();
       setUserFound(null); // if the searchUser is empty then we are setting the userFound to null
@@ -108,10 +107,15 @@ export default function GetUser() {
 
     // this is going to get the updated data and show it one the all users page
     const getData = () => {
+      // let len = allUsers.length
       axios.get('/allusers')
       .then((getData => {
-          // console.log(getData.data);
-          setAllUsers(getData.data);
+          console.log('data',getData.data[0]);
+          setAllUsers(getData.data[0]);
+          // setAllNames(getData.data[1])
+          if (userFound !== null){
+            setUserFound(null)
+          }
       }))
       .catch(err => {
         console.log(err);
@@ -123,16 +127,12 @@ export default function GetUser() {
 
     const onDelete = (name) => {
       console.log("deleted: ",name);
-      // setDeleteUser("")  
       axios.delete(`/${name}`)
       .then(()=> {
-        getData(); // this will get the updated data after deleting a particular user with his username.
-      })
-
+        getData();
+      }
+      )
     }
-
-    // console.log('EXACT USER (OUTSIDE) : ', exactUser)
-    // console.log('MATCHING USERS (OUTSIDE) : ', matchingUsers)
 
     const toggleButton = () => {
       setConfirm(!confirm)
@@ -140,7 +140,6 @@ export default function GetUser() {
 
     return (
       <div className="allUsers" >
-
       {
       error 
       ? 
@@ -159,13 +158,6 @@ export default function GetUser() {
       </div>
       </div>  
       :
-
-      // allUsers.length===0
-      // ?
-      // <div>
-      // <h1>No Users Found</h1>
-      // </div>
-      // :
 
       <>
       {userFound=== null ?
@@ -194,7 +186,8 @@ export default function GetUser() {
       { userFound !== null
       ?
       <div>
-      { userFound === true ? 
+      { userFound === true  
+      ? 
         <div className={(userFound === true) ? 'userFound' : 'userNotFound'}>
           <div className='singleUser'>
           <Table borderless >
@@ -423,8 +416,6 @@ export default function GetUser() {
                             style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
                           Delete
                         </button>
-                      
-                      
                       }
                     </td>
                 </tr>
@@ -436,6 +427,7 @@ export default function GetUser() {
 
     </>
       }
+
       {
       confirm 
       &&
@@ -448,35 +440,27 @@ export default function GetUser() {
               Cancel
             </button>
 
-            {/* {console.log(deleteUser)} */}
-
             <button 
                 onClick={()=> {
                   console.log("main delete button triggered.!")
                   setToastDelete(true)
                   setShow(true)
                   // if (userFound !== null){
-                  //   navigate("/allusers")
-                  //   // return(
-                  //   //   onDelete(deleteUser),
-                  //   //   document.getElementById('searchButton').click()
-                  //   // )
+                  //   // navigate(-1)
                   // }
-                  onDelete(deleteUser)
-
                   return(
-                    getData()
+                    onDelete(deleteUser)
                   )
               }}
                 style={{margin:"10px",width:"150px" ,backgroundColor: "#343434",color:"#fff", borderRadius:"1rem", border: '3px solid #fff', fontSize:'12px'}}>
               Confirm
             </button>
-
-           
           </div>
         </div>
         }
-        {toastDelete &&
+
+        {
+        toastDelete &&
         <ToastContainer position="top-end" style={{marginRight:20, marginTop:20}} >
           <Toast autohide style={{color:"#fff"}} bg={'danger'} delay={4000}  onClose={() => setShow(false)} show={show}>
             <Toast.Header>
@@ -491,6 +475,5 @@ export default function GetUser() {
           </ToastContainer>
         }
   </div>
-
   )
 }
