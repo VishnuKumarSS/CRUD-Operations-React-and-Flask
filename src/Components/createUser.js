@@ -134,8 +134,8 @@ function CreateUser() {
                 placeholder="Enter your name here" style={{borderRadius: 16 }} />
               
                 {specialChar ?
-                <Form.Control.Feedback type="valid" style={{ marginLeft:5 }}>
-                  Enter without special characters.
+                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
+                  Enter without any special characters.
                 </Form.Control.Feedback>
                 :
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
@@ -143,8 +143,8 @@ function CreateUser() {
                 </Form.Control.Feedback>
                 }
                 
-                
-                <Form.Text className="text-muted" style={{marginLeft:5}}>
+                {/* remove className text-muted to change the color of the text. */}
+                <Form.Text className="text-muted" style={{marginLeft:5, color:"#fff"}}>
                   Type without any SPECIAL CHAR'S or SPACES.
                 </Form.Text>                          
               </Form.Group>
