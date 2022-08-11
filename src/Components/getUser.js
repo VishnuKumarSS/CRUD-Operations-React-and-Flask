@@ -38,7 +38,7 @@ export default function GetUser() {
         .catch(err => {
           console.log(err);
           console.log(err.message);
-          setError(err.message);
+          setError(err);
         });
         
     }, []);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Form, Button} from 'react-bootstrap';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import "../styling/createAndUpdateUser.css"
 
 function CreateUser() {
     let navigate = useNavigate();
+    const [ allNames, setAllNames ] = useState([]);
 
     const [username, setUsername] = useState("");
     const [userage, setUserage] = useState(null);
@@ -20,6 +21,21 @@ function CreateUser() {
 
     const [validated, setValidated] = useState(false);
     const [specialChar, setSpecialChar] = useState(null);
+    const [userAlreadyExist, setUserAlreadyExist] = useState(null);
+
+    useEffect(()=> {
+      axios.get('/allusers')
+      .then((getData)=> {
+        setAllNames(getData.data[1]) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
+      })
+      .catch(err => {
+        console.log(err);
+        console.log(err);
+        setError(err);
+      });
+
+    }, []);
+
     let special_chars = [
       '!', '@', '#', '$', '%', '^',
       '&', '*', '(', ')', '+', '=',
@@ -27,26 +43,26 @@ function CreateUser() {
       '.', '/', '{', '}', '|', '"',
       ':', '<', '>', '?', ' '
     ]
-    const sendDataToAPI = () => {
-    // eventt.preventDefault() // to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
-    axios.post("/adduser", {
-      username,
-      userage,
-      usercity,
-    })
-    .catch(error => {
-        console.log(error);
-        setError(error);
-      })
-    
-    setCreated(true);
-    console.log('User Created: ',created)
-    console.log("Typed NAME : ", username);
-    console.log("Typed AGE : ", userage);
-    console.log("Typed CITY : ", usercity);
 
-    // navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
-  
+    const sendDataToAPI = () => {
+      // eventt.preventDefault() // to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
+      axios.post("/adduser", {
+        username,
+        userage,
+        usercity,
+      })
+      .catch(error => {
+          console.log(error);
+          setError(error);
+        })
+      
+      setCreated(true);
+      console.log('User Created: ',created)
+      console.log("Created NAME : ", username);
+      console.log("Created AGE : ", userage);
+      console.log("Created CITY : ", usercity);
+
+      // navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
   };
 
     // for toggling the popup message
@@ -56,7 +72,6 @@ function CreateUser() {
 
     const handleFormSubmit = (event) => {
       event.preventDefault();
-
       const form = event.currentTarget;
       if (form.checkValidity() === false) {
         event.preventDefault();
@@ -77,12 +92,13 @@ function CreateUser() {
                   )}}  
           className="overlay">
           <div className='innerOverlay'>
-            {error.response.status === 409
+            {/* {error.response.status === 409
             ?
             <h1>{error.response.data.message}</h1>
-            :
+            : */}
+            {console.log(error.response.status)}
             <h1>Something Went Wrong.<br/>Try connecting with Backend.</h1>
-          }
+          {/* } */}
 
             <button onClick={toggleButton} 
             
@@ -119,7 +135,7 @@ function CreateUser() {
                 
                 <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
                 {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-                <Form.Control required value={username || ""} name="username" maxLength="16" 
+                <Form.Control required value={username || ""} name="username" maxLength="20" 
                 onBlur={(eve)=> setUsername(eve.target.value.trim())}   
                 onChange={(e)=>{
                   setUsername(e.target.value)
@@ -133,9 +149,15 @@ function CreateUser() {
             
                 placeholder="Enter your name here" style={{borderRadius: 16 }} />
               
-                {specialChar ?
+                {
+                specialChar ?
                 <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
                   Enter without any special characters.
+                </Form.Control.Feedback>
+                :
+                userAlreadyExist ?
+                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
+                  Username Already Exist.
                 </Form.Control.Feedback>
                 :
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
@@ -151,11 +173,10 @@ function CreateUser() {
     
               <Form.Group className="mb-3" controlId="formBasicUserage">
                 <Form.Label style={{ marginLeft:5 }}>Age : </Form.Label>
-                <Form.Control required value={userage || ""} type="number" maxLength="3" name="userage" 
+                <Form.Control required value={userage || ""} type="number" name="userage" 
                 onChange={(e)=> {
                   return(
                     setUserage(e.target.value.slice(0, 3))
-                    // e.target.value  = e.target.value.slice(0,3)
                   )}}  
                   placeholder="Enter your age here" style={{borderRadius: 16 }} />
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
@@ -165,7 +186,7 @@ function CreateUser() {
     
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label style={{ marginLeft:5 }}>City : </Form.Label>
-                <Form.Control required name="usercity" value={usercity || ""} maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+                <Form.Control required name="usercity" value={usercity || ""} maxLength="20" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                     Please provide a valid city.
                 </Form.Control.Feedback>
@@ -178,16 +199,30 @@ function CreateUser() {
                 <Button variant="primary" type="submit" 
                 onSubmit={(e)=>{e.preventDefault()}}
                 onClick={(e)=>{
-                  let count = 0
+                  // to check whether the special character is found or not
+                  let charCount = 0
                   for (let i of special_chars){
                     if (username.includes(i)){
                       setSpecialChar(true)
-                      count = count + 1;
+                      charCount = charCount + 1;
                     }
                   }
-                  if (count === 0 ){
+                  if (charCount === 0 ){
                     setSpecialChar(false)
                   }
+
+                  // to check whether the username already exist or not
+                  let userCount = 0
+                  for ( let u of allNames){
+                    if(u.toLowerCase() === username.toLowerCase()){
+                      setUserAlreadyExist(true)
+                      userCount += 1;
+                    }
+                  }
+                  if ( userCount === 0 ){
+                    setUserAlreadyExist(false)
+                  } 
+
                 }} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
                 Submit
               </Button> 
@@ -197,13 +232,9 @@ function CreateUser() {
               </Button>
               
               }
-              {/* {specialChar!==false && specialChar===true && sendDataToAPI() &&
-                <Button variant="primary" type="submit" onClick={sendDataToAPI}
-                 style={{color: "black", border: "2px solid #fff",backgroundColor: "#000", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
-                Submit
-              </Button> 
-              } */}
-               {specialChar=== false && sendDataToAPI()}
+
+              {/* In the below line it should be " === flase "...shouldn't be like this " ! "... Because the default one is null  */}
+              {specialChar===false && userAlreadyExist===false && sendDataToAPI()}
 
               </Form>
             </>

@@ -21,24 +21,7 @@ function UpdateUser() {
   const [confirm, setConfirm] = useState(false)
 
   const [validated, setValidated] = useState(false);
-
-  const [specialChar, setSpecialChar] = useState(null);
-  const [userAlreadyExist, setUserAlreadyExist] = useState(null);
-
-  const [allNames, setAllNames] = useState([]);
-
-  useEffect(()=> {
-    axios.get('/allusers')
-    .then((getData)=> {
-      setAllNames(getData.data[1]) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
-    })
-    .catch(err => {
-      console.log(err);
-      console.log(err);
-      setError(err);
-    });
-
-  }, []);
+  // const [specialChar, setSpecialChar] = useState(false);
 
   let special_chars = [
     '!', '@', '#', '$', '%', '^',
@@ -48,8 +31,8 @@ function UpdateUser() {
     ':', '<', '>', '?', ' '
   ]
 
-  const sendDataToAPI = () => {
-    // eventt.preventDefault()// to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
+  const sendDataToAPI = (eventt) => {
+    eventt.preventDefault()// to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
     axios.put(`/${updateUserNameURL}`, {
       username,
       userage,
@@ -65,9 +48,9 @@ function UpdateUser() {
 
       // navigate(`/`);  // this will navigate to the homepage of the application when the form is submitted.
       // navigate(-1);
-      console.log("Updated NAME : ", username);
-      console.log("Updated AGE : ", userage);
-      console.log("Updated CITY : ", usercity);
+      console.log("Typed NAME : ", username);
+      console.log("Typed AGE : ", userage);
+      console.log("Typed CITY : ", usercity);
 
 
   };
@@ -86,7 +69,6 @@ function UpdateUser() {
   }
 
   const handleFormSubmit = (event) => {
-    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -148,52 +130,28 @@ function UpdateUser() {
             
             <Form.Group className="mb-3" controlId="formBasicUsername">
               <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
-              {/* <Form.Control required name="username" value={username || ""} maxLength="20" onBlur={(eve)=> setUsername(eve.target.value.trim())} 
+              <Form.Control required name="username" value={username || ""} maxLength="16" onBlur={(eve)=> setUsername(eve.target.value.trim())} 
               onChange={(e)=> {
                 let last= e.target.value.slice(-1)
                 if (special_chars.includes(last) !== true) {
                   setUsername(e.target.value)
                 }
               }}  
-              placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-              <Form.Control required value={username || ""} name="username" maxLength="20" 
-                onBlur={(eve)=> setUsername(eve.target.value.trim())}   
-                onChange={(e)=>{
-                  setUsername(e.target.value)
-                }}            
-                placeholder="Enter your name here" style={{borderRadius: 16 }} />
+              placeholder="Enter your name here" style={{borderRadius: 16 }} />
 
-                {
-                specialChar ?
-                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
-                  Enter without any special characters.
-                </Form.Control.Feedback>
-                :
-                userAlreadyExist ?
-                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
-                  Username Already Exist.
-                </Form.Control.Feedback>
-                :
-                <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
-                  Please provide a valid User Name.
-                </Form.Control.Feedback>
-                }
-                
-                {/* remove className text-muted to change the color of the text. */}
-                <Form.Text className="text-muted" style={{marginLeft:5, color:"#fff"}}>
-                  Type without any SPECIAL CHAR'S or SPACES.
-                </Form.Text>                          
-              </Form.Group>
+              <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                Please provide a valid User Name.
+              </Form.Control.Feedback>
+              {/* } */}
+             
+              <Form.Text className="text-muted" style={{marginLeft:5}}>
+                Type without any SPECIAL CHAR'S or SPACES.
+              </Form.Text>
+            </Form.Group>
             
             <Form.Group className="mb-3" controlId="formBasicUserage">
               <Form.Label style={{ marginLeft:5 }}>Age : </Form.Label>
-              <Form.Control required type="number" value={userage || ""} name="userage" 
-              onChange={(e)=> {
-                return(
-                setUserage(e.target.value.slice(0,3))
-                )
-                }} 
-              placeholder="Enter your age here" style={{borderRadius: 16 }} />
+              <Form.Control required type="number" value={userage || ""} name="userage" onChange={(e)=> setUserage(e.target.value.slice(0,3))}  placeholder="Enter your age here" style={{borderRadius: 16 }} />
               <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                   Please provide your Age.
               </Form.Control.Feedback>
@@ -201,61 +159,22 @@ function UpdateUser() {
 
             <Form.Group className="mb-3" controlId="formBasicUsername">
               <Form.Label style={{ marginLeft:5 }}>City : </Form.Label>
-              <Form.Control required name="usercity" value={usercity || ""} maxLength="20" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
+              <Form.Control required name="usercity" value={usercity || ""} maxLength="12" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
               <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                   Please provide a valid city.
               </Form.Control.Feedback>
             </Form.Group>
-
-
-            { (username && userage && usercity)
-              // { (username && userage && usercity && !specialChar)
-
-              ? 
-                <Button variant="primary" type="submit" 
-                onSubmit={(e)=>{e.preventDefault()}}
-                onClick={(e)=>{
-                  // to check whether the special character is found or not
-                  let charCount = 0
-                  for (let i of special_chars){
-                    if (username.includes(i)){
-                      setSpecialChar(true)
-                      charCount = charCount + 1;
-                    }
-                  }
-                  if (charCount === 0 ){
-                    setSpecialChar(false)
-                  }
-
-                  // to check whether the username already exist or not
-                  let userCount = 0
-                    for ( let u of allNames){
-                      // we are skipping the current username to make it work properly.
-                      if (updateUserNameURL === username){
-                        continue                      
-                      }
-                      if(u.toLowerCase() === username.toLowerCase()){
-                        setUserAlreadyExist(true)
-                        userCount += 1;
-                      }
-                    }
-                    if ( userCount === 0 ){
-                      setUserAlreadyExist(false)
-                    } 
-                  
-
-                }} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
-                Submit
-              </Button> 
-              : 
-              <Button type='submit' style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", marginTop: 16, borderRadius:16}}>
-                Submit
-              </Button>
-              
-              }
-
-            {/* In the below line it should be " === flase "...shouldn't be like this " ! "... Because the default one is null  */}
-            {specialChar===false && userAlreadyExist===false && sendDataToAPI()}
+            {
+            (username && userage && usercity )
+            ? 
+            <Button variant="primary" type="submit" onClick={sendDataToAPI} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
+              Submit
+            </Button> 
+            : 
+            <Button type='submit' style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", marginTop: 16, borderRadius:16}}>
+              Submit
+            </Button>
+            }
 
           </Form>
         </>
