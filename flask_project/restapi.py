@@ -39,6 +39,7 @@ class AllUsers(Resource):
         # Here, above users will be an object consists of key and values as username, userage, usercity.
         # above the users_list will consist of all the user names available.
     
+    
 class SearchUser(Resource):    
     @marshal_with(resource_fields)
     def get(self, username):
