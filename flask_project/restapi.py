@@ -22,7 +22,8 @@ resource_fields= {
 
 class AllUsers(Resource):
     def get(self):
-        allusers = UserData.query.all()
+        # allusers = UserData.query.all()
+        allusers = db.engine.execute('select * from user_data')
         # here we are converting it to look like JSON using python dictionaries
         users = {}
         users_list = []
@@ -43,36 +44,37 @@ class SearchUser(Resource):
     @marshal_with(resource_fields)
     def get(self, username):
         # parsed_user = user_post_req.parse_args()
-        user = UserData.query.filter_by(username=username).first()
+        # user = UserData.query.filter_by(username=username).first()
+        user = db.engine.execute(f"select * from user_data where username='{username}'").first()
         if not user:
             abort(404, message='User is not there.')
         return user
     
     def delete(self, username):
-        user_delete = UserData.query.filter_by(username=username).first()
-        if user_delete: 
-            db.session.delete(user_delete)
+        # user_delete = UserData.query.filter_by(username=username).first()
+        # if user_delete: 
+        #     db.session.delete(user_delete)
+        #     db.session.commit()
+        # return 'User is deleted'
+        # or
+        user_delete = db.engine.execute(f"select * from user_data where username='{username}'").first()
+        if user_delete:
+            db.session.execute(f"DELETE from user_data where username='{user_delete[1]}'") # because the index 1 is the username field.
             db.session.commit()
         return 'User is deleted'
-    
-    @marshal_with(resource_fields)
+
+    # @marshal_with(resource_fields)
+    # # Instead of the above line we can use .asdict() function or dict() to return in object format.  
     def put(self, username):
         count = 0
-        # parsed user is the text that we are typing in input, and username is the text which is coming from what we are passing in to the url route
         parsed_user = user_put_req.parse_args()
-        user = UserData.query.filter_by(username=username).first()
-        # user = UserData.query.filter_by(username=parsed_user["username"]).first()
+        # user = UserData.query.filter_by(username=username).first()
+        user = db.engine.execute(f"select * from user_data where username='{username}'").first()
 
-        allUsers = UserData.query.all()
+        # allUsers = UserData.query.all()
+        allUsers = db.engine.execute(f"select * from user_data")
         if not user: # if user is not there, then...
             abort(405, message='User is not there to update.')
-
-        # for us in allUsers:
-        #     if parsed_user['username'] != username: # this condition is to neglect the same updating user
-        #         if us.username == parsed_user['username']:
-        #             count += 1
-        # if count>0:
-        #     abort(409, message='Username already exist.')
 
         if parsed_user['username']:
             # this loop is to find whether a user already exist or not while updating
@@ -83,14 +85,48 @@ class SearchUser(Resource):
             if count>0:
                 abort(409, message='Username already exist.')
             else:
-                user.username = parsed_user['username']
-        if parsed_user['userage']:
-            user.userage = parsed_user['userage']
-        if parsed_user['usercity']:
-            user.usercity = parsed_user['usercity']
+                db.engine.execute(f"UPDATE user_data SET username='{parsed_user['username']}', userage={parsed_user['userage']}, usercity='{parsed_user['usercity']}' WHERE username='{username}'")
+
+            updated = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()._asdict()
+
+        return updated
+
+    # @marshal_with(resource_fields)
+    # # Instead of the above line we can use .asdict() function or dict() to return in object format.
+    # def put(self, username):
+    #     count = 0
+    #     # parsed user is the text that we are typing in input, and username is the text which is coming from what we are passing in to the url route
+    #     parsed_user = user_put_req.parse_args()
+    #     # user = UserData.query.filter_by(username=parsed_user["username"]).first()
+    #     user = UserData.query.filter_by(username=username).first()
+
+    #     allUsers = UserData.query.all()
+    #     if not user: # if user is not there, then...
+    #         abort(405, message='User is not there to update.')
+    #     # for us in allUsers:
+    #     #     if parsed_user['username'] != username: # this condition is to neglect the same updating user
+    #     #         if us.username == parsed_user['username']:
+    #     #             count += 1
+    #     # if count>0:
+    #     #     abort(409, message='Username already exist.')
+
+    #     if parsed_user['username']:
+    #         # this loop is to find whether a user already exist or not while updating
+    #         for i in allUsers:
+    #             if parsed_user['username'] != username: # this condition is to neglect the same updating user
+    #                 if i.username == parsed_user['username']:
+    #                     count += 1
+    #         if count>0:
+    #             abort(409, message='Username already exist.')
+    #         else:
+    #             user[1] = parsed_user['username']
+    #     if parsed_user['userage']:
+    #         user[2] = parsed_user['userage']
+    #     if parsed_user['usercity']:
+    #         user[3] = parsed_user['usercity']
             
-        db.session.commit()
-        return user
+    #     db.session.commit()
+    #     return user
             
 class AddUser(Resource):
     # The below line will help us to convert our python object to look like JSON
@@ -99,16 +135,20 @@ class AddUser(Resource):
     @marshal_with(resource_fields)
     def post(self):
         parsed_user = user_post_req.parse_args()
-        user = UserData.query.filter_by(username=parsed_user["username"]).first()        
+        # user = UserData.query.filter_by(username=parsed_user["username"]).first()   
+        user = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()     
         # if the username already exists, then 
         if user:
             abort(409, message='User already exist.')
         
         # to add a user
-        newuser = UserData(username=parsed_user["username"], userage=parsed_user['userage'], usercity=parsed_user['usercity']) #id=parsed_user['id'] , username = username
-        db.session.add(newuser)
-        db.session.commit()
-        return newuser
+        # newuser = UserData(username=parsed_user["username"], userage=parsed_user['userage'], usercity=parsed_user['usercity']) #id=parsed_user['id'] , username = username
+        newuser = db.engine.execute(f"INSERT into user_data (username, userage, usercity) values('{parsed_user['username']}', {parsed_user['userage']}, '{parsed_user['usercity']}')") #id=parsed_user['id'] , username = username
+        if newuser:
+            created_user = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()
+        # db.session.add(newuser)
+        # db.session.commit()
+        return created_user
 
 
 api.add_resource(AddUser, '/adduser')
