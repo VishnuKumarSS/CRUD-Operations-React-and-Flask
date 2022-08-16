@@ -13,6 +13,7 @@ function CreateUser() {
     const [username, setUsername] = useState("");
     const [userage, setUserage] = useState(null);
     const [usercity, setUsercity] = useState("");
+    const [usertype, setUsertype] = useState("normal");
     
     const [ created, setCreated] = useState(false); // to show the user is created message on the screen
 
@@ -50,6 +51,7 @@ function CreateUser() {
         username,
         userage,
         usercity,
+        usertype,
       })
       .catch(error => {
           console.log(error);
@@ -61,6 +63,7 @@ function CreateUser() {
       console.log("Created NAME : ", username);
       console.log("Created AGE : ", userage);
       console.log("Created CITY : ", usercity);
+      console.log("Created CITY : ", usertype);
 
       // navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
   };
@@ -184,15 +187,32 @@ function CreateUser() {
                 </Form.Control.Feedback>
               </Form.Group>
     
-              <Form.Group className="mb-3" controlId="formBasicUsername">
+              <Form.Group className="mb-3" controlId="formBasicUsercity">
                 <Form.Label style={{ marginLeft:5 }}>City : </Form.Label>
                 <Form.Control required name="usercity" value={usercity || ""} maxLength="20" onBlur={(eve)=> setUsercity(eve.target.value.trim())} onChange={(e)=> setUsercity(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
                     Please provide a valid city.
                 </Form.Control.Feedback>
               </Form.Group>
+       
+              <Form.Group>
+                <Form.Label style={{ marginLeft:5 }}>User Type: </Form.Label>
+                  <Form.Control as="select" value={usertype} 
+                    onChange={(e)=> {
+                      console.log(e.target.value)
+                      setUsertype(e.target.value)}
+                    }
+                    style={{borderRadius: 16 }}>
+                    <option value="normal" >Normal</option>
+                    <option value="admin" >Admin</option>
+                  </Form.Control>
+              </Form.Group>
+                {/* <Form.Select aria-label="Default select example">
+                  <option value="normal" onChange={(e)=> setUsertype(e.target.value)}>Normal</option>
+                  <option value="admin" onChange={(e)=> setUsertype(e.target.value)}>Admin</option>
+                </Form.Select> */}
 
-              { (username && userage && usercity)
+              { (username && userage && usercity )
               // { (username && userage && usercity && !specialChar)
 
               ? 
