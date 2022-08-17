@@ -27,7 +27,7 @@ export default function Home() {
     //   }    
     // }
     // )() // lambda function
-
+ 
     // or
     axios.get("/current_user")
     .then((res)=> {
