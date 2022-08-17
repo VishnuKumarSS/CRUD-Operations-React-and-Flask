@@ -56,7 +56,7 @@ class AllUsers(Resource):
         # here we are converting it to look like JSON using python dictionaries
         users = {}
         users_list = []
-
+        # bcrypt.
         for user in allusers:
             users[user.id] = {
                 "username" : user.username,
@@ -124,7 +124,8 @@ class SearchUser(Resource):
 
 
         hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
-
+        # bcrypt.
+        pdb.set_trace()
         db.engine.execute(f"""
                 UPDATE user_data SET 
                 username='{parsed_user['username']}', 
@@ -179,7 +180,9 @@ class AddUser(Resource):
 
         if newuser:
             created_user = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()
-      
+
+        session['user_uuid'] = newuser.uuid
+
         return created_user
 
 class Login(Resource):
@@ -191,10 +194,14 @@ class Login(Resource):
 
         # if the username already exists, then 
         if user is None:
-            abort(409, message='Unauthorized User')
+            abort(401, message='Unauthorized User')
+            # or
+            # return jsonify({"message": 'Unauthorized User'}), 401
         
         if not bcrypt.check_password_hash(user['password'], parsed_user['password']):
-            abort(409, message='Unauthorized User, password not matching.')
+            abort(401, message='Unauthorized User, password not matching.') 
+            # or
+            # return jsonify({"message": 'Unauthorized User, password not matching.'}), 401
         
         session['user_uuid'] = user['uuid'] 
 
@@ -210,16 +217,16 @@ class Logout(Resource):
         except:
             abort(409, message='No user found with the Session ID.')
    
-        return abort(409, message="Current User Logged Out.")
+        return {'message': 'Successfully logged out'}, 200
 
 class CurrentUser(Resource):
     @marshal_with(resource_fields)
     def get(self):
         user_uuid = session.get("user_uuid")
-
         if not user_uuid:
-            abort(409, message='Unauthorized User or No Logged in users.')
-        
+            abort(401, message='Unauthorized User or No Logged in users.')
+            # or
+            # return jsonify({'error':"Unauthorized User or No Logged in users."}), 409
         current_user = UserData.query.filter_by(uuid = user_uuid).first()
         return current_user
 
