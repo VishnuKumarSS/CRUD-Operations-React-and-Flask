@@ -4,8 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Components/home";
 import UpdateUser from "./Components/updateUser";
 import Login from "./Components/login";
-// import DeleteUser from "./Components/deleteUser";
-
+import NotFound from "./Components/notFound"
 
 function App() {
   return (
@@ -14,13 +13,11 @@ function App() {
         <div>
           <Routes>
             <Route path="/" element={<Home />} />
-            {/* <Route path=":search" element={<GetSingleUser />} /> */}
             <Route path="/adduser" element={<CreateUser />} />
             <Route path="/allusers" element={<GetUser />} />
             <Route path="/update" element={<UpdateUser />} />
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/delete" element={<DeleteUser />} /> */}
-            {/* <Route path="/delete" element={<DeleteUser />} /> */}
+            <Route path="*" element={<NotFound/>} /> 
           </Routes>
         </div>
       </div>
