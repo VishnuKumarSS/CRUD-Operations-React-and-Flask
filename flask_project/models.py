@@ -2,10 +2,11 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from uuid import uuid4
+import redis
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
-import os
 
 app = Flask(__name__)
 api = Api(app)
@@ -13,7 +14,13 @@ api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://starz1:starz1234@localhost/mydatabase"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True # to see all the raw queries on the CLI 
+
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"] # this secret key is created in the .env file
+
+app.config['SESSION_TYPE'] = "redis"
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True # we are gonna use secret key signer...so it's true
+app.config['SESSION_URL'] = redis.from_url("redis://127.0.0.1:6379")
 
 db = SQLAlchemy(app)
 
