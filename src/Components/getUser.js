@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
-
 import "../styling/getUser.css"
 
 export default function GetUser() {
@@ -73,6 +72,7 @@ export default function GetUser() {
         
         
     }, []);
+    // <UpdateUser />
  
     function onSearchUser() {
       // eve.preventDefault();

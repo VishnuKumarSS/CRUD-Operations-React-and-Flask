@@ -12,7 +12,15 @@ import axios from 'axios';
 function App() {
   // const [ loggedOut, setLoggedOut ] = useState(false)
   const logoutUser = async () => {
-    await axios.post("/logout");
+    try{
+      await axios.post("/logout");
+    }
+    catch(error){
+      console.log(error)
+      if (error.response.status === 409) {
+        alert(error.response.data.message);
+    }
+  };
     // setLoggedOut(true)
   };
   return (
