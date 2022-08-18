@@ -1,5 +1,3 @@
-from email import message
-import json
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
@@ -125,7 +123,7 @@ class SearchUser(Resource):
 
         hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
         # bcrypt.
-        pdb.set_trace()
+        # pdb.set_trace()
         db.engine.execute(f"""
                 UPDATE user_data SET 
                 username='{parsed_user['username']}', 

@@ -1,27 +1,120 @@
 import GetUser from "./Components/getUser";
 import CreateUser from "./Components/createUser";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import Home from "./Components/home";
 import UpdateUser from "./Components/updateUser";
 import Login from "./Components/login";
-import NotFound from "./Components/notFound"
+import NotFound from "./Components/notFound";
 
 function App() {
   return (
-    <Router>
-      <div className="mainClass">
-        <div>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/adduser" element={<CreateUser />} />
-            <Route path="/allusers" element={<GetUser />} />
-            <Route path="/update" element={<UpdateUser />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound/>} /> 
-          </Routes>
+    <>
+      {/* <Navbar bg="dark" variant="dark"> */}
+
+      <Router>
+        <Navbar variant="light" style={{ backgroundColor: "#ffdc7c" }} >
+          {/* <Container > */}
+            {/* <Navbar.Brand style={{ marginLeft: -90 }} href="#home">
+              ADMIN PANEL
+            </Navbar.Brand> */}
+            <Link style={{ textDecoration: "none" }} to="/">
+                <Button
+                  className="homeButton"
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 16,
+                    color: "#000",
+                    backgroundColor: "#fff",
+                    border: "3px solid #fff",
+                    width: "auto",
+                    margin: 5,
+                    marginRight: 30,
+                    marginLeft: 30
+                  }}
+                >
+                  ADMIN PANEL
+                </Button>
+              </Link>
+            
+            {/* <Nav className="me-auto"> */}
+            <Nav className="">
+              <Link style={{ textDecoration: "none" }} to="/">
+                <Button
+                  className="homeButton"
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 16,
+                    color: "#000",
+                    backgroundColor: "#ffdc7c",
+                    border: "3px solid #ffc420",
+                    width: "auto",
+                    margin: 5
+                  }}
+                >
+                  Home
+                </Button>
+              </Link>
+              <Link style={{ textDecoration: "none" }} to="/adduser">
+                <Button
+                  className="homeButton"
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 16,
+                    color: "#000",
+                    backgroundColor: "#ffdc7c",
+                    border: "3px solid #ffc420",
+                    width: "auto",
+                    margin: 5
+                  }}
+                >
+                  Register
+                </Button>
+              </Link>
+              <Link style={{ textDecoration: "none" }} to="/login">
+                <Button
+                  className="homeButton"
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 16,
+                    color: "#000",
+                    backgroundColor: "#ffdc7c",
+                    border: "3px solid #ffc420",
+                    width: "auto",
+                    margin: 5
+                  }}
+                >
+                  Login
+                </Button>
+              </Link>
+              {/* <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/adduser">Register</Nav.Link>
+              <Nav.Link href="/login">Login</Nav.Link> */}
+            </Nav>
+          {/* </Container> */}
+        </Navbar>
+        <div className="mainClass">
+          <div>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/adduser" element={<CreateUser />} />
+              <Route path="/allusers" element={<GetUser />} />
+              <Route path="/update" element={<UpdateUser />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </>
   );
 }
 

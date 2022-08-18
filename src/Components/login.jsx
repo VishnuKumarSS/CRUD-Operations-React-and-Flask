@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
+import "../styling/createAndUpdateUser.css"
 import axios from "axios";
 
 function Login() {
@@ -12,7 +12,8 @@ function Login() {
   const loginUser = async () => {
     console.log(username, password);
     try{
-        const responseData = await axios
+        // const responseData = await axios
+        await axios
           .post("/login", {
             username,
             password,

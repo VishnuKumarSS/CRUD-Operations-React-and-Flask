@@ -3,59 +3,70 @@ import { Button } from "react-bootstrap";
 import "../styling/home.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [userJSON, setUserJSON] = useState(null);
-  let navigate = useNavigate();
+  // const [responseData, setResponseData ] = useState(null);
 
   const logoutUser = async () => {
-      await axios.post("/logout")
-      setUserJSON(null)
-      // navigate("/")
-  }
-  useEffect(()=>{
-    // (async() => {
-    //   try{
-    //     const responseData = await axios.get("/current_user")
-    //     setUserJSON(responseData.data)
-    //     console.log(responseData)
-    //   }
-    //   catch(error){
-    //     console.log('Currently no users logged in...')
-    //     console.log(error)
-    //   }    
-    // }
-    // )() // lambda function
- 
-    // or
-    axios.get("/current_user")
-    .then((res)=> {
-      setUserJSON(res.data)
-      console.log(res)
-    }
-    ).catch(err => {
-      console.log(err)
-      console.log('Currently no users logged in.')
-    })
+    await axios.post("/logout");
+    setUserJSON(null);
+    // setResponseData(null)
+    // navigate("/")
+  };
+  // useEffect(()=>{
+  // (async() => {
+  //   try{
+  //     const responseData = await axios.get("/current_user")
+  //     setUserJSON(responseData.data)
+  //     console.log(responseData)
+  //   }
+  //   catch(error){
+  //     console.log('Currently no users logged in...')
+  //     console.log(error)
+  //   }
+  // }
+  // )() // lambda function
+  // },[])
 
-  },[])
+  // or
+  useEffect(() => {
+    axios
+      .get("/current_user")
+      .then((res) => {
+        setUserJSON(res.data);
+        // setResponseData(res)
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("error:", err);
+        // setResponseData(err.response.status)
+        console.log("Currently no users logged in.");
+      });
+  }, []);
 
   return (
     <div className="home">
-      { userJSON &&
-      <>
-      <h4>
-        Logged In  
-      </h4>
-      <h5>
-        Username: {userJSON.username}
-        <br/>
-        UUID : {userJSON.uuid}
-      </h5>
-      <Button className="btn-sm" onClick={logoutUser} style={{marginBottom:"20"}}>LOGOUT</Button>
-      </>
-      }
+      {userJSON ? (
+        <>
+          <h4>User Logged In</h4>
+          <h5>
+            Username: {userJSON.username}
+            <br />
+            UUID : {userJSON.uuid}
+          </h5>
+          <Button
+            className="btn-sm"
+            onClick={logoutUser}
+            style={{ marginBottom: "20" }}
+          >
+            LOGOUT
+          </Button>
+        </>
+      ) : (
+        <h4>Currently, No Users LoggedIn.</h4>
+      )}
+
       <h1>HOME PAGE</h1>
       <nav>
         <Link style={{ textDecoration: "none" }} to="/allusers">
@@ -107,7 +118,7 @@ export default function Home() {
           >
             LOGIN
           </Button>
-        </Link>        
+        </Link>
       </nav>
     </div>
   );

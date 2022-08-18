@@ -8,6 +8,10 @@ import "../styling/createAndUpdateUser.css"
 
 function CreateUser() {
     let navigate = useNavigate();
+
+    const [userJSON, setUserJSON] = useState(null);
+    const [loggedIn, setLoggedIn ] = useState(false)
+
     const [ allNames, setAllNames ] = useState([]);
 
     const [username, setUsername] = useState("");
@@ -25,6 +29,20 @@ function CreateUser() {
     const [userAlreadyExist, setUserAlreadyExist] = useState(null);
 
     useEffect(()=> {
+        axios.get("/current_user")
+        .then((res) => {
+          setUserJSON(res.data);
+          // setResponseData(res)
+          setLoggedIn(true)
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log("error:", err);
+          // setResponseData(err.response.status)
+          setUserJSON(null)
+          setLoggedIn(false)
+          console.log("Currently no users logged in.");
+        });
       axios.get('/allusers')
       .then((getData)=> {
         setAllNames(getData.data[1]) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
@@ -84,6 +102,11 @@ function CreateUser() {
     };
     
     return (
+      <>
+      {loggedIn ? 
+      userJSON.usertype === 'admin' ?
+      // ------------------------------------
+
       <div className='createUser'>
         {
           error
@@ -266,6 +289,14 @@ function CreateUser() {
         
 
       </div>
+// ------------------------------------
+    :
+    <h1>You are not allowed to view this page</h1>
+    :
+    <h1>No Users LOGGED IN. Cannot View This Page</h1>
+    }
+  </>
+
     );
 }
 

@@ -10,6 +10,9 @@ export default function GetUser() {
 
     let navigate = useNavigate();
 
+    const [userJSON, setUserJSON] = useState(null);
+    const [loggedIn, setLoggedIn ] = useState(false)
+
     const [allUsers, setAllUsers] = useState([{}]); // to get all the users
 
     const [ searchUser, setSearchUser ] = useState(""); // text in the search bar
@@ -26,9 +29,36 @@ export default function GetUser() {
     const [ toastDelete, setToastDelete ] = useState(false); // to make the toastDelete to work
     const [show, setShow ] = useState(false); // to show and hide the the toast message
 
-    // const [ allNames, setAllNames ] = useState([]);
-    
+    // useEffect(() => {
+    //   axios
+    //     .get("/current_user")
+    //     .then((res) => {
+    //       setUserJSON(res.data);
+    //       // setResponseData(res)
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log("error:", err);
+    //       // setResponseData(err.response.status)
+    //       console.log("Currently no users logged in.");
+    //     });
+    // }, []);
+
     useEffect(() => {
+        axios.get("/current_user")
+        .then((res) => {
+          setUserJSON(res.data);
+          // setResponseData(res)
+          setLoggedIn(true)
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log("error:", err);
+          // setResponseData(err.response.status)
+          setUserJSON(null)
+          setLoggedIn(false)
+          console.log("Currently no users logged in.");
+        });
         axios.get('/allusers')
         .then((getData => {
             console.log('all data : ',getData);
@@ -40,6 +70,7 @@ export default function GetUser() {
           console.log(err.message);
           setError(err);
         });
+        
         
     }, []);
  
@@ -139,7 +170,12 @@ export default function GetUser() {
     }
 
     return (
-      <div className="allUsers" >
+    <>
+      {loggedIn ? 
+      userJSON.usertype === 'admin' ?
+// ------------------------------------
+<div className="allUsers" >
+    <h2 style={{textAlign:'center'}}>ADMIN LoggedIn.</h2>
       {
       error 
       ? 
@@ -475,5 +511,13 @@ export default function GetUser() {
           </ToastContainer>
         }
   </div>
+// ------------------------------------
+      :
+      <h1>You are not allowed to view this page</h1>
+      :
+      <h1>No Users LOGGED IN. Cannot View This Page</h1>
+    }   
+    </>
+
   )
 }

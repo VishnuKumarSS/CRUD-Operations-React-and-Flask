@@ -8,6 +8,9 @@ import "../styling/createAndUpdateUser.css" // here we have used the same stylin
 function UpdateUser() {
 
   let navigate = useNavigate();
+
+  const [userJSON, setUserJSON] = useState(null);
+  const [loggedIn, setLoggedIn ] = useState(false)
   
   const [username, setUsername] = useState("");
   const [userage, setUserage] = useState(null);
@@ -28,6 +31,20 @@ function UpdateUser() {
   const [allNames, setAllNames] = useState([]);
 
   useEffect(()=> {
+    axios.get("/current_user")
+    .then((res) => {
+      setUserJSON(res.data);
+      // setResponseData(res)
+      setLoggedIn(true)
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log("error:", err);
+      // setResponseData(err.response.status)
+      setUserJSON(null)
+      setLoggedIn(false)
+      console.log("Currently no users logged in.");
+    });
     axios.get('/allusers')
     .then((getData)=> {
       setAllNames(getData.data[1]) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
@@ -96,6 +113,10 @@ function UpdateUser() {
   };
   
   return (
+    <>
+    {loggedIn ? 
+    userJSON.usertype === 'admin' ?
+    // ------------------------------------
     <div className='updateUser'>
         {
         error
@@ -263,6 +284,13 @@ function UpdateUser() {
       </>
       }
     </div>
+// ------------------------------------
+    :
+    <h1>You are not allowed to view this page</h1>
+    :
+    <h1>No Users LOGGED IN. Cannot View This Page</h1>
+    }
+  </>
   );
 }
 
