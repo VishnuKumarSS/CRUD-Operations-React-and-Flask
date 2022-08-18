@@ -96,10 +96,7 @@ export default function GetUser() {
             "id" : keyy,
             "username" :  allUsers[keyy]['username'],
             "userage" :  allUsers[keyy]['userage'],
-            "usercity" :  allUsers[keyy]['usercity'],
-            "usertype" :  allUsers[keyy]['usertype'],
-            "email" :  allUsers[keyy]['email'],
-            "uuid" :  allUsers[keyy]['uuid']
+            "usercity" :  allUsers[keyy]['usercity']
           })
           return(
             setExactUser(exactUserArray),
@@ -120,10 +117,7 @@ export default function GetUser() {
                 "id": keyy,  
                 "username" : allUsers[keyy]["username"],
                 "userage" : allUsers[keyy]["userage"],
-                "usercity" : allUsers[keyy]["usercity"],
-                "usertype" :  allUsers[keyy]['usertype'],
-                "email" :  allUsers[keyy]['email'],
-                "uuid" :  allUsers[keyy]['uuid']
+                "usercity" : allUsers[keyy]["usercity"]
               })
               return(
                 setMatchingUsers(matchingUsersArray)
@@ -132,16 +126,13 @@ export default function GetUser() {
       }
     }
 
-    const setData = (name, age, city, type, email, uuid) => {
-      console.log(name, age, city, type, email, uuid)
+    const setData = (name, age, city) => {
+      console.log(name, age, city)
       return(
         // here we are gonna set the Items in the local storage and we will be using this keys and values in the update and delete user files. And in any files if needed.
         localStorage.setItem("LocalStorageUserName", name), // here local storage user name is a key, that we can see in the console page...go to applications and see the localstorage
         localStorage.setItem("LocalStorageUserAge", age),
-        localStorage.setItem("LocalStorageUserCity",city),
-        localStorage.setItem("LocalStorageUserType",type),
-        localStorage.setItem("LocalStorageUserEmail",email),
-        localStorage.setItem("LocalStorageUserUUID",uuid)
+        localStorage.setItem("LocalStorageUserCity",city)
       )
     }
 
@@ -206,9 +197,9 @@ export default function GetUser() {
 
       <>
       {userFound=== null ?
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>ALL USERS</h1>
+        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>All Users</h1>
         :
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>MATCHING USERS</h1>
+        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Matching Users</h1>
       }
   
       <Form onSubmit={(eve)=>{
@@ -242,9 +233,6 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >USER NAME</th>
                 <th className="heading" style={{color: "black"}} >AGE</th>
                 <th className="heading" style={{color: "black"}} >CITY</th>
-                <th className="heading" style={{color: "black"}} >TYPE</th>
-                <th className="heading" style={{color: "black"}} >EMAIL</th>
-                <th className="heading" style={{color: "black"}} >UUID</th>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
               </tr>
@@ -257,9 +245,6 @@ export default function GetUser() {
                           <td>{exactuser["username"]}</td>
                           <td>{exactuser["userage"]}</td>
                           <td>{exactuser["usercity"]}</td>
-                          <td>{exactuser["usertype"]}</td>
-                          <td>{exactuser["email"]}</td>
-                          <td>{exactuser["uuid"]}</td>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -268,10 +253,7 @@ export default function GetUser() {
                                             // here we are passing the arguments
                                             exactuser["username"],
                                             exactuser["userage"], 
-                                            exactuser["usercity"], 
-                                            exactuser["usertype"], 
-                                            exactuser["email"],
-                                            exactuser["uuid"] 
+                                            exactuser["usercity"] 
                                           )
                                         }
                                         } 
@@ -307,9 +289,6 @@ export default function GetUser() {
                           <td>{matchuser["username"]}</td>
                           <td>{matchuser["userage"]}</td>
                           <td>{matchuser["usercity"]}</td>
-                          <td>{matchuser["usertype"]}</td>
-                          <td>{matchuser["email"]}</td>
-                          <td>{matchuser["uuid"]}</td>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -318,10 +297,7 @@ export default function GetUser() {
                                             // here we are passing the arguments
                                             matchuser["username"],
                                             matchuser["userage"], 
-                                            matchuser["usercity"],
-                                            matchuser["usertype"], 
-                                            matchuser["email"],
-                                            matchuser["uuid"] 
+                                            matchuser["usercity"] 
                                           )
                                         }
                                         } 
@@ -372,9 +348,6 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >USER NAME</th>
                 <th className="heading" style={{color: "black"}} >AGE</th>
                 <th className="heading" style={{color: "black"}} >CITY</th>
-                <th className="heading" style={{color: "black"}} >TYPE</th>
-                <th className="heading" style={{color: "black"}} >EMAIL</th>
-                <th className="heading" style={{color: "black"}} >UUID</th>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
               </tr>
@@ -387,9 +360,6 @@ export default function GetUser() {
                           <td>{matchuser["username"]}</td>
                           <td>{matchuser["userage"]}</td>
                           <td>{matchuser["usercity"]}</td>
-                          <td>{matchuser["usertype"]}</td>
-                          <td>{matchuser["email"]}</td>
-                          <td>{matchuser["uuid"]}</td>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -398,10 +368,7 @@ export default function GetUser() {
                                             // here we are passing the arguments
                                             matchuser["username"],
                                             matchuser["userage"], 
-                                            matchuser["usercity"],
-                                            matchuser["usertype"], 
-                                            matchuser["email"],
-                                            matchuser["uuid"] 
+                                            matchuser["usercity"] 
                                           )
                                         }
                                         } 
@@ -443,9 +410,6 @@ export default function GetUser() {
           <th className="heading" style={{color: "black"}} >USER NAME</th>
           <th className="heading" style={{color: "black"}} >AGE</th>
           <th className="heading" style={{color: "black"}} >CITY</th>
-          <th className="heading" style={{color: "black"}} >TYPE</th>
-          <th className="heading" style={{color: "black"}} >EMAIL</th>
-          <th className="heading" style={{color: "black"}} >UUID</th>
           <th className="heading" style={{color: "black"}} >UPDATE</th>
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
         </tr>
@@ -458,9 +422,6 @@ export default function GetUser() {
                     <td>{allUsers[key]["username"]}</td>
                     <td>{allUsers[key]["userage"]}</td>
                     <td>{allUsers[key]["usercity"]}</td>
-                    <td>{allUsers[key]["usertype"]}</td>
-                    <td>{allUsers[key]["email"]}</td>
-                    <td>{allUsers[key]["uuid"]}</td>
                     <td>
                
                       <Link style={{ textDecoration:"none" }} to="/update">
@@ -469,11 +430,7 @@ export default function GetUser() {
                                       // here we are passing the arguments
                                       allUsers[key]["username"],
                                       allUsers[key]["userage"], 
-                                      allUsers[key]["usercity"],
-                                      allUsers[key]["usertype"],
-                                      allUsers[key]["email"],
-                                      allUsers[key]["uuid"]
-
+                                      allUsers[key]["usercity"] 
                                     )
                                   }
                                   } 
