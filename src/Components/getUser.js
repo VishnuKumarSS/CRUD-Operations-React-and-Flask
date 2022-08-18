@@ -167,11 +167,21 @@ export default function GetUser() {
 
     const onDelete = (name) => {
       console.log("deleted: ",name);
-      axios.delete(`/${name}`)
-      .then(()=> {
-        getData();
+      console.log(userJSON)
+      if (userJSON.username !== name){
+        axios.delete(`/${name}`)
+        .then(()=> {
+          getData();
+        }
+        )
+        setToastDelete(true)
+        setShow(true)
       }
-      )
+      else{
+        console.log('Cannot delete the current user.')
+        return 'No user deleted.'
+      }
+      
     }
 
     const toggleButton = () => {
@@ -522,8 +532,7 @@ export default function GetUser() {
             <button 
                 onClick={()=> {
                   console.log("main delete button triggered.!")
-                  setToastDelete(true)
-                  setShow(true)
+
                   // if (userFound !== null){
                   //   // navigate(-1)
                   // }

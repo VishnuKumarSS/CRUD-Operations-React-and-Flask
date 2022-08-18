@@ -179,7 +179,7 @@ class AddUser(Resource):
         if newuser:
             created_user = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()
 
-        session['user_uuid'] = newuser.uuid
+        # session['user_uuid'] = newuser.uuid // to login the created user automatically, instantly
 
         return created_user
 

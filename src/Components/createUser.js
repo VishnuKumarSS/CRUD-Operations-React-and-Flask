@@ -85,12 +85,14 @@ function CreateUser() {
       // setSpecialChar(null);
       // setUsernameAlreadyExist(null);
       // setEmailAlreadyExist(null);
-
-      console.log('User Created: ',created)
-      console.log("Created NAME : ", username);
-      console.log("Created AGE : ", userage);
-      console.log("Created CITY : ", usercity);
-      console.log("Created CITY : ", usertype);
+      console.log('USER CREATED: ', {
+        "name": username, 
+        "age": userage, 
+        "city": usercity,
+        "type": usertype,
+        "email": email,
+        "password": password
+      })
 
       // navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
   };
@@ -200,7 +202,7 @@ function CreateUser() {
                 </Form.Text>                          
               </Form.Group>
     
-              <Form.Group className="mb-3" >
+              <Form.Group className="mb-3" controlId="formBasicEmail" >
                 <Form.Label style={{ marginLeft:5 }}>Email : </Form.Label>
                 {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
                 <Form.Control type="email" required value={email || ""} name="email" maxLength="24" 
@@ -298,10 +300,6 @@ function CreateUser() {
                   let usernameCount = 0
                   let emailCount = 0
                   for ( let i in userData){
-                    // if(u.toLowerCase() === username.toLowerCase()){
-                    //   setUsernameAlreadyExist(true)
-                    //   usernameCount += 1;
-                    // }
                     console.log(userData[i]['username'])
                     console.log(userData[i]['email'])
                     if (userData[i]['username'].toLowerCase() === username.toLowerCase()){
