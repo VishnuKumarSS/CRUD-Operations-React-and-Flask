@@ -47,7 +47,7 @@ function UpdateUser() {
     });
     axios.get('/allusers')
     .then((getData)=> {
-      setAllNames(getData.data[1]) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
+      setAllNames(getData.data) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
     })
     .catch(err => {
       console.log(err);

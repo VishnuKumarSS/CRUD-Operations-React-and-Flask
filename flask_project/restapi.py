@@ -53,8 +53,7 @@ class AllUsers(Resource):
         allusers = db.engine.execute('select * from user_data')
         # here we are converting it to look like JSON using python dictionaries
         users = {}
-        users_list = []
-        # bcrypt.
+        # users_list = []
         for user in allusers:
             users[user.id] = {
                 "username" : user.username,
@@ -64,9 +63,10 @@ class AllUsers(Resource):
                 "email": user.email,
                 "uuid": user.uuid
             } 
-            users_list.append(user.username)
-
-        return ([users, users_list])
+            # users_list.append(user.username)
+        # pdb.set_trace()
+        # return ([users, users_list])
+        return (users)
         # Here, above users will be an object consists of key and values as username, userage, usercity.
         # above the users_list will consist of all the user names available.
     

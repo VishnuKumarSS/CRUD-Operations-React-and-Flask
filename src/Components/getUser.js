@@ -62,7 +62,7 @@ export default function GetUser() {
         axios.get('/allusers')
         .then((getData => {
             console.log('all data : ',getData);
-            setAllUsers(getData.data[0]);
+            setAllUsers(getData.data);
             // setAllNames(getData.data[1]);
         }))
         .catch(err => {
@@ -142,7 +142,7 @@ export default function GetUser() {
       axios.get('/allusers')
       .then((getData => {
           console.log('data',getData.data[0]);
-          setAllUsers(getData.data[0]);
+          setAllUsers(getData.data);
           // setAllNames(getData.data[1])
           if (userFound !== null){
             setUserFound(null)
