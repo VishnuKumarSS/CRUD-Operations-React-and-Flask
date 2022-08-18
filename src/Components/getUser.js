@@ -141,7 +141,7 @@ export default function GetUser() {
       // let len = allUsers.length
       axios.get('/allusers')
       .then((getData => {
-          console.log('data',getData.data[0]);
+          console.log('allusers data: ',getData.data);
           setAllUsers(getData.data);
           // setAllNames(getData.data[1])
           if (userFound !== null){
