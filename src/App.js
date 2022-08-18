@@ -1,13 +1,20 @@
 import GetUser from "./Components/getUser";
 import CreateUser from "./Components/createUser";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Container, Navbar, Nav, Button } from "react-bootstrap";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import Home from "./Components/home";
 import UpdateUser from "./Components/updateUser";
 import Login from "./Components/login";
 import NotFound from "./Components/notFound";
+import axios from 'axios';
+// import { useState } from 'react';
 
 function App() {
+  // const [ loggedOut, setLoggedOut ] = useState(false)
+  const logoutUser = async () => {
+    await axios.post("/logout");
+    // setLoggedOut(true)
+  };
   return (
     <>
       {/* <Navbar bg="dark" variant="dark"> */}
@@ -40,7 +47,7 @@ function App() {
               </Link>
             
             {/* <Nav className="me-auto"> */}
-            <Nav className="">
+            <Nav className="" style={{marginLeft: "60%"}}>
               <Link style={{ textDecoration: "none" }} to="/">
                 <Button
                   className="homeButton"
@@ -50,7 +57,8 @@ function App() {
                     flexDirection: "column",
                     borderRadius: 16,
                     color: "#000",
-                    backgroundColor: "#ffdc7c",
+                    // backgroundColor: "#ffdc7c",
+                    backgroundColor: "#ffc420",
                     border: "3px solid #ffc420",
                     width: "auto",
                     margin: 5
@@ -68,7 +76,7 @@ function App() {
                     flexDirection: "column",
                     borderRadius: 16,
                     color: "#000",
-                    backgroundColor: "#ffdc7c",
+                    backgroundColor: "#ffc420",
                     border: "3px solid #ffc420",
                     width: "auto",
                     margin: 5
@@ -86,7 +94,7 @@ function App() {
                     flexDirection: "column",
                     borderRadius: 16,
                     color: "#000",
-                    backgroundColor: "#ffdc7c",
+                    backgroundColor: "#ffc420",
                     border: "3px solid #ffc420",
                     width: "auto",
                     margin: 5
@@ -94,7 +102,28 @@ function App() {
                 >
                   Login
                 </Button>
+                
               </Link>
+              {/* {!loggedOut && */}
+              <Link style={{ textDecoration: "none" }} to="/">
+              <Button
+                  onClick={logoutUser}
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 16,
+                    color: "#000",
+                    backgroundColor: "#E57373",
+                    border: "3px solid #EF5350",
+                    width: "auto",
+                    margin: 5
+                  }}
+                >
+                  LOGOUT
+                </Button>
+                </Link>
+                {/* } */}
               {/* <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/adduser">Register</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link> */}

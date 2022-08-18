@@ -49,7 +49,7 @@ export default function Home() {
     <div className="home">
       {userJSON ? (
         <>
-          <h4>User Logged In</h4>
+          <h4>Logged In User is - {userJSON.usertype}</h4>
           <h5>
             Username: {userJSON.username}
             <br />
