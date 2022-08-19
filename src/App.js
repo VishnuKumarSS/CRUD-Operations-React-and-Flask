@@ -10,10 +10,13 @@ import axios from 'axios';
 // import { useState } from 'react';
 
 function App() {
+  // let navigate = useNavigate();
   // const [ loggedOut, setLoggedOut ] = useState(false)
   const logoutUser = async () => {
     try{
       await axios.post("/logout");
+      // navigate("/")
+      // window.location.href("/")
     }
     catch(error){
       console.log(error)

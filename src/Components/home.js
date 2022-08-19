@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import "../styling/home.css";
 import React, { useState, useEffect } from "react";
@@ -7,7 +7,6 @@ import axios from "axios";
 export default function Home() {
   const [userJSON, setUserJSON] = useState(null);
   // const [responseData, setResponseData ] = useState(null);
-
   const logoutUser = async () => {
     await axios.post("/logout");
     setUserJSON(null);

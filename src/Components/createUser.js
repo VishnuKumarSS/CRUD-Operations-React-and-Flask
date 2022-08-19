@@ -311,13 +311,13 @@ function CreateUser() {
                       usernameCount += 1
                     }
 
-                  }
-                  if ( usernameCount === 0 ){
-                    setUsernameAlreadyExist(false)
-                  } 
-                  if ( emailCount === 0){
-                    setEmailAlreadyExist(false)
-                  }
+                    }
+                    if ( usernameCount === 0 ){
+                      setUsernameAlreadyExist(false)
+                    } 
+                    if ( emailCount === 0){
+                      setEmailAlreadyExist(false)
+                    }
 
                 }} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
                 Submit
@@ -328,7 +328,6 @@ function CreateUser() {
               </Button>
               
               }
-              {console.log(specialChar, usernameAlreadyExist, emailAlreadyExist)}
               {/* In the below line it should be " === flase "...shouldn't be like this " ! "... Because the default one is null  */}
               {specialChar===false && usernameAlreadyExist===false && emailAlreadyExist===false && sendDataToAPI()}
 

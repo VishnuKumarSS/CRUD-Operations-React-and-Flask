@@ -21,8 +21,8 @@ function UpdateUser() {
   const [email, setEmail ] = useState("");
   // const [ password, setPassword ] = useState("");
 
-  const [updateUsername, setUpdateUsername ] = useState("");
-  const [ updateEmail, setUpdateEmail ] =  useState("")
+  const [updateUserNameURL, setUpdateUserNameURL ] = useState("");
+
   const [ updated, setUpdated ] = useState(false); // to show the user is updated message on the screen.
 
   const [error, setError] = useState(null); // to show the error message
@@ -70,7 +70,7 @@ function UpdateUser() {
 
   const sendDataToAPI = () => {
     // eventt.preventDefault()// to remove the warning error while submitting the form , and the error is "Form submission cancelled because the form is not connected"
-    axios.put(`/${updateUsername}`, {
+    axios.put(`/${updateUserNameURL}`, {
       username,
       userage,
       usercity,
@@ -97,9 +97,7 @@ function UpdateUser() {
   };
 
   useEffect(()=> {
-    setUpdateUsername(localStorage.getItem('LocalStorageUserName')); // this is gonna be that particular username that we have selected to update. And this will be in the url endpoint in the backend
-    setUpdateEmail(localStorage.getItem('LocalStorageEmail'));
-
+    setUpdateUserNameURL(localStorage.getItem('LocalStorageUserName')) // this is gonna be that particular username that we have selected to update. And this will be in the url endpoint in the backend
     setUsername(localStorage.getItem('LocalStorageUserName')); // here we are getting that LocalStorageUserName that we set while setting the username in the getUser.js
     setUserage(localStorage.getItem('LocalStorageUserAge'));
     setUsercity(localStorage.getItem('LocalStorageUserCity'));
@@ -181,7 +179,14 @@ function UpdateUser() {
             
             <Form.Group className="mb-3" controlId="formBasicUsername">
               <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
-
+              {/* <Form.Control required name="username" value={username || ""} maxLength="20" onBlur={(eve)=> setUsername(eve.target.value.trim())} 
+              onChange={(e)=> {
+                let last= e.target.value.slice(-1)
+                if (special_chars.includes(last) !== true) {
+                  setUsername(e.target.value)
+                }
+              }}  
+              placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
               <Form.Control required value={username || ""} name="username" maxLength="20" 
                 onBlur={(eve)=> setUsername(eve.target.value.trim())}   
                 onChange={(e)=>{
@@ -210,36 +215,7 @@ function UpdateUser() {
                   Type without any SPECIAL CHAR'S or SPACES.
                 </Form.Text>                          
               </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicEmail" >
-                <Form.Label style={{ marginLeft:5 }}>Email : </Form.Label>
-                {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-                <Form.Control type="email" required value={email || ""} name="email" maxLength="24" 
-                onBlur={(eve)=> setEmail(eve.target.value.trim())}   
-                onChange={(e)=>{
-                  setEmail(e.target.value)
-                }}
-                placeholder="Enter your Email here" style={{borderRadius: 16 }} />
-              
-                {
-                // specialChar ?
-                // <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
-                //   Enter valid Email without any spaces.
-                // </Form.Control.Feedback>
-                // :
-                emailAlreadyExist ?
-                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
-                  Email Already Exist.
-                </Form.Control.Feedback>
-                :
-                <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
-                  Please provide your Valid Email.
-                </Form.Control.Feedback>
-                }
-                
-                {/* remove className text-muted to change the color of the text. */}       
-              </Form.Group>
-
+            
             <Form.Group className="mb-3" controlId="formBasicUserage">
               <Form.Label style={{ marginLeft:5 }}>Age : </Form.Label>
               <Form.Control required type="number" value={userage || ""} name="userage" 
@@ -262,20 +238,8 @@ function UpdateUser() {
               </Form.Control.Feedback>
             </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label style={{ marginLeft:5 }}>User Type: </Form.Label>
-                  <Form.Control as="select" value={usertype} 
-                    onChange={(e)=> {
-                      console.log(e.target.value)
-                      setUsertype(e.target.value)}
-                    }
-                    style={{borderRadius: 16 }}>
-                    <option value="normal" >Normal</option>
-                    <option value="admin" >Admin</option>
-                  </Form.Control>
-              </Form.Group>
 
-            { (username && userage && usercity && usertype && email)
+            { (username && userage && usercity)
               // { (username && userage && usercity && !specialChar)
 
               ? 
@@ -294,34 +258,21 @@ function UpdateUser() {
                     setSpecialChar(false)
                   }
 
-                    // to check whether the username already exist or not
-                    let usernameCount = 0
-                    let emailCount = 0
-                    for ( let i in userData){
+                  // to check whether the username already exist or not
+                  let userCount = 0
+                    for ( let u of userData){
                       // we are skipping the current username to make it work properly.
-                      if (updateUsername === username){
+                      if (updateUserNameURL === username){
                         continue                      
                       }
-                      if (updateEmail === email){
-                        continue
-                      }
-                      console.log(userData[i]['username'])
-                      console.log(userData[i]['email'])
-                      if (userData[i]['username'].toLowerCase() === username.toLowerCase()){
+                      if(u.toLowerCase() === username.toLowerCase()){
                         setUsernameAlreadyExist(true)
-                        usernameCount += 1
+                        userCount += 1;
                       }
-                      if (userData[i]['email'].toLowerCase() === email){
-                        setEmailAlreadyExist(true)
-                        usernameCount += 1
-                      }
-                      }
-                      if ( usernameCount === 0 ){
-                        setUsernameAlreadyExist(false)
-                      } 
-                      if ( emailCount === 0){
-                        setEmailAlreadyExist(false)
-                      }
+                    }
+                    if ( userCount === 0 ){
+                      setUsernameAlreadyExist(false)
+                    } 
                   
 
                 }} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
@@ -335,7 +286,7 @@ function UpdateUser() {
               }
 
             {/* In the below line it should be " === flase "...shouldn't be like this " ! "... Because the default one is null  */}
-            {specialChar===false && usernameAlreadyExist===false && emailAlreadyExist===false && sendDataToAPI()}
+            {specialChar===false && usernameAlreadyExist===false && sendDataToAPI()}
 
           </Form>
         </>

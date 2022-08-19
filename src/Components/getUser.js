@@ -132,16 +132,16 @@ export default function GetUser() {
       }
     }
 
-    const setData = (name, age, city, type, email, uuid) => {
-      console.log(name, age, city, type, email, uuid)
+    const setData = (name, age, city, type, email) => {
+      console.log(name, age, city, type, email)
       return(
         // here we are gonna set the Items in the local storage and we will be using this keys and values in the update and delete user files. And in any files if needed.
         localStorage.setItem("LocalStorageUserName", name), // here local storage user name is a key, that we can see in the console page...go to applications and see the localstorage
         localStorage.setItem("LocalStorageUserAge", age),
         localStorage.setItem("LocalStorageUserCity",city),
         localStorage.setItem("LocalStorageUserType",type),
-        localStorage.setItem("LocalStorageUserEmail",email),
-        localStorage.setItem("LocalStorageUserUUID",uuid)
+        localStorage.setItem("LocalStorageEmail",email)
+        // localStorage.setItem("LocalStoragePassword",password)
       )
     }
 
@@ -280,8 +280,8 @@ export default function GetUser() {
                                             exactuser["userage"], 
                                             exactuser["usercity"], 
                                             exactuser["usertype"], 
-                                            exactuser["email"],
-                                            exactuser["uuid"] 
+                                            exactuser["email"]
+                                            // exactuser["password"] 
                                           )
                                         }
                                         } 
@@ -330,8 +330,8 @@ export default function GetUser() {
                                             matchuser["userage"], 
                                             matchuser["usercity"],
                                             matchuser["usertype"], 
-                                            matchuser["email"],
-                                            matchuser["uuid"] 
+                                            matchuser["email"]
+                                            // matchuser["password"] 
                                           )
                                         }
                                         } 
@@ -410,8 +410,8 @@ export default function GetUser() {
                                             matchuser["userage"], 
                                             matchuser["usercity"],
                                             matchuser["usertype"], 
-                                            matchuser["email"],
-                                            matchuser["uuid"] 
+                                            matchuser["email"]
+                                            // matchuser["password"] 
                                           )
                                         }
                                         } 
@@ -481,8 +481,8 @@ export default function GetUser() {
                                       allUsers[key]["userage"], 
                                       allUsers[key]["usercity"],
                                       allUsers[key]["usertype"],
-                                      allUsers[key]["email"],
-                                      allUsers[key]["uuid"]
+                                      allUsers[key]["email"]
+                                      // allUsers[key]["password"]
 
                                     )
                                   }

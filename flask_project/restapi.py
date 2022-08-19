@@ -121,19 +121,30 @@ class SearchUser(Resource):
             abort(405, message='User is not there to update.')
 
 
-        hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
-        # bcrypt.
-        # pdb.set_trace()
+        # with password field.
+        # hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
+        # # pdb.set_trace()
+        # db.engine.execute(f"""
+        #         UPDATE user_data SET 
+        #         username='{parsed_user['username']}', 
+        #         userage={parsed_user['userage']}, 
+        #         usercity='{parsed_user['usercity']}', 
+        #         usertype='{parsed_user['usertype']}',
+        #         email='{parsed_user['email']}',
+        #         password='{hashed_password}'
+        #         WHERE username='{username}'
+        #         """)
+
+        #without password field
         db.engine.execute(f"""
-                UPDATE user_data SET 
-                username='{parsed_user['username']}', 
-                userage={parsed_user['userage']}, 
-                usercity='{parsed_user['usercity']}', 
-                usertype='{parsed_user['usertype']}',
-                email='{parsed_user['email']}',
-                password='{hashed_password}'
-                WHERE username='{username}'
-                """)
+            UPDATE user_data SET 
+            username='{parsed_user['username']}', 
+            userage={parsed_user['userage']}, 
+            usercity='{parsed_user['usercity']}', 
+            usertype='{parsed_user['usertype']}',
+            email='{parsed_user['email']}'
+            WHERE username='{username}'
+            """)
 
         updated = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()._asdict()
 
