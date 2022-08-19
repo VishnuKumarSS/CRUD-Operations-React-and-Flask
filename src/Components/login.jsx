@@ -30,14 +30,15 @@ function Login() {
 };
 
   return (
-    <div>
+    <div className="loginUser">
       <Form onSubmit={(e) => e.preventDefault()}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>User Name: </Form.Label>
+          <Form.Label style={{ marginLeft:5 }}>User Name: </Form.Label>
           <Form.Control
             type="text"
+            style={{borderRadius: 16 }}
             value={username}
-            placeholder="Enter Your Name"
+            placeholder="Enter your Username"
             onChange={(e) => setUsername(e.target.value)}
           />
           {/* <Form.Text className="text-muted">
@@ -46,20 +47,29 @@ function Login() {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password: </Form.Label>
+          <Form.Label style={{ marginLeft:5 }}>Password: </Form.Label>
           <Form.Control
             type="password"
+            style={{borderRadius: 16 }}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            placeholder="Enter your Password"
           />
         </Form.Group>
         {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
         <Form.Check type="checkbox" label="Check me out" />
       </Form.Group> */}
-        <Button variant="primary" type="submit" onClick={loginUser}>
-          Submit
-        </Button>
+      {username && password ?
+          <Button type='submit' onClick={loginUser} style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#90CAF9", borderRadius:16}}>
+             Submit
+          </Button>
+      :
+          <Button style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", borderRadius:16}}>
+                Submit
+          </Button>
+      }
+        
+        
       </Form>
     </div>
   );

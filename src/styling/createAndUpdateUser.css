@@ -1,4 +1,4 @@
-.createUser, .updateUser {
+.createUser, .updateUser, .loginUser {
     background-color: rgb(255, 220, 124);
     border-radius: 1rem;
     padding: 2rem;

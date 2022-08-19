@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import "../styling/home.css";
 import React, { useState, useEffect } from "react";
@@ -6,11 +6,13 @@ import axios from "axios";
 
 export default function Home() {
   const [userJSON, setUserJSON] = useState(null);
+  const [ loggedIn, setLoggedIn ] = useState(false)
   // const [responseData, setResponseData ] = useState(null);
   const logoutUser = async () => {
     await axios.post("/logout");
     setUserJSON(null);
     // setResponseData(null)
+    setLoggedIn(false)
     // navigate("/")
   };
   // useEffect(()=>{
@@ -36,6 +38,7 @@ export default function Home() {
         setUserJSON(res.data);
         // setResponseData(res)
         console.log(res);
+        setLoggedIn(true)
       })
       .catch((err) => {
         console.log("error:", err);
@@ -46,8 +49,9 @@ export default function Home() {
 
   return (
     <div className="home">
-      {userJSON ? (
-        <>
+      
+      {/* {userJSON ? (
+        <div >
           <h4>Logged In User is - {userJSON.usertype}</h4>
           <h5>
             Username: {userJSON.username}
@@ -57,17 +61,18 @@ export default function Home() {
           <Button
             className="btn-sm"
             onClick={logoutUser}
-            style={{ marginBottom: "20" }}
+            style={{ marginBottom: 20 }}
           >
             LOGOUT
-          </Button>
-        </>
+          </Button >
+        </div>
       ) : (
         <h4>Currently, No Users LoggedIn.</h4>
-      )}
+      )} */}
 
-      <h1>HOME PAGE</h1>
+      <h1 style={{marginBottom: 20}}>HOME PAGE</h1>
       <nav>
+        {loggedIn &&
         <Link style={{ textDecoration: "none" }} to="/allusers">
           <Button
             className="homeButton"
@@ -85,7 +90,9 @@ export default function Home() {
             ALL USERS
           </Button>
         </Link>
-
+        }
+        {!loggedIn &&
+        <>
         <Link style={{ textDecoration: "none" }} to="/adduser">
           <Button
             className="homeButton"
@@ -99,7 +106,7 @@ export default function Home() {
               border: "3px solid #ffc420",
             }}
           >
-            CREATE USER
+            REGISTER
           </Button>
         </Link>
         <Link style={{ textDecoration: "none" }} to="/login">
@@ -118,6 +125,8 @@ export default function Home() {
             LOGIN
           </Button>
         </Link>
+        </>
+        }
       </nav>
     </div>
   );

@@ -114,9 +114,9 @@ function CreateUser() {
     
     return (
       <>
-      {loggedIn ? 
+      {/* {loggedIn ? 
       userJSON.usertype === 'admin' ?
-      // ------------------------------------
+      // ------------------------------------ */}
 
       <div className='createUser'>
         {
@@ -340,12 +340,14 @@ function CreateUser() {
         }       
 
       </div>
-// ------------------------------------
-    :
+   {/* // ------------------------------------
+
+   :
     <h1>You are not allowed to view this page</h1>
     :
     <h1>No Users LOGGED IN. Cannot View This Page</h1>
-    }
+    } */}
+    
   </>
 
     );

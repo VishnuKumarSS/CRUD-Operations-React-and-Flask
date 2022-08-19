@@ -4,6 +4,7 @@ import { Table, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
 import "../styling/getUser.css"
+import NavBar from './navBar' 
 
 export default function GetUser() {
 
@@ -190,9 +191,9 @@ export default function GetUser() {
 
     return (
     <>
-      {loggedIn ? 
+      {/* {loggedIn ? 
       userJSON.usertype === 'admin' ?
-// ------------------------------------
+// ------------------------------------ */}
 <div className="allUsers" >
     <h2 style={{textAlign:'center'}}>ADMIN LoggedIn.</h2>
       {
@@ -563,12 +564,12 @@ export default function GetUser() {
           </ToastContainer>
         }
   </div>
-// ------------------------------------
+{/* // ------------------------------------
       :
       <h1>You are not allowed to view this page</h1>
       :
       <h1>No Users LOGGED IN. Cannot View This Page</h1>
-    }   
+    }    */}
     </>
 
   )
