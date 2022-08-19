@@ -3,7 +3,8 @@
     border-radius: 1.5rem;
     padding: 2rem;
     margin-bottom: 50px;
-    width: auto;
+    width:fit-content;
+    align-items: center;
 }
 p {
     background-color: #ffe6b6;

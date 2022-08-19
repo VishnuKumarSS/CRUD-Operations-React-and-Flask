@@ -8,6 +8,8 @@ function Login() {
   let navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  // const [ loggedIn, setLoggedIn ] = useState(false);
+  const [ created, setCreated ] = useState(false);
 
   const loginUser = async () => {
     console.log(username, password);
@@ -17,9 +19,13 @@ function Login() {
           .post("/login", {
             username,
             password,
-          })
-        console.log('User Logged IN'); // we are awaiting to get the response. 
-        navigate("/") // if this works properly then it will navigate it to the given route.
+          });
+          // setLoggedIn(true)
+          setCreated(true);
+          
+          // setLoggedIn(true)
+          console.log('User Logged IN'); // we are awaiting to get the response. 
+           // if this works properly then it will navigate it to the given route.
       }
     catch(error){
       console.log(error)
@@ -31,6 +37,24 @@ function Login() {
 
   return (
     <div className="loginUser">
+        { 
+            created
+            ?
+            <div className='created' style={{ textAlign: 'center', padding:"2rem" }}>
+                <h1 style={{backgroundColor: "#c7ffe5", border:"3px solid #fff"}}>
+                  Successfully LoggedIN!
+                </h1>
+                <button onClick={(e)=>{
+                                return(
+                                  e.preventDefault(),
+                                  navigate("/")
+                                )}} 
+                  style={{fontSize:16, backgroundColor: "#90CAF9", borderRadius: 10, marginTop:10 , border: "2px solid #fff"}} 
+                >Return Home
+                </button>          
+            </div>
+            :
+            <>
       <Form onSubmit={(e) => e.preventDefault()}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label style={{ marginLeft:5 }}>User Name: </Form.Label>
@@ -60,9 +84,11 @@ function Login() {
         <Form.Check type="checkbox" label="Check me out" />
       </Form.Group> */}
       {username && password ?
+          <>
           <Button type='submit' onClick={loginUser} style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#90CAF9", borderRadius:16}}>
              Submit
           </Button>
+          </>
       :
           <Button style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#F5F5F5", borderRadius:16}}>
                 Submit
@@ -71,6 +97,8 @@ function Login() {
         
         
       </Form>
+      </>
+      }
     </div>
   );
 }

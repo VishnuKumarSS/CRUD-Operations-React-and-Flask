@@ -7,7 +7,7 @@ import axios from "axios";
 export default function Home() {
   const [userJSON, setUserJSON] = useState(null);
   const [ loggedIn, setLoggedIn ] = useState(false)
-  // const [responseData, setResponseData ] = useState(null);
+
   const logoutUser = async () => {
     await axios.post("/logout");
     setUserJSON(null);
@@ -15,6 +15,8 @@ export default function Home() {
     setLoggedIn(false)
     // navigate("/")
   };
+
+
   // useEffect(()=>{
   // (async() => {
   //   try{
@@ -42,37 +44,25 @@ export default function Home() {
       })
       .catch((err) => {
         console.log("error:", err);
+        setLoggedIn(false)
         // setResponseData(err.response.status)
         console.log("Currently no users logged in.");
       });
-  }, []);
+  },[]);
 
   return (
-    <div className="home">
-      
-      {/* {userJSON ? (
-        <div >
-          <h4>Logged In User is - {userJSON.usertype}</h4>
-          <h5>
-            Username: {userJSON.username}
-            <br />
-            UUID : {userJSON.uuid}
-          </h5>
-          <Button
-            className="btn-sm"
-            onClick={logoutUser}
-            style={{ marginBottom: 20 }}
-          >
-            LOGOUT
-          </Button >
-        </div>
-      ) : (
-        <h4>Currently, No Users LoggedIn.</h4>
-      )} */}
-
+    <>
+    {/* {loggedIn &&
+      <div style={{width:"100vw"}}>
+        <NavBar />
+      </div>
+      } */}
+    <div className="home"> 
+      <>
       <h1 style={{marginBottom: 20}}>HOME PAGE</h1>
       <nav>
         {loggedIn &&
+        <>
         <Link style={{ textDecoration: "none" }} to="/allusers">
           <Button
             className="homeButton"
@@ -87,11 +77,12 @@ export default function Home() {
               border: "3px solid #ffc420",
             }}
           >
-            ALL USERS
+            DASHBOARD
           </Button>
         </Link>
+        </>
         }
-        {!loggedIn &&
+        {(!loggedIn || loggedIn) &&
         <>
         <Link style={{ textDecoration: "none" }} to="/adduser">
           <Button
@@ -106,9 +97,16 @@ export default function Home() {
               border: "3px solid #ffc420",
             }}
           >
-            REGISTER
+            {loggedIn && userJSON.usertype === 'admin'?
+            "ADD USER"
+            :
+            "REGISTER"
+          }
           </Button>
         </Link>
+        </>
+        }
+        {!loggedIn &&
         <Link style={{ textDecoration: "none" }} to="/login">
           <Button
             className="homeButton"
@@ -125,9 +123,29 @@ export default function Home() {
             LOGIN
           </Button>
         </Link>
-        </>
         }
+        {loggedIn &&
+          <div >
+            {/* <button onClick={(e)=>{
+                                return(
+                                  e.preventDefault(),
+                                  navigate("/")
+                                )}} 
+                  style={{fontSize:16, backgroundColor: "#90CAF9", borderRadius: 10, marginTop:10 , border: "2px solid #fff"}} 
+                >Return Home
+                </button>   */}
+          <Button
+            className="btn-sm"
+            onClick={logoutUser}
+            style={{ color:"#fff",fontSize:16, backgroundColor: "#E57373", borderRadius: 10, marginTop:10 , border: "2px solid #E57373" }}
+          >
+            LOGOUT
+          </Button >
+        </div>
+          }
       </nav>
+      </>
     </div>
+    </>
   );
 }

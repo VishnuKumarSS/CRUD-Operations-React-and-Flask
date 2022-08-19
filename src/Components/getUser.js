@@ -190,12 +190,16 @@ export default function GetUser() {
     }
 
     return (
-    <>
-      {/* {loggedIn ? 
-      userJSON.usertype === 'admin' ?
-// ------------------------------------ */}
-<div className="allUsers" >
-    <h2 style={{textAlign:'center'}}>ADMIN LoggedIn.</h2>
+    <div >
+      <div style={{width:"100vw"}}>
+        <NavBar />
+      </div>
+      {loggedIn ? 
+      userJSON.usertype === 'normal' || userJSON.usertype==='admin' ?
+// ------------------------------------
+
+  <div className="allUsers" style={{margin:"auto", marginTop: 30, marginBottom: 30}}>
+    <h2 style={{textAlign:'center'}}>{userJSON.usertype} user LoggedIn.</h2>
       {
       error 
       ? 
@@ -256,8 +260,12 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
                 <th className="heading" style={{color: "black"}} >UUID</th>
+                {userJSON.usertype === 'admin' &&
+                <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
+                </>
+                }
               </tr>
             </thead>
             <tbody  >
@@ -271,6 +279,8 @@ export default function GetUser() {
                           <td>{exactuser["usertype"]}</td>
                           <td>{exactuser["email"]}</td>
                           <td>{exactuser["uuid"]}</td>
+                          {userJSON.usertype === 'admin' &&
+                          <>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -306,6 +316,8 @@ export default function GetUser() {
                               </button>
                             }
                           </td>
+                          </>
+                        }
                       </tr>
                   )
               })}
@@ -321,6 +333,8 @@ export default function GetUser() {
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
                           <td>{matchuser["uuid"]}</td>
+                          {userJSON.usertype === 'admin' &&
+                          <>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -357,6 +371,8 @@ export default function GetUser() {
                             
                             }
                           </td>
+                          </>
+                        }
                       </tr>
                   )
               })}
@@ -386,8 +402,12 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
                 <th className="heading" style={{color: "black"}} >UUID</th>
+                {userJSON.usertype === 'admin' &&
+                <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
+                </>
+                }
               </tr>
             </thead>
             <tbody  >
@@ -401,6 +421,8 @@ export default function GetUser() {
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
                           <td>{matchuser["uuid"]}</td>
+                          {userJSON.usertype === 'admin' &&
+                          <>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -436,6 +458,8 @@ export default function GetUser() {
                               </button>
                             }
                           </td>
+                          </>
+                        }
                       </tr>
                   )
               })}
@@ -457,8 +481,12 @@ export default function GetUser() {
           <th className="heading" style={{color: "black"}} >TYPE</th>
           <th className="heading" style={{color: "black"}} >EMAIL</th>
           <th className="heading" style={{color: "black"}} >UUID</th>
+          {userJSON.usertype === 'admin' &&
+          <>
           <th className="heading" style={{color: "black"}} >UPDATE</th>
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
+          </>
+          }
         </tr>
       </thead>
       <tbody>
@@ -472,6 +500,8 @@ export default function GetUser() {
                     <td>{allUsers[key]["usertype"]}</td>
                     <td>{allUsers[key]["email"]}</td>
                     <td>{allUsers[key]["uuid"]}</td>
+                    {userJSON.usertype === 'admin' &&
+                    <>
                     <td>
                
                       <Link style={{ textDecoration:"none" }} to="/update">
@@ -508,6 +538,8 @@ export default function GetUser() {
                         </button>
                       }
                     </td>
+                    </>
+                    }
                 </tr>
             )
         })}
@@ -564,13 +596,13 @@ export default function GetUser() {
           </ToastContainer>
         }
   </div>
-{/* // ------------------------------------
+// ------------------------------------
       :
       <h1>You are not allowed to view this page</h1>
       :
       <h1>No Users LOGGED IN. Cannot View This Page</h1>
-    }    */}
-    </>
+    }
+    </div>
 
   )
 }

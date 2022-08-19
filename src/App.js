@@ -5,13 +5,13 @@ import Home from "./Components/home";
 import UpdateUser from "./Components/updateUser";
 import Login from "./Components/login";
 import NotFound from "./Components/notFound";
-
+import NavBar from "./Components/navBar";
 
 function App() {
   return (
     <>
       <Router>
-        
+        {/* <NavBar/> */}
         <div className="mainClass">
           <div>
             <Routes>

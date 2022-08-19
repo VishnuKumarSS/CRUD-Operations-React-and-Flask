@@ -2,12 +2,29 @@ import React from 'react'
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
-// import { useState } from "react";
+import { useState, useEffect } from "react";
+
 function NavBar() {
-    // const [ isNavbar, setIsNavbar] = useState(true)
+  const [ loggedOut, setLoggedOut ] = useState(false);
+  const [ loggedIn, setLoggedIn ] = useState(false);
+  const [userJSON, setUserJSON] = useState(null);
+
+    useEffect(() => {
+      axios.get("/current_user")
+      .then((res) => {
+        setUserJSON(res.data);
+        setLoggedIn(true)        
+      })
+      .catch((err) => {
+        console.log("error:", err);
+        setLoggedIn(false)
+        console.log("Currently no users logged in.");
+      });
+    },[]);
     const logoutUser = async () => {
         try{
           await axios.post("/logout");
+          setLoggedOut(true)
           // navigate("/")
           // window.location.href("/")
         //   setIsNavbar(false);
@@ -22,9 +39,9 @@ function NavBar() {
         // setLoggedOut(true)
       };
   return (
-    <div>
+    <div style={{marginTop:-50}}>
         {/* <Navbar bg="dark" variant="dark"> */}
-        <Navbar variant="light" style={{ backgroundColor: "#ffdc7c" }} >
+        <Navbar variant="light" style={{ backgroundColor: "#ffdc7c" }}  >
           {/* <Container > */}
             {/* <Navbar.Brand style={{ marginLeft: -90 }} href="#home">
               ADMIN PANEL
@@ -51,7 +68,7 @@ function NavBar() {
               </Link>
             
             {/* <Nav className="me-auto"> */}
-            <Nav className="" style={{marginLeft: "60%"}}>
+            <Nav className="" style={{marginLeft: "auto", marginRight:20}}>
               <Link style={{ textDecoration: "none" }} to="/">
                 <Button
                   className="homeButton"
@@ -71,6 +88,8 @@ function NavBar() {
                   Home
                 </Button>
               </Link>
+              {loggedIn &&
+              userJSON.usertype === 'admin' &&
               <Link style={{ textDecoration: "none" }} to="/adduser">
                 <Button
                   className="homeButton"
@@ -86,10 +105,11 @@ function NavBar() {
                     margin: 5
                   }}
                 >
-                  Register
+                  Add User
                 </Button>
               </Link>
-              <Link style={{ textDecoration: "none" }} to="/login">
+              }
+              {/* <Link style={{ textDecoration: "none" }} to="/login">
                 <Button
                   className="homeButton"
                   style={{
@@ -107,8 +127,9 @@ function NavBar() {
                   Login
                 </Button>
                 
-              </Link>
+              </Link> */}
               {/* {!loggedOut && */}
+              {!loggedOut && loggedIn &&
               <Link style={{ textDecoration: "none" }} to="/">
               <Button
                   onClick={logoutUser}
@@ -127,7 +148,7 @@ function NavBar() {
                   LOGOUT
                 </Button>
                 </Link>
-                {/* } */}
+              }
               {/* <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/adduser">Register</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link> */}
