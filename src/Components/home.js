@@ -82,7 +82,7 @@ export default function Home() {
         </Link>
         </>
         }
-        {(!loggedIn || loggedIn) &&
+        {(!loggedIn || (loggedIn && userJSON.usertype!=='normal')) &&
         <>
         <Link style={{ textDecoration: "none" }} to="/adduser">
           <Button
