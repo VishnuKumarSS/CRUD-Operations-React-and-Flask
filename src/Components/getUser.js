@@ -199,7 +199,7 @@ export default function GetUser() {
 // ------------------------------------
 
   <div className="allUsers" style={{margin:"auto", marginTop: 30, marginBottom: 30}}>
-    <h2 style={{textAlign:'center'}}>{userJSON.usertype} user LoggedIn.</h2>
+    {/* <h2 style={{textAlign:'center'}}>{userJSON.usertype} user LoggedIn.</h2> */}
       {
       error 
       ? 

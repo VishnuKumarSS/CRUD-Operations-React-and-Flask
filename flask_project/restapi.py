@@ -242,13 +242,13 @@ class CurrentUser(Resource):
 
 
 api.add_resource(AddUser, '/adduser')
+api.add_resource(SearchUser, '/<string:username>')
+api.add_resource(AllUsers, '/allusers')
+
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(CurrentUser, '/current_user')
-api.add_resource(SearchUser, '/<string:username>')
 
-api.add_resource(AllUsers, '/allusers')
-# api.add_resource(User, '/user/<string:username>')
 
 if __name__ == '__main__':
     app.run(debug=True)
