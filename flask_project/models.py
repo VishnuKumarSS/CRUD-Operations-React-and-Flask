@@ -7,6 +7,9 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+from authentication import firebase, auth
+
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -38,6 +41,12 @@ class UserData(db.Model):
     userage = db.Column(db.Integer, nullable=False)
     usercity = db.Column(db.String(50), nullable=False)
     usertype = db.Column(db.String, nullable=False)
+
+
+
+
+
+
 
     # db.engine.execute(f"ALTER TABLE user_Data ADD id int NOT NULL if not exists id int, ADD username varchar(20) NOT NULL, ADD userage int NOT NULL, ADD usercity varchar(20) NOT NULL, ADD PRIMARY KEY (id)")
 

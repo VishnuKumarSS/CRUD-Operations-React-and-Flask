@@ -1,3 +1,4 @@
+from email import message
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
@@ -170,8 +171,14 @@ class AddUser(Resource):
         # hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
         hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
         
-        # to add a user
+        # add user to firebase
+        try: 
+            register_firebase = auth.create_user_with_email_and_password( parsed_user['email'], hashed_password )
+        except:
+            abort(409, message='''User not created, Try to enter valid entries. PROBLEM CAUSED BY GOOGLE FIREBASE''')
+        # pdb.set_trace()
 
+        # to add a user
         newuser = UserData(username=parsed_user["username"], userage=parsed_user['userage'], usercity=parsed_user['usercity'], usertype=parsed_user['usertype'], email=parsed_user['email'], password = hashed_password) #id=parsed_user['id'] , username = username
         db.session.add(newuser)
         db.session.commit()
@@ -212,17 +219,25 @@ class Login(Resource):
             abort(401, message='Unauthorized User, password not matching.') 
             # or
             # return jsonify({"message": 'Unauthorized User, password not matching.'}), 401
-        
-        session['user_uuid'] = user['uuid'] 
+
 
         if user:
-            user_details = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()
+            try:
+                user_details = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()
+                # here simply getting the current user details for using the email to verify because we are not using email for signin. But in firebase we are using email for verfitication. That's why
+                login_firebase = auth.sign_in_with_email_and_password(user_details['email'], user['password'])
+
+                # here creating a session for logged in user.
+                session['user_uuid'] = user['uuid']
+            except:
+                abort(409, message='problem with Google firebase authentication.')
+
         return user_details
 
 class Logout(Resource):
     def post(self):
 
-        try: 
+        try:
             session.pop("user_uuid")
         except:
             abort(409, message='No user found with the Session ID.')
