@@ -89,7 +89,7 @@ function NavBar() {
                 </Button>
               </Link>
               {loggedIn &&
-              userJSON.usertype === 'admin' &&
+              ( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser') &&
               <Link style={{ textDecoration: "none" }} to="/adduser">
                 <Button
                   className="homeButton"

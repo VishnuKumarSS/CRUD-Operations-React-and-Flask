@@ -97,7 +97,7 @@ export default function Home() {
               border: "3px solid #ffc420",
             }}
           >
-            {loggedIn && userJSON.usertype === 'admin'?
+            {loggedIn && (userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )?
             "ADD USER"
             :
             "REGISTER"

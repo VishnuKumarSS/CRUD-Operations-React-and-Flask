@@ -7,7 +7,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-
 app = Flask(__name__)
 api = Api(app)
 
@@ -66,3 +65,4 @@ class UserData(db.Model):
 # db.init_app(app)
 # db.drop_all()
 # db.create_all()
+

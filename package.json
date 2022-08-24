@@ -22,6 +22,8 @@
   "scripts": {
     "start": "react-scripts start",
     "start-flask": "cd flask_project && my-env/bin/python",
+    "flask-superuser": "cd flask_project && my-env/bin/python superuser.py",
+    "flask-superuser-help": "cd flask_project && my-env/bin/python superuser.py --help",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

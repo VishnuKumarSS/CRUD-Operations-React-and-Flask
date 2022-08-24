@@ -127,7 +127,7 @@ function UpdateUser() {
   return (
     <>
     {loggedIn ? 
-    userJSON.usertype === 'admin' ?
+    userJSON.usertype === 'admin' || userJSON.usertype === 'superuser'?
     // ------------------------------------
     <div className='updateUser'>
         {

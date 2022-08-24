@@ -70,10 +70,7 @@ export default function GetUser() {
           console.log(err.message);
           setError(err);
         });
-        
-        
     }, []);
-    // <UpdateUser />
  
     function onSearchUser() {
       // eve.preventDefault();
@@ -194,31 +191,11 @@ export default function GetUser() {
       <div style={{width:"100vw"}}>
         <NavBar />
       </div>
-      {loggedIn ? 
-      userJSON.usertype === 'normal' || userJSON.usertype==='admin' ?
+      {loggedIn && !error ? 
+      ( userJSON.usertype === 'normal' || userJSON.usertype==='admin' || userJSON.usertype==='superuser') &&
 // ------------------------------------
 
   <div className="allUsers" style={{margin:"auto", marginTop: 30, marginBottom: 30}}>
-    {/* <h2 style={{textAlign:'center'}}>{userJSON.usertype} user LoggedIn.</h2> */}
-      {
-      error 
-      ? 
-      <div onClick={()=>{
-            return(
-            toggleButton,
-            navigate("/")
-            )}}  
-            className="overlay">
-      <div className='innerOverlay'>
-          <h1>Failed to connect with Backend.<br/>Try to connect again.</h1>
-          <button  onClick={toggleButton} 
-                  style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
-            Go Back
-          </button>
-      </div>
-      </div>  
-      :
-
       <>
       {userFound=== null ?
         <h1 style={{textAlign: 'center', marginBottom: '20px'}}>ALL USERS</h1>
@@ -260,7 +237,7 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
                 <th className="heading" style={{color: "black"}} >UUID</th>
-                {userJSON.usertype === 'admin' &&
+                {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser') &&
                 <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
@@ -279,7 +256,7 @@ export default function GetUser() {
                           <td>{exactuser["usertype"]}</td>
                           <td>{exactuser["email"]}</td>
                           <td>{exactuser["uuid"]}</td>
-                          {userJSON.usertype === 'admin' &&
+                          { (userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
                     
@@ -333,7 +310,7 @@ export default function GetUser() {
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
                           <td>{matchuser["uuid"]}</td>
-                          {userJSON.usertype === 'admin' &&
+                          {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
                     
@@ -402,7 +379,7 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
                 <th className="heading" style={{color: "black"}} >UUID</th>
-                {userJSON.usertype === 'admin' &&
+                {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
                 <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
@@ -421,7 +398,7 @@ export default function GetUser() {
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
                           <td>{matchuser["uuid"]}</td>
-                          {userJSON.usertype === 'admin' &&
+                          {(userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
                     
@@ -481,7 +458,7 @@ export default function GetUser() {
           <th className="heading" style={{color: "black"}} >TYPE</th>
           <th className="heading" style={{color: "black"}} >EMAIL</th>
           <th className="heading" style={{color: "black"}} >UUID</th>
-          {userJSON.usertype === 'admin' &&
+          {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
           <>
           <th className="heading" style={{color: "black"}} >UPDATE</th>
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
@@ -500,7 +477,7 @@ export default function GetUser() {
                     <td>{allUsers[key]["usertype"]}</td>
                     <td>{allUsers[key]["email"]}</td>
                     <td>{allUsers[key]["uuid"]}</td>
-                    {userJSON.usertype === 'admin' &&
+                    {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
                     <>
                     <td>
                
@@ -546,9 +523,7 @@ export default function GetUser() {
       </tbody>
     </Table>
       }
-
     </>
-      }
 
       {
       confirm 
@@ -598,9 +573,30 @@ export default function GetUser() {
   </div>
 // ------------------------------------
       :
-      <h1>You are not allowed to view this page</h1>
+      <>
+      {
+      error 
+      ? 
+      <>
+      <div onClick={()=>{
+            return(
+            toggleButton,
+            navigate("/")
+            )}}  
+            className="overlay">
+      <div className='innerOverlay'>
+          <h1>Failed to connect with Backend.<br/>Try to connect again.</h1>
+          <button  onClick={toggleButton} 
+                  style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+            Go Back
+          </button>
+      </div>
+      </div> 
+      </>
       :
       <h1>No Users LOGGED IN. Cannot View This Page</h1>
+      }
+      </>
     }
     </div>
 

@@ -62,6 +62,7 @@ class AllUsers(Resource):
                 "usertype": user.usertype,
                 "email": user.email,
                 "uuid": user.uuid
+                # "password": user.password
             } 
             # users_list.append(user.username)
         # pdb.set_trace()
