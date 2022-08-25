@@ -1,12 +1,61 @@
-from email import message
+from crypt import methods
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
 from flask_bcrypt import Bcrypt
 from flask_session import Session
 from flask import jsonify, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
+from authentication import firebase, auth
+from authlib.integrations.flask_client import OAuth
+from flask import url_for, render_template, redirect, url_for
+# from flask_cors import CORS
+
+# direct google signin dependencies
+oauth = OAuth(app)
+app.config['GOOGLE_CLIENT_ID'] = "830332678302-3qsfcmb0b2f0ru15bpfeaqimhjph25qa.apps.googleusercontent.com"
+app.config['GOOGLE_CLIENT_SECRET'] = "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"
+
+# # CORS ( Cross-Origin Resource Sharing )
+# cors = CORS(app, supports_credentials=True)
+
+# for password hashing 
 bcrypt = Bcrypt(app)
+
+# passing our app to the server Session. So, that it will be safe.
 server_session = Session(app) # if we don't have the server sided session. Then this session will be the client side session. It could easily be  hacked.
+
+
+google = oauth.register(
+    name='google',
+    client_kwargs = {'scope': 'openid email profile'},
+    server_metadata_url = "https://accounts.google.com/.well-known/openid-configuration",
+)
+
+
+@app.route('/login/google', methods=["get"])
+def login_google():
+    redirect_uri = url_for('authorize_google', _external=True)
+    resp = oauth.google.authorize_redirect(redirect_uri)
+    return resp
+
+@app.route('/authorize/google')
+def authorize_google():
+    token = oauth.google.authorize_access_token()
+    # resp = token['userinfo']
+    session['usern'] = token['userinfo']
+    # pdb.set_trace()
+    return redirect("/userdetails")
+
+@app.route('/userdetails', methods=["GET"])
+def userdetails():
+    details = session.get('usern')
+    return jsonify(details)
+
+@app.route('/logout/google')
+def logout_google():
+    if session.pop('usern'):
+    # return redirect('/login/google')
+        return 'User Logged Out'
 
 
 user_post_req = reqparse.RequestParser()
@@ -47,6 +96,7 @@ resource_fields= {
     'email': fields.String,
     'password': fields.String,
 }
+
 
 class AllUsers(Resource):
     def get(self):
@@ -90,10 +140,15 @@ class SearchUser(Resource):
         #     db.session.commit()
         # return 'User is deleted'
         # or
+        user_uuid = session.get("user_uuid")
         user_delete = db.engine.execute(f"select * from user_data where username='{username}'").first()
+
         if user_delete:
-            db.session.execute(f"DELETE from user_data where username='{user_delete['username']}'") # because the index 1 is the username field.
-            db.session.commit()
+            if user_uuid != user_delete['uuid']:
+                db.session.execute(f"DELETE from user_data where username='{user_delete['username']}'") # because the index 1 is the username field.
+                db.session.commit()
+            else:
+                abort(409, message="Can't delete yourself")
         else:
             abort(409, message='User not found to DELETE.')
         return 'User is deleted'

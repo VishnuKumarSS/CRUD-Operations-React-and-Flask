@@ -124,6 +124,24 @@ export default function Home() {
           </Button>
         </Link>
         }
+        {!loggedIn &&
+        <Link style={{ textDecoration: "none" }} to="/login/google">
+          <Button
+            className="homeButton"
+            style={{
+              marginBottom: 10,
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: 16,
+              color: "#000",
+              backgroundColor: "#B2DFDB",
+              border: "3px solid #4DB6AC",
+            }}
+          >
+            Continue with GOOGLE?
+          </Button>
+        </Link>
+        }
         {loggedIn &&
           <div >
             {/* <button onClick={(e)=>{

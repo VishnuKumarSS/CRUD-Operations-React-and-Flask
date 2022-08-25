@@ -6,6 +6,7 @@ import UpdateUser from "./Components/updateUser";
 import Login from "./Components/login";
 import NotFound from "./Components/notFound";
 import NavBar from "./Components/navBar";
+import GoogleSignIn from "./Components/googleSignIn";
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
               <Route path="/update" element={<UpdateUser />} />
               <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFound />} />
+
+              <Route path="/login/google" element={<GoogleSignIn />} />
+              <Route path="/authorize/google" element={<Login />} />
             </Routes>
           </div>
         </div>

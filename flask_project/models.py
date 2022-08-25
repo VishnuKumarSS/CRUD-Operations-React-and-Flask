@@ -7,9 +7,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from authentication import firebase, auth
-
-
 app = Flask(__name__)
 api = Api(app)
 
