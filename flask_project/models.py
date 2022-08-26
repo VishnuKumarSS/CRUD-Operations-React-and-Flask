@@ -1,3 +1,4 @@
+from ast import Delete
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -40,11 +41,6 @@ class UserData(db.Model):
     usertype = db.Column(db.String, nullable=False)
 
 
-
-
-
-
-
     # db.engine.execute(f"ALTER TABLE user_Data ADD id int NOT NULL if not exists id int, ADD username varchar(20) NOT NULL, ADD userage int NOT NULL, ADD usercity varchar(20) NOT NULL, ADD PRIMARY KEY (id)")
 
     # try:
@@ -68,7 +64,21 @@ class UserData(db.Model):
     def __str__(self):
         return f"{self.username} - {self.userage} - {self.usercity} - {self.usertype}"
         
+
+class GoogleUserData(db.Model):
+    __tablename__ = 'google_user_data'
+    id = db.Column(db.Integer, primary_key=True) #unique=True
+    email = db.Column(db.String(255), unique=True)
+    fullname = db.Column(db.String(50), nullable=False)
+    google_id = db.Column(db.String(), unique=True)
+    # firstname = db.Column(db.String(50), nullable=False)
+    # lastname = db.Column(db.String(50), nullable=False)
+    # googleID
+
+    def __str__(self):
+        return f"{self.email} - {self.fullname}"
 # db.init_app(app)
 # db.drop_all()
 # db.create_all()
 
+# db.engine.execute('drop table google_user_data')

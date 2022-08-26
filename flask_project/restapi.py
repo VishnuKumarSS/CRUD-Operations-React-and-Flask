@@ -1,4 +1,3 @@
-from crypt import methods
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
@@ -7,8 +6,8 @@ from flask_session import Session
 from flask import jsonify, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
 from authentication import firebase, auth
 from authlib.integrations.flask_client import OAuth
-from flask import url_for, render_template, redirect, url_for
-# from flask_cors import CORS
+from flask import url_for, render_template, redirect, url_for, request
+from flask_cors import CORS
 
 # direct google signin dependencies
 oauth = OAuth(app)
@@ -17,6 +16,9 @@ app.config['GOOGLE_CLIENT_SECRET'] = "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"
 
 # # CORS ( Cross-Origin Resource Sharing )
 # cors = CORS(app, supports_credentials=True)
+cors = CORS()
+cors.init_app(app)
+
 
 # for password hashing 
 bcrypt = Bcrypt(app)
@@ -96,6 +98,27 @@ resource_fields= {
     'email': fields.String,
     'password': fields.String,
 }
+# class ReactGoogleSignin(Resource, strict_slashes = False):
+class ReactGoogleSignin(Resource):
+    def post(self):
+        email = request.json['email']
+        fullname = request.json['name']
+        google_id = request.json['googleId']
+        # firstname = request.json['firstname']
+        # lastname = request.json['lastname']
+
+        check_table = db.engine.execute('select * from google_user_data')
+        # pdb.set_trace()
+        # if check_table:
+        # for i in check_table:
+            # if i.google_id != google_id:
+        try:
+            google_user = GoogleUserData(email=email, fullname=fullname, google_id=google_id)
+            db.session.add(google_user)
+            db.session.commit()
+            return 'Google User Created.....'
+        except:
+            return 'User already exist in Database....'
 
 
 class AllUsers(Resource):
@@ -121,6 +144,7 @@ class AllUsers(Resource):
         return (users)
         # Here, above users will be an object consists of key and values as username, userage, usercity.
         # above the users_list will consist of all the user names available.
+    
     
 class SearchUser(Resource):    
     @marshal_with(resource_fields)
@@ -319,7 +343,7 @@ api.add_resource(AllUsers, '/allusers')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(CurrentUser, '/current_user')
-
+api.add_resource(ReactGoogleSignin, '/google/signin')
 
 if __name__ == '__main__':
     app.run(debug=True)

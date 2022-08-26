@@ -3,6 +3,8 @@ import { Button } from "react-bootstrap";
 import "../styling/home.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import GoogleSignIn from "./googleSignIn";
+import GoogleSignOut from "./googleSignOut";
 
 export default function Home() {
   const [userJSON, setUserJSON] = useState(null);
@@ -57,8 +59,11 @@ export default function Home() {
         <NavBar />
       </div>
       } */}
+      
     <div className="home"> 
       <>
+          <GoogleSignIn />
+          <GoogleSignOut />
       <h1 style={{marginBottom: 20}}>HOME PAGE</h1>
       <nav>
         {loggedIn &&
@@ -125,7 +130,7 @@ export default function Home() {
         </Link>
         }
         {!loggedIn &&
-        <Link style={{ textDecoration: "none" }} to="/login/google">
+        <Link style={{ textDecoration: "none" }} to="/google_signin">
           <Button
             className="homeButton"
             style={{

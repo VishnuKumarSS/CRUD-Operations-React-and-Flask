@@ -8,8 +8,8 @@ import "../styling/createAndUpdateUser.css"
 function CreateUser() {
     let navigate = useNavigate();
 
-    const [userJSON, setUserJSON] = useState(null);
-    const [loggedIn, setLoggedIn ] = useState(false)
+    // const [userJSON, setUserJSON] = useState(null);
+    // const [loggedIn, setLoggedIn ] = useState(false)
 
     const [ userData, setUserData ] = useState([]);
 
@@ -33,16 +33,16 @@ function CreateUser() {
     useEffect(()=> {
         axios.get("/current_user")
         .then((res) => {
-          setUserJSON(res.data);
+          // setUserJSON(res.data);
           // setResponseData(res)
-          setLoggedIn(true)
+          // setLoggedIn(true)
           console.log(res);
         })
         .catch((err) => {
           console.log("error:", err);
           // setResponseData(err.response.status)
-          setUserJSON(null)
-          setLoggedIn(false)
+          // setUserJSON(null)
+          // setLoggedIn(false)
           console.log("Currently no users logged in.");
         });
       axios.get('/allusers')
