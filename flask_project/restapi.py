@@ -101,17 +101,14 @@ resource_fields= {
 # class ReactGoogleSignin(Resource, strict_slashes = False):
 class ReactGoogleSignin(Resource):
     def post(self):
-        email = request.json['email']
+        # below we are getting the data's directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.
+        email = request.json['email'] 
         fullname = request.json['name']
         google_id = request.json['googleId']
         # firstname = request.json['firstname']
         # lastname = request.json['lastname']
 
         check_table = db.engine.execute('select * from google_user_data')
-        # pdb.set_trace()
-        # if check_table:
-        # for i in check_table:
-            # if i.google_id != google_id:
         try:
             google_user = GoogleUserData(email=email, fullname=fullname, google_id=google_id)
             db.session.add(google_user)
