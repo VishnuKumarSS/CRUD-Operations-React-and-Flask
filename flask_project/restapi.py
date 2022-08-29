@@ -108,9 +108,10 @@ class ReactGoogleSignin(Resource):
         # firstname = request.json['firstname']
         # lastname = request.json['lastname']
 
-        check_table = db.engine.execute('select * from google_user_data')
+        # check_table = db.engine.execute('select * from google_user_data')
+        # pdb.set_trace()
         try:
-            google_user = GoogleUserData(email=email, fullname=fullname, google_id=google_id)
+            google_user = Users(email=email, fullname=fullname, google_id=google_id)
             db.session.add(google_user)
             db.session.commit()
             return 'Google User Created.....'
@@ -122,8 +123,10 @@ class AllUsers(Resource):
     def get(self):
         # allusers = UserData.query.all()
         allusers = db.engine.execute('select * from user_data')
+        google_allusers = db.engine.execute('select * from google_user_data')
         # here we are converting it to look like JSON using python dictionaries
         users = {}
+        google_users = {}
         # users_list = []
         for user in allusers:
             users[user.id] = {
@@ -135,10 +138,16 @@ class AllUsers(Resource):
                 "uuid": user.uuid
                 # "password": user.password
             } 
+        for i in google_allusers:
+            google_users[i.id] = {
+                'google_email' : i.email,
+                'google_fullname' : i.fullname,
+                'google_id' : i.google_id
+            }
             # users_list.append(user.username)
         # pdb.set_trace()
         # return ([users, users_list])
-        return (users)
+        return ([users, google_users])
         # Here, above users will be an object consists of key and values as username, userage, usercity.
         # above the users_list will consist of all the user names available.
     
