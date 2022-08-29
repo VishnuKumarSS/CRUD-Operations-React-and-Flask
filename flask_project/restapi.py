@@ -122,28 +122,27 @@ class ReactGoogleSignin(Resource):
 class AllUsers(Resource):
     def get(self):
         # allusers = UserData.query.all()
-        allusers = db.engine.execute('select * from user_data')
-        google_allusers = db.engine.execute('select * from google_user_data')
+        users = db.engine.execute('select * from users')
+        users_data = db.engine.execute('select * from user_data')
         # here we are converting it to look like JSON using python dictionaries
-        users = {}
-        google_users = {}
+        pdb.set_trace()
         # users_list = []
-        for user in allusers:
-            users[user.id] = {
-                "username" : user.username,
-                "userage": user.userage,
-                "usercity": user.usercity,
-                "usertype": user.usertype,
-                "email": user.email,
-                "uuid": user.uuid
-                # "password": user.password
-            } 
-        for i in google_allusers:
-            google_users[i.id] = {
-                'google_email' : i.email,
-                'google_fullname' : i.fullname,
-                'google_id' : i.google_id
-            }
+        # for user in allusers:
+        #     users[user.id] = {
+        #         "username" : user.username,
+        #         "userage": user.userage,
+        #         "usercity": user.usercity,
+        #         "usertype": user.usertype,
+        #         "email": user.email,
+        #         "uuid": user.uuid
+        #         # "password": user.password
+        #     } 
+        # for i in google_allusers:
+        #     google_users[i.id] = {
+        #         'google_email' : i.email,
+        #         'google_fullname' : i.fullname,
+        #         'google_id' : i.google_id
+        #     }
             # users_list.append(user.username)
         # pdb.set_trace()
         # return ([users, users_list])

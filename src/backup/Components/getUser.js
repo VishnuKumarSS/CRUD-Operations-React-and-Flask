@@ -4,6 +4,7 @@ import { Table, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
 import "../styling/getUser.css"
+import NavBar from './navBar' 
 
 export default function GetUser() {
 
@@ -69,10 +70,7 @@ export default function GetUser() {
           console.log(err.message);
           setError(err);
         });
-        
-        
     }, []);
-    // <UpdateUser />
  
     function onSearchUser() {
       // eve.preventDefault();
@@ -96,7 +94,10 @@ export default function GetUser() {
             "id" : keyy,
             "username" :  allUsers[keyy]['username'],
             "userage" :  allUsers[keyy]['userage'],
-            "usercity" :  allUsers[keyy]['usercity']
+            "usercity" :  allUsers[keyy]['usercity'],
+            "usertype" :  allUsers[keyy]['usertype'],
+            "email" :  allUsers[keyy]['email'],
+            "uuid" :  allUsers[keyy]['uuid']
           })
           return(
             setExactUser(exactUserArray),
@@ -117,7 +118,10 @@ export default function GetUser() {
                 "id": keyy,  
                 "username" : allUsers[keyy]["username"],
                 "userage" : allUsers[keyy]["userage"],
-                "usercity" : allUsers[keyy]["usercity"]
+                "usercity" : allUsers[keyy]["usercity"],
+                "usertype" :  allUsers[keyy]['usertype'],
+                "email" :  allUsers[keyy]['email'],
+                "uuid" :  allUsers[keyy]['uuid']
               })
               return(
                 setMatchingUsers(matchingUsersArray)
@@ -126,13 +130,16 @@ export default function GetUser() {
       }
     }
 
-    const setData = (name, age, city) => {
-      console.log(name, age, city)
+    const setData = (name, age, city, type, email) => {
+      console.log(name, age, city, type, email)
       return(
         // here we are gonna set the Items in the local storage and we will be using this keys and values in the update and delete user files. And in any files if needed.
         localStorage.setItem("LocalStorageUserName", name), // here local storage user name is a key, that we can see in the console page...go to applications and see the localstorage
         localStorage.setItem("LocalStorageUserAge", age),
-        localStorage.setItem("LocalStorageUserCity",city)
+        localStorage.setItem("LocalStorageUserCity",city),
+        localStorage.setItem("LocalStorageUserType",type),
+        localStorage.setItem("LocalStorageEmail",email)
+        // localStorage.setItem("LocalStoragePassword",password)
       )
     }
 
@@ -158,11 +165,21 @@ export default function GetUser() {
 
     const onDelete = (name) => {
       console.log("deleted: ",name);
-      axios.delete(`/${name}`)
-      .then(()=> {
-        getData();
+      console.log(userJSON)
+      if (userJSON.username !== name){
+        axios.delete(`/${name}`)
+        .then(()=> {
+          getData();
+        }
+        )
+        setToastDelete(true)
+        setShow(true)
       }
-      )
+      else{
+        console.log('Cannot delete the current user.')
+        return 'No user deleted.'
+      }
+      
     }
 
     const toggleButton = () => {
@@ -170,36 +187,20 @@ export default function GetUser() {
     }
 
     return (
-    <>
-      {loggedIn ? 
-      userJSON.usertype === 'admin' ?
-// ------------------------------------
-<div className="allUsers" >
-    <h2 style={{textAlign:'center'}}>ADMIN LoggedIn.</h2>
-      {
-      error 
-      ? 
-      <div onClick={()=>{
-            return(
-            toggleButton,
-            navigate("/")
-            )}}  
-            className="overlay">
-      <div className='innerOverlay'>
-          <h1>Failed to connect with Backend.<br/>Try to connect again.</h1>
-          <button  onClick={toggleButton} 
-                  style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
-            Go Back
-          </button>
+    <div >
+      <div style={{width:"100vw"}}>
+        <NavBar />
       </div>
-      </div>  
-      :
+      {loggedIn && !error ? 
+      ( userJSON.usertype === 'normal' || userJSON.usertype==='admin' || userJSON.usertype==='superuser') &&
+// ------------------------------------
 
+  <div className="allUsers" style={{margin:"auto", marginTop: 30, marginBottom: 30}}>
       <>
       {userFound=== null ?
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>All Users</h1>
+        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>ALL USERS</h1>
         :
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Matching Users</h1>
+        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>MATCHING USERS</h1>
       }
   
       <Form onSubmit={(eve)=>{
@@ -233,8 +234,15 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >USER NAME</th>
                 <th className="heading" style={{color: "black"}} >AGE</th>
                 <th className="heading" style={{color: "black"}} >CITY</th>
+                <th className="heading" style={{color: "black"}} >TYPE</th>
+                <th className="heading" style={{color: "black"}} >EMAIL</th>
+                <th className="heading" style={{color: "black"}} >UUID</th>
+                {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser') &&
+                <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
+                </>
+                }
               </tr>
             </thead>
             <tbody  >
@@ -245,6 +253,11 @@ export default function GetUser() {
                           <td>{exactuser["username"]}</td>
                           <td>{exactuser["userage"]}</td>
                           <td>{exactuser["usercity"]}</td>
+                          <td>{exactuser["usertype"]}</td>
+                          <td>{exactuser["email"]}</td>
+                          <td>{exactuser["uuid"]}</td>
+                          { (userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
+                          <>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -253,7 +266,10 @@ export default function GetUser() {
                                             // here we are passing the arguments
                                             exactuser["username"],
                                             exactuser["userage"], 
-                                            exactuser["usercity"] 
+                                            exactuser["usercity"], 
+                                            exactuser["usertype"], 
+                                            exactuser["email"]
+                                            // exactuser["password"] 
                                           )
                                         }
                                         } 
@@ -277,6 +293,8 @@ export default function GetUser() {
                               </button>
                             }
                           </td>
+                          </>
+                        }
                       </tr>
                   )
               })}
@@ -289,6 +307,11 @@ export default function GetUser() {
                           <td>{matchuser["username"]}</td>
                           <td>{matchuser["userage"]}</td>
                           <td>{matchuser["usercity"]}</td>
+                          <td>{matchuser["usertype"]}</td>
+                          <td>{matchuser["email"]}</td>
+                          <td>{matchuser["uuid"]}</td>
+                          {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
+                          <>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -297,7 +320,10 @@ export default function GetUser() {
                                             // here we are passing the arguments
                                             matchuser["username"],
                                             matchuser["userage"], 
-                                            matchuser["usercity"] 
+                                            matchuser["usercity"],
+                                            matchuser["usertype"], 
+                                            matchuser["email"]
+                                            // matchuser["password"] 
                                           )
                                         }
                                         } 
@@ -322,6 +348,8 @@ export default function GetUser() {
                             
                             }
                           </td>
+                          </>
+                        }
                       </tr>
                   )
               })}
@@ -348,8 +376,15 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >USER NAME</th>
                 <th className="heading" style={{color: "black"}} >AGE</th>
                 <th className="heading" style={{color: "black"}} >CITY</th>
+                <th className="heading" style={{color: "black"}} >TYPE</th>
+                <th className="heading" style={{color: "black"}} >EMAIL</th>
+                <th className="heading" style={{color: "black"}} >UUID</th>
+                {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
+                <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
+                </>
+                }
               </tr>
             </thead>
             <tbody  >
@@ -360,6 +395,11 @@ export default function GetUser() {
                           <td>{matchuser["username"]}</td>
                           <td>{matchuser["userage"]}</td>
                           <td>{matchuser["usercity"]}</td>
+                          <td>{matchuser["usertype"]}</td>
+                          <td>{matchuser["email"]}</td>
+                          <td>{matchuser["uuid"]}</td>
+                          {(userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
+                          <>
                           <td>
                     
                             <Link style={{ textDecoration:"none" }} to="/update">
@@ -368,7 +408,10 @@ export default function GetUser() {
                                             // here we are passing the arguments
                                             matchuser["username"],
                                             matchuser["userage"], 
-                                            matchuser["usercity"] 
+                                            matchuser["usercity"],
+                                            matchuser["usertype"], 
+                                            matchuser["email"]
+                                            // matchuser["password"] 
                                           )
                                         }
                                         } 
@@ -392,6 +435,8 @@ export default function GetUser() {
                               </button>
                             }
                           </td>
+                          </>
+                        }
                       </tr>
                   )
               })}
@@ -410,8 +455,15 @@ export default function GetUser() {
           <th className="heading" style={{color: "black"}} >USER NAME</th>
           <th className="heading" style={{color: "black"}} >AGE</th>
           <th className="heading" style={{color: "black"}} >CITY</th>
+          <th className="heading" style={{color: "black"}} >TYPE</th>
+          <th className="heading" style={{color: "black"}} >EMAIL</th>
+          <th className="heading" style={{color: "black"}} >UUID</th>
+          {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
+          <>
           <th className="heading" style={{color: "black"}} >UPDATE</th>
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
+          </>
+          }
         </tr>
       </thead>
       <tbody>
@@ -422,6 +474,11 @@ export default function GetUser() {
                     <td>{allUsers[key]["username"]}</td>
                     <td>{allUsers[key]["userage"]}</td>
                     <td>{allUsers[key]["usercity"]}</td>
+                    <td>{allUsers[key]["usertype"]}</td>
+                    <td>{allUsers[key]["email"]}</td>
+                    <td>{allUsers[key]["uuid"]}</td>
+                    {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
+                    <>
                     <td>
                
                       <Link style={{ textDecoration:"none" }} to="/update">
@@ -430,7 +487,11 @@ export default function GetUser() {
                                       // here we are passing the arguments
                                       allUsers[key]["username"],
                                       allUsers[key]["userage"], 
-                                      allUsers[key]["usercity"] 
+                                      allUsers[key]["usercity"],
+                                      allUsers[key]["usertype"],
+                                      allUsers[key]["email"]
+                                      // allUsers[key]["password"]
+
                                     )
                                   }
                                   } 
@@ -454,15 +515,15 @@ export default function GetUser() {
                         </button>
                       }
                     </td>
+                    </>
+                    }
                 </tr>
             )
         })}
       </tbody>
     </Table>
       }
-
     </>
-      }
 
       {
       confirm 
@@ -479,8 +540,7 @@ export default function GetUser() {
             <button 
                 onClick={()=> {
                   console.log("main delete button triggered.!")
-                  setToastDelete(true)
-                  setShow(true)
+
                   // if (userFound !== null){
                   //   // navigate(-1)
                   // }
@@ -513,11 +573,32 @@ export default function GetUser() {
   </div>
 // ------------------------------------
       :
-      <h1>You are not allowed to view this page</h1>
+      <>
+      {
+      error 
+      ? 
+      <>
+      <div onClick={()=>{
+            return(
+            toggleButton,
+            navigate("/")
+            )}}  
+            className="overlay">
+      <div className='innerOverlay'>
+          <h1>Failed to connect with Backend.<br/>Try to connect again.</h1>
+          <button  onClick={toggleButton} 
+                  style={{margin:"10px",width:"150px" ,backgroundColor: "#fff", borderRadius:"1rem", border: '3px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
+            Go Back
+          </button>
+      </div>
+      </div> 
+      </>
       :
       <h1>No Users LOGGED IN. Cannot View This Page</h1>
-    }   
-    </>
+      }
+      </>
+    }
+    </div>
 
   )
 }

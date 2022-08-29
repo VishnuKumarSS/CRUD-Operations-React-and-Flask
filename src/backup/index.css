@@ -1,0 +1,24 @@
+@import url('clash-display.css');
+* {
+  font-family: 'Poppins';
+  /* font-family: 'ClashDisplay-Variable'; */
+  /* font-family: 'ClashDisplay-Extralight'; */
+  /* font-family: 'ClashDisplay-Light'; */
+  /* font-family: 'ClashDisplay-Regular'; */
+  /* font-family: 'ClashDisplay-Medium'; */
+  /* font-family: 'ClashDisplay-Semibold'; */
+  /* font-family: 'ClashDisplay-Bold'; */
+
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'ClashDisplay-Semibold';
+}
+
+.mainClass {
+  /* height: 100vh; */
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

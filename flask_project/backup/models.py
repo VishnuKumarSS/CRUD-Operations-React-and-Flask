@@ -39,7 +39,6 @@ class Users(db.Model):
     password = db.Column(db.String(512), nullable=True)
 
     user_data = db.relationship('UserData', backref='users', uselist=False) # without the uselist we cannot directly access the child table's attributes
-    # user_data = db.relationship('UserData', backref='users')
     def __str__(self):
         return f"{self.email} - {self.fullname}"
 

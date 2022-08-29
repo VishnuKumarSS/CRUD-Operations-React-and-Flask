@@ -5,15 +5,20 @@ import { useNavigate } from "react-router-dom";
 import "../styling/createAndUpdateUser.css"
 
 
-
 function CreateUser() {
     let navigate = useNavigate();
-    const [ allNames, setAllNames ] = useState([]);
+
+    // const [userJSON, setUserJSON] = useState(null);
+    // const [loggedIn, setLoggedIn ] = useState(false)
+
+    const [ userData, setUserData ] = useState([]);
 
     const [username, setUsername] = useState("");
     const [userage, setUserage] = useState(null);
     const [usercity, setUsercity] = useState("");
     const [usertype, setUsertype] = useState("normal");
+    const [email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
     
     const [ created, setCreated] = useState(false); // to show the user is created message on the screen
 
@@ -22,12 +27,28 @@ function CreateUser() {
 
     const [validated, setValidated] = useState(false);
     const [specialChar, setSpecialChar] = useState(null);
-    const [userAlreadyExist, setUserAlreadyExist] = useState(null);
+    const [usernameAlreadyExist, setUsernameAlreadyExist] = useState(null);
+    const [emailAlreadyExist, setEmailAlreadyExist] = useState(null);
 
     useEffect(()=> {
+        axios.get("/current_user")
+        .then((res) => {
+          // setUserJSON(res.data);
+          // setResponseData(res)
+          // setLoggedIn(true)
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log("error:", err);
+          // setResponseData(err.response.status)
+          // setUserJSON(null)
+          // setLoggedIn(false)
+          console.log("Currently no users logged in.");
+        });
       axios.get('/allusers')
       .then((getData)=> {
-        setAllNames(getData.data[1]) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
+        console.log('UserData: ', getData.data)
+        setUserData(getData.data) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
       })
       .catch(err => {
         console.log(err);
@@ -52,6 +73,8 @@ function CreateUser() {
         userage,
         usercity,
         usertype,
+        email,
+        password,
       })
       .catch(error => {
           console.log(error);
@@ -59,11 +82,17 @@ function CreateUser() {
         })
       
       setCreated(true);
-      console.log('User Created: ',created)
-      console.log("Created NAME : ", username);
-      console.log("Created AGE : ", userage);
-      console.log("Created CITY : ", usercity);
-      console.log("Created CITY : ", usertype);
+      // setSpecialChar(null);
+      // setUsernameAlreadyExist(null);
+      // setEmailAlreadyExist(null);
+      console.log('USER CREATED: ', {
+        "name": username, 
+        "age": userage, 
+        "city": usercity,
+        "type": usertype,
+        "email": email,
+        "password": password
+      })
 
       // navigate(-1);  // this will navigate to the homepage of the application when the form is submitted.
   };
@@ -84,6 +113,11 @@ function CreateUser() {
     };
     
     return (
+      <>
+      {/* {loggedIn ? 
+      userJSON.usertype === 'admin' ?
+      // ------------------------------------ */}
+
       <div className='createUser'>
         {
           error
@@ -143,12 +177,6 @@ function CreateUser() {
                 onChange={(e)=>{
                   setUsername(e.target.value)
                 }}
-                // onChange={(e)=> {
-                // let last= e.target.value.slice(-1)
-                // if (special_chars.includes(last) !== true) {
-                //   setUsername(e.target.value)
-                // }
-                // }}
             
                 placeholder="Enter your name here" style={{borderRadius: 16 }} />
               
@@ -158,7 +186,7 @@ function CreateUser() {
                   Enter without any special characters.
                 </Form.Control.Feedback>
                 :
-                userAlreadyExist ?
+                usernameAlreadyExist ?
                 <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
                   Username Already Exist.
                 </Form.Control.Feedback>
@@ -174,6 +202,35 @@ function CreateUser() {
                 </Form.Text>                          
               </Form.Group>
     
+              <Form.Group className="mb-3" controlId="formBasicEmail" >
+                <Form.Label style={{ marginLeft:5 }}>Email : </Form.Label>
+                {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
+                <Form.Control type="email" required value={email || ""} name="email" maxLength="24" 
+                onBlur={(eve)=> setEmail(eve.target.value.trim())}   
+                onChange={(e)=>{
+                  setEmail(e.target.value)
+                }}
+                placeholder="Enter your Email here" style={{borderRadius: 16 }} />
+              
+                {
+                // specialChar ?
+                // <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
+                //   Enter valid Email without any spaces.
+                // </Form.Control.Feedback>
+                // :
+                emailAlreadyExist ?
+                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
+                  Email Already Exist.
+                </Form.Control.Feedback>
+                :
+                <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                  Please provide your Valid Email.
+                </Form.Control.Feedback>
+                }
+                
+                {/* remove className text-muted to change the color of the text. */}       
+              </Form.Group>
+   
               <Form.Group className="mb-3" controlId="formBasicUserage">
                 <Form.Label style={{ marginLeft:5 }}>Age : </Form.Label>
                 <Form.Control required value={userage || ""} type="number" name="userage" 
@@ -195,7 +252,7 @@ function CreateUser() {
                 </Form.Control.Feedback>
               </Form.Group>
        
-              <Form.Group>
+              <Form.Group className="mb-3">
                 <Form.Label style={{ marginLeft:5 }}>User Type: </Form.Label>
                   <Form.Control as="select" value={usertype} 
                     onChange={(e)=> {
@@ -207,12 +264,20 @@ function CreateUser() {
                     <option value="admin" >Admin</option>
                   </Form.Control>
               </Form.Group>
+
+              <Form.Group className="mb-3" >
+                <Form.Label style={{ marginLeft:5 }}>Password : </Form.Label>
+                <Form.Control type='password' required name="password" value={password || ""} maxLength="20" onBlur={(eve)=> setPassword(eve.target.value.trim())} onChange={(e)=> setPassword(e.target.value)}  placeholder="Enter your Password here" style={{borderRadius: 16 }} />
+                <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                    Please set your Password.
+                </Form.Control.Feedback>
+              </Form.Group>
                 {/* <Form.Select aria-label="Default select example">
                   <option value="normal" onChange={(e)=> setUsertype(e.target.value)}>Normal</option>
                   <option value="admin" onChange={(e)=> setUsertype(e.target.value)}>Admin</option>
                 </Form.Select> */}
-
-              { (username && userage && usercity )
+                {/* {console.log(username, userage, usercity, usertype, email, password)} */}
+              { (username && userage && usercity && usertype && email && password )
               // { (username && userage && usercity && !specialChar)
 
               ? 
@@ -232,16 +297,27 @@ function CreateUser() {
                   }
 
                   // to check whether the username already exist or not
-                  let userCount = 0
-                  for ( let u of allNames){
-                    if(u.toLowerCase() === username.toLowerCase()){
-                      setUserAlreadyExist(true)
-                      userCount += 1;
+                  let usernameCount = 0
+                  let emailCount = 0
+                  for ( let i in userData){
+                    console.log(userData[i]['username'])
+                    console.log(userData[i]['email'])
+                    if (userData[i]['username'].toLowerCase() === username.toLowerCase()){
+                      setUsernameAlreadyExist(true)
+                      usernameCount += 1
                     }
-                  }
-                  if ( userCount === 0 ){
-                    setUserAlreadyExist(false)
-                  } 
+                    if (userData[i]['email'].toLowerCase() === email){
+                      setEmailAlreadyExist(true)
+                      usernameCount += 1
+                    }
+
+                    }
+                    if ( usernameCount === 0 ){
+                      setUsernameAlreadyExist(false)
+                    } 
+                    if ( emailCount === 0){
+                      setEmailAlreadyExist(false)
+                    }
 
                 }} style={{color: "black", border: "2px solid #fff",backgroundColor: "#90CAF9", marginLeft: 180 , marginTop: 16, borderRadius:16}}>
                 Submit
@@ -252,9 +328,8 @@ function CreateUser() {
               </Button>
               
               }
-
               {/* In the below line it should be " === flase "...shouldn't be like this " ! "... Because the default one is null  */}
-              {specialChar===false && userAlreadyExist===false && sendDataToAPI()}
+              {specialChar===false && usernameAlreadyExist===false && emailAlreadyExist===false && sendDataToAPI()}
 
               </Form>
             </>
@@ -262,10 +337,19 @@ function CreateUser() {
           }
           </>
 
-        }
-        
+        }       
 
       </div>
+   {/* // ------------------------------------
+
+   :
+    <h1>You are not allowed to view this page</h1>
+    :
+    <h1>No Users LOGGED IN. Cannot View This Page</h1>
+    } */}
+    
+  </>
+
     );
 }
 
