@@ -115,7 +115,7 @@ export default function GetUser() {
             })
             .map((keyy) => {
               matchingUsersArray.push({
-                "id": keyy,  
+                "id": keyy,
                 "username" : allUsers[keyy]["username"],
                 "userage" : allUsers[keyy]["userage"],
                 "usercity" : allUsers[keyy]["usercity"],
