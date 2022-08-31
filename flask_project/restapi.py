@@ -210,7 +210,6 @@ class SearchUser(Resource):
     # # Instead of the above line we can use .asdict() function or dict() to return in object format.  
     def put(self, username):
         parsed_user = update_user_req.parse_args()
-        # user = UserData.query.filter_by(username=username).first()
         try:
             userdata = db.engine.execute(f"select * from user_data where username='{username}'").first()
             user = Users.query.filter_by(id=userdata.users_id).first()
@@ -286,7 +285,6 @@ class CreateUser(Resource):
         if email_exist:
             abort(409, message='Email already exist.')
 
-        # hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
         hashed_password = bcrypt.generate_password_hash(f"{parsed_user['password']}").decode('utf-8')
         
         # add user to firebase
@@ -314,8 +312,6 @@ class AddUserData(Resource):
  
         created_user_id = session.get("created_user_id")
         user_id_exist = db.engine.execute(f"select * from user_data where users_id='{created_user_id}'").first()     
-        # pdb.set_trace()
-
         # if the username already exists, then 
         if user_exist:
             abort(409, message='User already exist with the username.')
@@ -350,12 +346,9 @@ class Login(Resource):
         if userdata:
             try:
                 user_email_password = db.engine.execute(f"select * from users where id='{userdata.users_id}'").first()
-
                 # here simply getting the current user details for using the email to verify because we are not using email for signin. But in firebase we are using email for verfitication. That's why
                 login_firebase = auth.sign_in_with_email_and_password(user_email_password['email'], user_email_password['password'])
-
                 session['created_user_id'] = user_email_password.id # or ... user_email_and_password['id']
-                # pdb.set_trace()
             except:
                 abort(409, message='problem with Google firebase authentication.')
 
@@ -363,7 +356,6 @@ class Login(Resource):
 
 class Logout(Resource):
     def post(self):
-
         try:
             session.pop("created_user_id")
         except:
@@ -381,7 +373,6 @@ class CurrentUser(Resource):
         user = db.engine.execute(f"select * from users where id='{user_id}'").first()
         userdata = db.engine.execute(f"select * from user_data where users_id='{user_id}'").first()
         return ([user._asdict(), userdata._asdict()])
-
 
 
 api.add_resource(CreateUser, '/create_user')
