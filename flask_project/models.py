@@ -7,6 +7,8 @@ from uuid import uuid4
 import redis
 import os
 from dotenv import load_dotenv
+
+
 load_dotenv()
 
 app = Flask(__name__)
