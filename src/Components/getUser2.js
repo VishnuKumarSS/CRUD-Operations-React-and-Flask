@@ -10,11 +10,10 @@ export default function GetUser() {
 
     let navigate = useNavigate();
 
-    const [currentUserJSON, setCurrentUserJSON] = useState(null);
+    const [userJSON, setUserJSON] = useState(null);
     const [loggedIn, setLoggedIn ] = useState(false)
 
-    const [users, setUsers] = useState([{}]); // to get all the users
-    const [userData, setUserData] = useState([{}]); // to get all the users
+    const [allUsers, setAllUsers] = useState([{}]); // to get all the users
 
     const [ searchUser, setSearchUser ] = useState(""); // text in the search bar
     const [ userFound, setUserFound ] = useState(null); // if user is found,then we will be changing the value...otherwise no
@@ -30,24 +29,41 @@ export default function GetUser() {
     const [ toastDelete, setToastDelete ] = useState(false); // to make the toastDelete to work
     const [show, setShow ] = useState(false); // to show and hide the the toast message
 
+    // useEffect(() => {
+    //   axios
+    //     .get("/current_user")
+    //     .then((res) => {
+    //       setUserJSON(res.data);
+    //       // setResponseData(res)
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log("error:", err);
+    //       // setResponseData(err.response.status)
+    //       console.log("Currently no users logged in.");
+    //     });
+    // }, []);
+
     useEffect(() => {
         axios.get("/current_user")
         .then((res) => {
-          setCurrentUserJSON(res.data[1]);
+          setUserJSON(res.data);
+          // setResponseData(res)
           setLoggedIn(true)
           console.log(res);
         })
         .catch((err) => {
           console.log("error:", err);
-          setCurrentUserJSON(null)
+          // setResponseData(err.response.status)
+          setUserJSON(null)
           setLoggedIn(false)
           console.log("Currently no users logged in.");
         });
         axios.get('/allusers')
         .then((getData => {
             console.log('all data : ',getData);
-            setUsers(getData.data[0]);
-            setUserData(getData.data[1]);
+            setAllUsers(getData.data);
+            // setAllNames(getData.data[1]);
         }))
         .catch(err => {
           console.log(err);
@@ -69,19 +85,19 @@ export default function GetUser() {
         let matchingUsersArray = []
         let exactUserArray = []
   
-        let id = Object.keys(users) // returns all the user keys of the object in an array.
+        let id = Object.keys(allUsers) // returns all the user keys of the object in an array.
           
-        let exactUserId = id.filter(key => users[key]['username'].toLowerCase() === searchUser)
+        let exactUserId = id.filter(key => allUsers[key]['username'].toLowerCase() === searchUser)
         .map((keyy) => {
           setUserFound(true)
           exactUserArray.push({
             "id" : keyy,
-            "username" :  users[keyy]['username'],
-            "userage" :  users[keyy]['userage'],
-            "usercity" :  users[keyy]['usercity'],
-            "usertype" :  users[keyy]['usertype'],
-            "email" :  users[keyy]['email'],
-            "uuid" :  users[keyy]['uuid']
+            "username" :  allUsers[keyy]['username'],
+            "userage" :  allUsers[keyy]['userage'],
+            "usercity" :  allUsers[keyy]['usercity'],
+            "usertype" :  allUsers[keyy]['usertype'],
+            "email" :  allUsers[keyy]['email'],
+            "uuid" :  allUsers[keyy]['uuid']
           })
           return(
             setExactUser(exactUserArray),
@@ -91,7 +107,7 @@ export default function GetUser() {
           )
 
           id.filter(key => {
-            let relatedUser = users[key]["username"].toLowerCase();
+            let relatedUser = allUsers[key]["username"].toLowerCase();
             let foundRelatedUser = relatedUser.includes(searchUser);
             return( 
               foundRelatedUser && key !== exactUserId[0]
@@ -100,12 +116,12 @@ export default function GetUser() {
             .map((keyy) => {
               matchingUsersArray.push({
                 "id": keyy,
-                "username" : users[keyy]["username"],
-                "userage" : users[keyy]["userage"],
-                "usercity" : users[keyy]["usercity"],
-                "usertype" :  users[keyy]['usertype'],
-                "email" :  users[keyy]['email'],
-                "uuid" :  users[keyy]['uuid']
+                "username" : allUsers[keyy]["username"],
+                "userage" : allUsers[keyy]["userage"],
+                "usercity" : allUsers[keyy]["usercity"],
+                "usertype" :  allUsers[keyy]['usertype'],
+                "email" :  allUsers[keyy]['email'],
+                "uuid" :  allUsers[keyy]['uuid']
               })
               return(
                 setMatchingUsers(matchingUsersArray)
@@ -129,11 +145,11 @@ export default function GetUser() {
 
     // this is going to get the updated data and show it one the all users page
     const getData = () => {
-      // let len = users.length
+      // let len = allUsers.length
       axios.get('/allusers')
       .then((getData => {
-          console.log('users data: ',getData.data);
-          setUsers(getData.data);
+          console.log('allusers data: ',getData.data);
+          setAllUsers(getData.data);
           // setAllNames(getData.data[1])
           if (userFound !== null){
             setUserFound(null)
@@ -149,8 +165,8 @@ export default function GetUser() {
 
     const onDelete = (name) => {
       console.log("deleted: ",name);
-      console.log(currentUserJSON)
-      if (currentUserJSON.username !== name){
+      console.log(userJSON)
+      if (userJSON.username !== name){
         axios.delete(`/${name}`)
         .then(()=> {
           getData();
@@ -176,7 +192,7 @@ export default function GetUser() {
         <NavBar />
       </div>
       {loggedIn && !error ? 
-      ( currentUserJSON.usertype === 'normal' || currentUserJSON.usertype==='admin' || currentUserJSON.usertype==='superuser') &&
+      ( userJSON.usertype === 'normal' || userJSON.usertype==='admin' || userJSON.usertype==='superuser') &&
 // ------------------------------------
 
   <div className="allUsers" style={{margin:"auto", marginTop: 30, marginBottom: 30}}>
@@ -221,7 +237,7 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
                 <th className="heading" style={{color: "black"}} >UUID</th>
-                {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser') &&
+                {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser') &&
                 <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
@@ -240,7 +256,7 @@ export default function GetUser() {
                           <td>{exactuser["usertype"]}</td>
                           <td>{exactuser["email"]}</td>
                           <td>{exactuser["uuid"]}</td>
-                          { (currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' ) &&
+                          { (userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
                     
@@ -294,7 +310,7 @@ export default function GetUser() {
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
                           <td>{matchuser["uuid"]}</td>
-                          {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' ) &&
+                          {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
                     
@@ -363,7 +379,7 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
                 <th className="heading" style={{color: "black"}} >UUID</th>
-                {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' )&&
+                {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
                 <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
                 <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
@@ -382,7 +398,7 @@ export default function GetUser() {
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
                           <td>{matchuser["uuid"]}</td>
-                          {(currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' ) &&
+                          {(userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
                     
@@ -442,7 +458,7 @@ export default function GetUser() {
           <th className="heading" style={{color: "black"}} >TYPE</th>
           <th className="heading" style={{color: "black"}} >EMAIL</th>
           <th className="heading" style={{color: "black"}} >UUID</th>
-          {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' )&&
+          {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
           <>
           <th className="heading" style={{color: "black"}} >UPDATE</th>
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
@@ -451,18 +467,17 @@ export default function GetUser() {
         </tr>
       </thead>
       <tbody>
-        {Object.keys(users).map(key => {
+        {Object.keys(allUsers).map(key => {
             return(
                 <tr key={key} >
                     <td >{key}</td>
-                    {console.log('users : ',users)}
-                    <td>{users[key]["username"]}</td>
-                    <td>{users[key]["userage"]}</td>
-                    <td>{users[key]["usercity"]}</td>
-                    <td>{users[key]["usertype"]}</td>
-                    <td>{users[key]["email"]}</td>
-                    <td>{users[key]["uuid"]}</td>
-                    {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' )&&
+                    <td>{allUsers[key]["username"]}</td>
+                    <td>{allUsers[key]["userage"]}</td>
+                    <td>{allUsers[key]["usercity"]}</td>
+                    <td>{allUsers[key]["usertype"]}</td>
+                    <td>{allUsers[key]["email"]}</td>
+                    <td>{allUsers[key]["uuid"]}</td>
+                    {( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )&&
                     <>
                     <td>
                
@@ -470,12 +485,12 @@ export default function GetUser() {
                         <button onClick={()=> {
                                     setData(
                                       // here we are passing the arguments
-                                      users[key]["username"],
-                                      users[key]["userage"], 
-                                      users[key]["usercity"],
-                                      users[key]["usertype"],
-                                      users[key]["email"]
-                                      // users[key]["password"]
+                                      allUsers[key]["username"],
+                                      allUsers[key]["userage"], 
+                                      allUsers[key]["usercity"],
+                                      allUsers[key]["usertype"],
+                                      allUsers[key]["email"]
+                                      // allUsers[key]["password"]
 
                                     )
                                   }
@@ -492,7 +507,7 @@ export default function GetUser() {
                             onClick={()=>{
                               return(
                                 toggleButton(),
-                                setDeleteUser(users[key]['username'])
+                                setDeleteUser(allUsers[key]['username'])
                               )
                              } }
                             style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>
