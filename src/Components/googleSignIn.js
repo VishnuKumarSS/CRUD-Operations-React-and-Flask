@@ -37,7 +37,7 @@ function GoogleSignIn() {
                 }
                 else{
                   console.log('User datas are already provided.')
-                  navigate("/")
+                  // navigate("/")
                 }
               })
               .catch((err) => {

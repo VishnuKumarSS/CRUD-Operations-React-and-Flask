@@ -1,13 +1,17 @@
 import React from 'react'
 import { Navbar, Nav, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import GoogleSignOut from './googleSignOut';
+
 
 function NavBar() {
   const [ loggedOut, setLoggedOut ] = useState(false);
   const [ loggedIn, setLoggedIn ] = useState(false);
   const [userJSON, setUserJSON] = useState(null);
+
+  let navigate = useNavigate();
 
     useEffect(() => {
       axios.get("/current_user")
@@ -25,14 +29,10 @@ function NavBar() {
     // const logoutUser = async () => {
       const logoutUser = () => {
         try{
-          // await axios.post("/logout");
           axios.post("/logout");
           setLoggedOut(true)
           console.log('Logged Out.')
-          // navigate("/")
-          // window.location.href("/")
-        //   setIsNavbar(false);
-          // <Home isNavbar={isNavbar}/>
+          navigate("/")
         }
         catch(error){
           console.log(error)
@@ -89,7 +89,7 @@ function NavBar() {
                     margin: 5
                   }}
                 >
-                  Home
+                  HOME
                 </Button>
               </Link>
               {loggedIn &&
@@ -113,29 +113,13 @@ function NavBar() {
                 </Button>
               </Link>
               }
-              {/* <Link style={{ textDecoration: "none" }} to="/login">
-                <Button
-                  className="homeButton"
-                  style={{
-                    marginBottom: 10,
-                    display: "flex",
-                    flexDirection: "column",
-                    borderRadius: 16,
-                    color: "#000",
-                    backgroundColor: "#ffc420",
-                    border: "3px solid #ffc420",
-                    width: "auto",
-                    margin: 5
-                  }}
-                >
-                  Login
-                </Button>
-                
-              </Link> */}
-              {/* {!loggedOut && */}
+              
               {!loggedOut && loggedIn &&
-              <Link style={{ textDecoration: "none" }} to="/">
-              <Button
+              <div className='homeButton' onClick={logoutUser} style={{marginBottom: 10, margin: 5}}>
+              <GoogleSignOut />
+              </div>
+              }
+              {/* <Button
                   onClick={logoutUser}
                   style={{
                     marginBottom: 10,
@@ -150,9 +134,8 @@ function NavBar() {
                   }}
                 >
                   LOGOUT
-                </Button>
-                </Link>
-              }
+                </Button> */}
+
               {/* <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/adduser">Register</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link> */}

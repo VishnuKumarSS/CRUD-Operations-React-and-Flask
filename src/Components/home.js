@@ -6,12 +6,12 @@ import axios from "axios";
 import GoogleSignOut from "./googleSignOut";
 
 export default function Home() {
-  const [userJSON, setUserJSON] = useState(null);
+  const [userDataJSON, setUserDataJSON] = useState(null);
   const [ loggedIn, setLoggedIn ] = useState(false)
 
   const logoutUser = async () => {
     await axios.post("/logout");
-    setUserJSON(null);
+    setUserDataJSON(null);
     setLoggedIn(false);
     console.log('User Logged Out.')
   };
@@ -21,7 +21,7 @@ export default function Home() {
   // (async() => {
   //   try{
   //     const responseData = await axios.get("/current_user")
-  //     setUserJSON(responseData.data)
+  //     setUserDataJSON(responseData.data)
   //     console.log(responseData)
   //   }
   //   catch(error){
@@ -37,8 +37,12 @@ export default function Home() {
     axios
       .get("/current_user")
       .then((res) => {
-        setUserJSON(res.data);
-        // setResponseData(res)
+        res.data[1] 
+        ?
+        setUserDataJSON(res.data[1])
+        :
+        setUserDataJSON({'usertype': 'normal'}); // here setting all other users to "normal" usertype to avoid errors.
+
         console.log('home',res);
         setLoggedIn(true)
       })
@@ -79,7 +83,7 @@ export default function Home() {
         </Link>
         </>
         }
-        {(!loggedIn || (loggedIn && userJSON.usertype!=='normal')) &&
+        {(!loggedIn || (loggedIn && userDataJSON.usertype!=='normal')) &&
         <>
         <Link style={{ textDecoration: "none" }} to="/adduser">
           <Button
@@ -94,7 +98,7 @@ export default function Home() {
               border: "3px solid #ffc420",
             }}
           >
-            {loggedIn && (userJSON.usertype === 'admin' || userJSON.usertype === 'superuser' )?
+            {loggedIn && (userDataJSON.usertype === 'admin' || userDataJSON.usertype === 'superuser' )?
             "ADD USER"
             :
             "REGISTER"
@@ -142,7 +146,7 @@ export default function Home() {
 
         }
         {loggedIn &&
-          <div onClick={logoutUser}>
+          <div onClick={logoutUser} style={{marginTop: 20}}>
             {/* //   <Button
             //     className="btn-sm"
             //     onClick={logoutUser}

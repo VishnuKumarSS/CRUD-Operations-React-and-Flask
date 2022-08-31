@@ -11,7 +11,7 @@ function GoogleSignOut() {
     <div id='signInButton'>
       <GoogleLogout 
         render={renderProps => (
-          <button onClick={renderProps.onClick} style={{color:"#fff",fontSize:16, backgroundColor: "#E57373", borderRadius: 10, marginTop:10 , border: "2px solid #E57373", padding: "0.5rem"}}>Logout</button>
+          <button onClick={renderProps.onClick} style={{color:"#000",fontSize:16, backgroundColor: "#E57373", borderRadius: 16 , border: "1px solid #E57373", padding: "0.5rem", paddingLeft: 15, paddingRight: 15}}>LOGOUT</button>
         )}
         clientId={client_id}
         buttonText='signout'
