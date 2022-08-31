@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import "../styling/home.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import GoogleSignIn from "./googleSignIn";
 import GoogleSignOut from "./googleSignOut";
 
 export default function Home() {
@@ -13,9 +12,8 @@ export default function Home() {
   const logoutUser = async () => {
     await axios.post("/logout");
     setUserJSON(null);
-    // setResponseData(null)
-    setLoggedIn(false)
-    // navigate("/")
+    setLoggedIn(false);
+    console.log('User Logged Out.')
   };
 
 
@@ -41,7 +39,7 @@ export default function Home() {
       .then((res) => {
         setUserJSON(res.data);
         // setResponseData(res)
-        console.log(res);
+        console.log('home',res);
         setLoggedIn(true)
       })
       .catch((err) => {
@@ -50,20 +48,14 @@ export default function Home() {
         // setResponseData(err.response.status)
         console.log("Currently no users logged in.");
       });
-  },[]);
+  }, []);
 
   return (
     <>
-    {/* {loggedIn &&
-      <div style={{width:"100vw"}}>
-        <NavBar />
-      </div>
-      } */}
-      
     <div className="home"> 
       <>
-          <GoogleSignIn />
-          <GoogleSignOut />
+          {/* <GoogleSignIn />
+          <GoogleSignOut /> */}
       <h1 style={{marginBottom: 20}}>HOME PAGE</h1>
       <nav>
         {loggedIn &&
@@ -130,7 +122,7 @@ export default function Home() {
         </Link>
         }
         {!loggedIn &&
-        <Link style={{ textDecoration: "none" }} to="/google_signin">
+        <Link style={{ textDecoration: "none" }} to="/googlepage">
           <Button
             className="homeButton"
             style={{
@@ -146,25 +138,21 @@ export default function Home() {
             Continue with GOOGLE?
           </Button>
         </Link>
+      
+
         }
         {loggedIn &&
-          <div >
-            {/* <button onClick={(e)=>{
-                                return(
-                                  e.preventDefault(),
-                                  navigate("/")
-                                )}} 
-                  style={{fontSize:16, backgroundColor: "#90CAF9", borderRadius: 10, marginTop:10 , border: "2px solid #fff"}} 
-                >Return Home
-                </button>   */}
-          <Button
-            className="btn-sm"
-            onClick={logoutUser}
-            style={{ color:"#fff",fontSize:16, backgroundColor: "#E57373", borderRadius: 10, marginTop:10 , border: "2px solid #E57373" }}
-          >
-            LOGOUT
-          </Button >
-        </div>
+          <div onClick={logoutUser}>
+            {/* //   <Button
+            //     className="btn-sm"
+            //     onClick={logoutUser}
+            //     style={{ color:"#fff",fontSize:16, backgroundColor: "#E57373", borderRadius: 10, marginTop:10 , border: "2px solid #E57373" }}
+            //   >
+            //     LOGOUT
+            //   </Button > */}
+            <GoogleSignOut />
+
+            </div>
           }
       </nav>
       </>

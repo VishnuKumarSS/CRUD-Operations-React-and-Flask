@@ -35,7 +35,6 @@ server_session = Session(app) # if we don't have the server sided session. Then 
 #     server_metadata_url = "https://accounts.google.com/.well-known/openid-configuration",
 # )
 
-
 # @app.route('/login/google', methods=["get"])
 # def login_google():
 #     redirect_uri = url_for('authorize_google', _external=True)
@@ -113,8 +112,8 @@ class ReactGoogleSignin(Resource):
         email = request.json['email'] 
         fullname = request.json['name']
         google_id = request.json['googleId']
-        # firstname = request.json['firstname']
-        # lastname = request.json['lastname']
+        # or 
+        # we can do what we did in login class.
 
         # check_table = db.engine.execute('select * from google_user_data')
 
@@ -123,12 +122,16 @@ class ReactGoogleSignin(Resource):
             google_user = Users(email=email, fullname=fullname, google_id=google_id)
             db.session.add(google_user)
             db.session.commit()
-            # pdb.set_trace()
             session['created_user_id'] = google_user.id
+            # pdb.set_trace()
             return 'Google User Created...'
         except:
-            return 'User already exist in Database...'
+            # logged_in_user = Users.query.filter_by(id=google_id).first()
+            logged_in_user = db.engine.execute(f"select * from users where google_id='{google_id}'").first()
+            session['created_user_id'] = logged_in_user.id
+            # pdb.set_trace()
 
+            return 'User already exist in Database...'
 
 class AllUsers(Resource):
     def get(self):
@@ -275,7 +278,7 @@ class CreateUser(Resource):
     # The below line will help us to convert our python object to look like JSON
     # here the resource fields tells that the returned data's should be in the JSON format...
     # then @marshal_with actually injects that rule in our method.
-    @marshal_with(create_user_field )
+    @marshal_with(create_user_field)
     def post(self):
         parsed_user = create_user_req.parse_args()
         # user = UserData.query.filter_by(username=parsed_user["username"]).first()   
@@ -370,9 +373,19 @@ class CurrentUser(Resource):
             abort(401, message='Unauthorized User or No Logged in users.')
             # or
             # return jsonify({'error':"Unauthorized User or No Logged in users."}), 409
-        user = db.engine.execute(f"select * from users where id='{user_id}'").first()
+        user = db.engine.execute(f"select * from users where id='{user_id}'").first() 
         userdata = db.engine.execute(f"select * from user_data where users_id='{user_id}'").first()
-        return ([user._asdict(), userdata._asdict()])
+        # pdb.set_trace()
+        if userdata and user:
+            return ([user._asdict(), userdata._asdict()])
+        elif user or userdata:
+            if user:
+                return([user._asdict()])
+            if userdata:
+                return([userdata._asdict()])
+        else:
+            return ({"message": "no current users"}), 200
+        
 
 
 api.add_resource(CreateUser, '/create_user')
@@ -384,7 +397,7 @@ api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(CurrentUser, '/current_user')
 
-api.add_resource(ReactGoogleSignin, '/google/signin')
+api.add_resource(ReactGoogleSignin, '/google_signin')
 
 if __name__ == '__main__':
     app.run(debug=True)

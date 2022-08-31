@@ -21,10 +21,14 @@ function NavBar() {
         console.log("Currently no users logged in.");
       });
     },[]);
-    const logoutUser = async () => {
+    
+    // const logoutUser = async () => {
+      const logoutUser = () => {
         try{
-          await axios.post("/logout");
+          // await axios.post("/logout");
+          axios.post("/logout");
           setLoggedOut(true)
+          console.log('Logged Out.')
           // navigate("/")
           // window.location.href("/")
         //   setIsNavbar(false);
