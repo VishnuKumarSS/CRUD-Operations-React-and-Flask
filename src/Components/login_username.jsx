@@ -6,18 +6,18 @@ import axios from "axios";
 
 function Login() {
   let navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   // const [ loggedIn, setLoggedIn ] = useState(false);
   const [ created, setCreated ] = useState(false);
 
   const loginUser = async () => {
-    console.log(email, password);
+    console.log(username, password);
     try{
         // const responseData = await axios
         await axios
           .post("/login", {
-            email,
+            username,
             password,
           });
           // setLoggedIn(true)
@@ -58,13 +58,13 @@ function Login() {
               <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Login</h1>
               <Form onSubmit={(e) => e.preventDefault()}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label style={{ marginLeft:5 }}>Email : </Form.Label>
+                  <Form.Label style={{ marginLeft:5 }}>User Name: </Form.Label>
                   <Form.Control
-                    type="email"
+                    type="text"
                     style={{borderRadius: 16 }}
-                    value={email}
-                    placeholder="Enter your email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    placeholder="Enter your Username"
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                   {/* <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
@@ -84,7 +84,7 @@ function Login() {
                 {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
                 <Form.Check type="checkbox" label="Check me out" />
               </Form.Group> */}
-              {email && password ?
+              {username && password ?
                   <>
                   <Button type='submit' onClick={loginUser} style={{color: "black", border: "2px solid #fff", marginLeft: 180 ,backgroundColor: "#90CAF9", borderRadius:16}}>
                     Submit

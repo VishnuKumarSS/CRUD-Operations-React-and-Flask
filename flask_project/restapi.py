@@ -86,7 +86,8 @@ update_user_req.add_argument('usertype', type=str)
 
 
 user_login_req = reqparse.RequestParser()
-user_login_req.add_argument('username', type=str, required=True, help='Username is needed.', )
+# user_login_req.add_argument('username', type=str, required=True, help='Username is needed.', )
+user_login_req.add_argument('email', type=str, required=True, help='Email is needed.', )
 user_login_req.add_argument('password', type=str, required=True, help='Password is Required.', )
 
 
@@ -332,30 +333,58 @@ class AddUserData(Resource):
         else:
             abort(401, message="No Users are currently created or logged in to add data.")
         
+# class Login(Resource):
+#     def post(self):
+#         parsed_user = user_login_req.parse_args() # instead we can use request.json['field_name'] for individual fields. 
+#         userdata = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()     
+#         user = db.engine.execute(f"select * from users where id='{userdata.users_id}'").first()
+#         # pdb.set_trace()
+#         if userdata is None:
+#             abort(401, message='Unauthorized User')
+#             # or
+#             # return jsonify({"message": 'Unauthorized User'}), 401
+        
+#         if not bcrypt.check_password_hash(user['password'], parsed_user['password']): # means...if not True
+#             abort(401, message='Unauthorized User, password not matching.') 
+
+#         if userdata:
+#             try:
+#                 user_email_password = db.engine.execute(f"select * from users where id='{userdata.users_id}'").first()
+#                 # here simply getting the current user details for using the email to verify because we are not using email for signin. But in firebase we are using email for verfitication. That's why
+#                 login_firebase = auth.sign_in_with_email_and_password(user_email_password['email'], user_email_password['password'])
+#                 session['created_user_id'] = user_email_password.id # or ... user_email_and_password['id']
+#             except:
+#                 abort(409, message='problem with Google firebase authentication.')
+
+#         return ([user._asdict(), userdata._asdict()])
+
 class Login(Resource):
     def post(self):
         parsed_user = user_login_req.parse_args() # instead we can use request.json['field_name'] for individual fields. 
-        userdata = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()     
-        user = db.engine.execute(f"select * from users where id='{userdata.users_id}'").first()
+        user = db.engine.execute(f"select * from users where email='{parsed_user['email']}'").first()
         # pdb.set_trace()
-        if userdata is None:
-            abort(401, message='Unauthorized User')
+        if user is None:
+            abort(401, message='Unauthorized User or Not found.')
             # or
             # return jsonify({"message": 'Unauthorized User'}), 401
         
         if not bcrypt.check_password_hash(user['password'], parsed_user['password']): # means...if not True
             abort(401, message='Unauthorized User, password not matching.') 
 
-        if userdata:
+        if user:
             try:
-                user_email_password = db.engine.execute(f"select * from users where id='{userdata.users_id}'").first()
+                user_email_password = db.engine.execute(f"select * from users where id='{user.id}'").first() # here we also can use the above user object.
                 # here simply getting the current user details for using the email to verify because we are not using email for signin. But in firebase we are using email for verfitication. That's why
                 login_firebase = auth.sign_in_with_email_and_password(user_email_password['email'], user_email_password['password'])
                 session['created_user_id'] = user_email_password.id # or ... user_email_and_password['id']
             except:
                 abort(409, message='problem with Google firebase authentication.')
-
-        return ([user._asdict(), userdata._asdict()])
+        if user:
+            userdata = db.engine.execute(f"select * from user_data where users_id='{user.id}'").first()     
+            if userdata:
+                return ([user._asdict(), userdata._asdict()])
+            else:
+                return user._asdict()
 
 class Logout(Resource):
     def post(self):
