@@ -87,7 +87,7 @@ function NavBar() {
             
             {/* <Nav className="me-auto"> */}
             <Nav className="" style={{marginLeft: "auto", marginRight:20}}>
-              <Link style={{ textDecoration: "none" }} to="/">
+              {/* <Link style={{ textDecoration: "none" }} to="/">
                 <Button
                   className="homeButton"
                   style={{
@@ -105,7 +105,7 @@ function NavBar() {
                 >
                   HOME
                 </Button>
-              </Link>
+              </Link> */}
               {loggedIn &&
               ( userJSON.usertype === 'admin' || userJSON.usertype === 'superuser') &&
               <Link style={{ textDecoration: "none" }} to="/adduser">
@@ -145,7 +145,7 @@ function NavBar() {
                     margin: 5
                   }}
                 >
-                  ADD_DATA
+                  ADD_INFO
                 </Button>
               </Link>
 

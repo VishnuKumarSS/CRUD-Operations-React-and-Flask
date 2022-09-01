@@ -148,19 +148,19 @@ function AddUserData() {
             </div>
             :
             <>
-              <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Create User</h1>
-
+        {/* <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Add More <span style={{color:"#FFCC80", padding: 2, textShadow: "1px 1px 1px #5e5e5e"}}>Information</span></h1> */}
+        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Add More <span style={{color:"#FFCC80", padding: 2}}>Information</span></h1>
         <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
 
               <Form.Group className="mb-3" controlId="formBasicUsername">
-                <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
+                <Form.Label style={{ marginLeft:5 }}>Username : </Form.Label>
                 {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
                 <Form.Control required value={username || ""} name="username" maxLength="20" 
                 onBlur={(eve)=> setUsername(eve.target.value.trim())}   
                 onChange={(e)=>{
                   setUsername(e.target.value)
                 }}            
-                placeholder="Enter your name here" style={{borderRadius: 16 }} />
+                placeholder="Enter username here" style={{borderRadius: 16 }} />
 
                 {
                 specialChar ?

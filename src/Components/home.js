@@ -143,8 +143,9 @@ export default function Home() {
         //     Continue with GOOGLE?
         //   </Button>
         // </Link>
+        <div style={{marginTop: 20}}>
         <GoogleSignIn />
-      
+        </div>
 
         }
         {loggedIn &&

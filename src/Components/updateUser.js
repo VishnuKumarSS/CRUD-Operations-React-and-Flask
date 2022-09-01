@@ -180,11 +180,47 @@ function UpdateUser() {
         </div>
         :
         <>
-          <h1 style={{textAlign: 'center', marginBottom: '20px'}}> Update User Details</h1>
+          <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Update User <span style={{color:"#FFCC80", padding: 2}}>Information</span></h1>
           <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
-            
-            <Form.Group className="mb-3" controlId="formBasicUsername">
-              <Form.Label style={{ marginLeft:5 }}>UserName : </Form.Label>
+              <Form.Group className="mb-3" controlId="formBasicEmail" >
+                <Form.Label style={{ marginLeft:5 }}>Email : </Form.Label>
+                {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
+                <Form.Control type="email" required value={email || ""} name="email" maxLength="24" 
+                onBlur={(eve)=> setEmail(eve.target.value.trim())}   
+                onChange={(e)=>{
+                  setEmail(e.target.value)
+                }}
+                placeholder="Enter your Email here" style={{borderRadius: 16 }} />
+              
+                {
+                // specialChar ?
+                // <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
+                //   Enter valid Email without any spaces.
+                // </Form.Control.Feedback>
+                // :
+                emailAlreadyExist ?
+                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
+                  Email Already Exist.
+                </Form.Control.Feedback>
+                :
+                <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                  Please provide your Valid Email.
+                </Form.Control.Feedback>
+                }
+                
+                {/* remove className text-muted to change the color of the text. */}       
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicFullname">
+              <Form.Label style={{ marginLeft:5 }}>Fullname : </Form.Label>
+              <Form.Control required name="fullname" value={fullname || ""} maxLength="20" onBlur={(eve)=> setFullname(eve.target.value.trim())} onChange={(e)=> setFullname(e.target.value)}  placeholder="Enter your fullname here" style={{borderRadius: 16 }} />
+              <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                  Please provide a valid fullname.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicUsername">
+              <Form.Label style={{ marginLeft:5 }}>Username : </Form.Label>
 
               <Form.Control required value={username || ""} name="username" maxLength="20" 
                 onBlur={(eve)=> setUsername(eve.target.value.trim())}   
@@ -215,35 +251,6 @@ function UpdateUser() {
                 </Form.Text>                          
               </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formBasicEmail" >
-                <Form.Label style={{ marginLeft:5 }}>Email : </Form.Label>
-                {/* <Form.Control name="username" maxLength="16" onChange={(e)=> setUsername(e.target.value.trim())} placeholder="Enter your name here" style={{borderRadius: 16 }} /> */}
-                <Form.Control type="email" required value={email || ""} name="email" maxLength="24" 
-                onBlur={(eve)=> setEmail(eve.target.value.trim())}   
-                onChange={(e)=>{
-                  setEmail(e.target.value)
-                }}
-                placeholder="Enter your Email here" style={{borderRadius: 16 }} />
-              
-                {
-                // specialChar ?
-                // <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
-                //   Enter valid Email without any spaces.
-                // </Form.Control.Feedback>
-                // :
-                emailAlreadyExist ?
-                <Form.Control.Feedback type="valid" style={{ marginLeft:5, color:"#EF5350" }}>
-                  Email Already Exist.
-                </Form.Control.Feedback>
-                :
-                <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
-                  Please provide your Valid Email.
-                </Form.Control.Feedback>
-                }
-                
-                {/* remove className text-muted to change the color of the text. */}       
-              </Form.Group>
-
             <Form.Group className="mb-3" controlId="formBasicUserage">
               <Form.Label style={{ marginLeft:5 }}>Age : </Form.Label>
               <Form.Control required type="number" value={userage || ""} name="userage" 
@@ -267,7 +274,7 @@ function UpdateUser() {
             </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label style={{ marginLeft:5 }}>User Type: </Form.Label>
+                <Form.Label style={{ marginLeft:5 }}>Usertype: </Form.Label>
                   <Form.Control as="select" value={usertype} 
                     onChange={(e)=> {
                       console.log(e.target.value)
@@ -278,14 +285,6 @@ function UpdateUser() {
                     <option value="admin" >Admin</option>
                   </Form.Control>
               </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicFullname">
-              <Form.Label style={{ marginLeft:5 }}>Fullname : </Form.Label>
-              <Form.Control required name="fullname" value={fullname || ""} maxLength="20" onBlur={(eve)=> setFullname(eve.target.value.trim())} onChange={(e)=> setFullname(e.target.value)}  placeholder="Enter your fullname here" style={{borderRadius: 16 }} />
-              <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
-                  Please provide a valid fullname.
-              </Form.Control.Feedback>
-            </Form.Group>
 
             { (username && userage && usercity && usertype && email && fullname)
               // { (username && userage && usercity && !specialChar)

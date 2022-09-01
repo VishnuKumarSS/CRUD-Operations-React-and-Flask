@@ -125,7 +125,7 @@ function CreateUser() {
           </div>
           : 
             <>
-              <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Create User</h1>
+              <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Create New<br/><span style={{color:"#FFCC80", padding: 2}}>User</span></h1>
 
         <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
 
@@ -198,10 +198,10 @@ function CreateUser() {
               </Form.Group>
               */}
               <Form.Group className="mb-3" controlId="formBasicfullname">
-                <Form.Label style={{ marginLeft:5 }}>City : </Form.Label>
+                <Form.Label style={{ marginLeft:5 }}>Fullname : </Form.Label>
                 <Form.Control required name="fullname" value={fullname || ""} maxLength="20" onBlur={(eve)=> setFullname(eve.target.value.trim())} onChange={(e)=> setFullname(e.target.value)}  placeholder="Enter your city here" style={{borderRadius: 16 }} />
                 <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
-                    Please provide a valid city.
+                    Please enter your fullname.
                 </Form.Control.Feedback>
               </Form.Group> 
        
