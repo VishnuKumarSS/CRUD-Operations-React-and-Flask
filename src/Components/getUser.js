@@ -463,10 +463,10 @@ export default function GetUser() {
           <th className="heading" style={{color: "black"}} >CITY</th>
           <th className="heading" style={{color: "black"}} >TYPE</th>
           <th className="heading" style={{color: "black"}} >EMAIL</th>
-          <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >FULLNAME</th>
+          <th className="heading" style={{color: "black"}} >FULLNAME</th>
           {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' )&&
           <>
-          <th className="heading" style={{color: "black", borderTopLeftRadius:16, borderBottomLeftRadius:16}} >UPDATE</th>
+          <th className="heading" style={{color: "black"}} >UPDATE</th>
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
           </>
           }
