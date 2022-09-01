@@ -33,9 +33,14 @@ export default function GetUser() {
     useEffect(() => {
         axios.get("/current_user")
         .then((res) => {
-          setCurrentUserJSON(res.data[1]);
+          res.data[1] 
+          ?
+          setCurrentUserJSON(res.data[1])
+          :
+          setCurrentUserJSON({'usertype': 'normal'})
+
           setLoggedIn(true)
-          console.log(res);
+          console.log('current',res);
         })
         .catch((err) => {
           console.log("error:", err);
@@ -71,17 +76,27 @@ export default function GetUser() {
   
         let id = Object.keys(users) // returns all the user keys of the object in an array.
           
-        let exactUserId = id.filter(key => users[key]['username'].toLowerCase() === searchUser)
+        let exactUserId = id.filter(key => {
+          // console.log(key)
+          if(userData[key]['username'] !== null){
+            return(
+              userData[key]['username'].toLowerCase() === searchUser)
+          }
+          else{
+            return(null)
+          }
+          })
         .map((keyy) => {
+          console.log('key', keyy)
           setUserFound(true)
           exactUserArray.push({
             "id" : keyy,
-            "username" :  users[keyy]['username'],
-            "userage" :  users[keyy]['userage'],
-            "usercity" :  users[keyy]['usercity'],
-            "usertype" :  users[keyy]['usertype'],
+            "username" :  userData[keyy]['username'],
+            "userage" :  userData[keyy]['userage'],
+            "usercity" :  userData[keyy]['usercity'],
+            "usertype" :  userData[keyy]['usertype'],
             "email" :  users[keyy]['email'],
-            "uuid" :  users[keyy]['uuid']
+            "fullname" :  users[keyy]['fullname']
           })
           return(
             setExactUser(exactUserArray),
@@ -91,21 +106,26 @@ export default function GetUser() {
           )
 
           id.filter(key => {
-            let relatedUser = users[key]["username"].toLowerCase();
-            let foundRelatedUser = relatedUser.includes(searchUser);
-            return( 
-              foundRelatedUser && key !== exactUserId[0]
+            if ( userData[key]['username'] !== null){
+              let relatedUser = userData[key]["username"].toLowerCase();
+              let foundRelatedUser = relatedUser.includes(searchUser);
+              return( 
+                foundRelatedUser && key !== exactUserId[0]
             )
+            }
+            else{
+              return(null)
+            }
             })
             .map((keyy) => {
               matchingUsersArray.push({
                 "id": keyy,
-                "username" : users[keyy]["username"],
-                "userage" : users[keyy]["userage"],
-                "usercity" : users[keyy]["usercity"],
-                "usertype" :  users[keyy]['usertype'],
+                "username" : userData[keyy]["username"],
+                "userage" : userData[keyy]["userage"],
+                "usercity" : userData[keyy]["usercity"],
+                "usertype" :  userData[keyy]['usertype'],
                 "email" :  users[keyy]['email'],
-                "uuid" :  users[keyy]['uuid']
+                "fullname" :  users[keyy]['fullname']
               })
               return(
                 setMatchingUsers(matchingUsersArray)
@@ -114,15 +134,16 @@ export default function GetUser() {
       }
     }
 
-    const setData = (name, age, city, type, email) => {
-      console.log(name, age, city, type, email)
+    const setData = (name, age, city, type, email, fullname) => {
+      console.log(name, age, city, type, email, fullname)
       return(
         // here we are gonna set the Items in the local storage and we will be using this keys and values in the update and delete user files. And in any files if needed.
         localStorage.setItem("LocalStorageUserName", name), // here local storage user name is a key, that we can see in the console page...go to applications and see the localstorage
         localStorage.setItem("LocalStorageUserAge", age),
         localStorage.setItem("LocalStorageUserCity",city),
         localStorage.setItem("LocalStorageUserType",type),
-        localStorage.setItem("LocalStorageEmail",email)
+        localStorage.setItem("LocalStorageEmail",email),
+        localStorage.setItem("LocalStorageFullName",fullname)
         // localStorage.setItem("LocalStoragePassword",password)
       )
     }
@@ -133,7 +154,8 @@ export default function GetUser() {
       axios.get('/allusers')
       .then((getData => {
           console.log('users data: ',getData.data);
-          setUsers(getData.data);
+          setUsers(getData.data[0]);
+          setUserData(getData.data[1]);
           // setAllNames(getData.data[1])
           if (userFound !== null){
             setUserFound(null)
@@ -220,7 +242,7 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >CITY</th>
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
-                <th className="heading" style={{color: "black"}} >UUID</th>
+                <th className="heading" style={{color: "black"}} >FULLNAME</th>
                 {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser') &&
                 <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
@@ -239,7 +261,7 @@ export default function GetUser() {
                           <td>{exactuser["usercity"]}</td>
                           <td>{exactuser["usertype"]}</td>
                           <td>{exactuser["email"]}</td>
-                          <td>{exactuser["uuid"]}</td>
+                          <td>{exactuser["fullname"]}</td>
                           { (currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
@@ -252,8 +274,8 @@ export default function GetUser() {
                                             exactuser["userage"], 
                                             exactuser["usercity"], 
                                             exactuser["usertype"], 
-                                            exactuser["email"]
-                                            // exactuser["password"] 
+                                            exactuser["email"],
+                                            exactuser["fullname"] 
                                           )
                                         }
                                         } 
@@ -293,7 +315,7 @@ export default function GetUser() {
                           <td>{matchuser["usercity"]}</td>
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
-                          <td>{matchuser["uuid"]}</td>
+                          <td>{matchuser["fullname"]}</td>
                           {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
@@ -306,8 +328,8 @@ export default function GetUser() {
                                             matchuser["userage"], 
                                             matchuser["usercity"],
                                             matchuser["usertype"], 
-                                            matchuser["email"]
-                                            // matchuser["password"] 
+                                            matchuser["email"],
+                                            matchuser["fullname"] 
                                           )
                                         }
                                         } 
@@ -362,7 +384,7 @@ export default function GetUser() {
                 <th className="heading" style={{color: "black"}} >CITY</th>
                 <th className="heading" style={{color: "black"}} >TYPE</th>
                 <th className="heading" style={{color: "black"}} >EMAIL</th>
-                <th className="heading" style={{color: "black"}} >UUID</th>
+                <th className="heading" style={{color: "black"}} >FULLNAME</th>
                 {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' )&&
                 <>
                 <th className="heading" style={{color: "black"}} >UPDATE</th>
@@ -381,7 +403,7 @@ export default function GetUser() {
                           <td>{matchuser["usercity"]}</td>
                           <td>{matchuser["usertype"]}</td>
                           <td>{matchuser["email"]}</td>
-                          <td>{matchuser["uuid"]}</td>
+                          <td>{matchuser["fullname"]}</td>
                           {(currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' ) &&
                           <>
                           <td>
@@ -394,8 +416,8 @@ export default function GetUser() {
                                             matchuser["userage"], 
                                             matchuser["usercity"],
                                             matchuser["usertype"], 
-                                            matchuser["email"]
-                                            // matchuser["password"] 
+                                            matchuser["email"],
+                                            matchuser["fullname"] 
                                           )
                                         }
                                         } 
@@ -432,7 +454,7 @@ export default function GetUser() {
           }
     </div>
     : 
-    <Table borderless >
+    <Table borderless>
       <thead  >
         <tr className='heading' >
           <th className="heading" style={{color: "black", borderTopLeftRadius:16, borderBottomLeftRadius:16}}  >ID</th>
@@ -441,10 +463,10 @@ export default function GetUser() {
           <th className="heading" style={{color: "black"}} >CITY</th>
           <th className="heading" style={{color: "black"}} >TYPE</th>
           <th className="heading" style={{color: "black"}} >EMAIL</th>
-          <th className="heading" style={{color: "black"}} >UUID</th>
+          <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >FULLNAME</th>
           {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' )&&
           <>
-          <th className="heading" style={{color: "black"}} >UPDATE</th>
+          <th className="heading" style={{color: "black", borderTopLeftRadius:16, borderBottomLeftRadius:16}} >UPDATE</th>
           <th className="heading" style={{color: "black", borderTopRightRadius:16, borderBottomRightRadius:16}} >DELETE</th>
           </>
           }
@@ -455,13 +477,13 @@ export default function GetUser() {
             return(
                 <tr key={key} >
                     <td >{key}</td>
-                    {console.log('users : ',users)}
-                    <td>{users[key]["username"]}</td>
-                    <td>{users[key]["userage"]}</td>
-                    <td>{users[key]["usercity"]}</td>
-                    <td>{users[key]["usertype"]}</td>
+                    {/* {console.log('users : ',users)} */}
+                    <td>{userData[key]["username"]}</td>
+                    <td>{userData[key]["userage"]}</td>
+                    <td>{userData[key]["usercity"]}</td>
+                    <td>{userData[key]["usertype"]}</td>
                     <td>{users[key]["email"]}</td>
-                    <td>{users[key]["uuid"]}</td>
+                    <td>{users[key]["fullname"]}</td>
                     {( currentUserJSON.usertype === 'admin' || currentUserJSON.usertype === 'superuser' )&&
                     <>
                     <td>
@@ -470,11 +492,12 @@ export default function GetUser() {
                         <button onClick={()=> {
                                     setData(
                                       // here we are passing the arguments
-                                      users[key]["username"],
-                                      users[key]["userage"], 
-                                      users[key]["usercity"],
-                                      users[key]["usertype"],
-                                      users[key]["email"]
+                                      userData[key]["username"],
+                                      userData[key]["userage"], 
+                                      userData[key]["usercity"],
+                                      userData[key]["usertype"],
+                                      users[key]["email"],
+                                      users[key]["fullname"],
                                       // users[key]["password"]
 
                                     )
@@ -492,7 +515,7 @@ export default function GetUser() {
                             onClick={()=>{
                               return(
                                 toggleButton(),
-                                setDeleteUser(users[key]['username'])
+                                setDeleteUser(userData[key]['username'])
                               )
                              } }
                             style={{backgroundColor: "#ff8585", borderRadius:"1rem", border: '2px solid #000', fontSize:'12px', color:'#3a3a3a'}}>

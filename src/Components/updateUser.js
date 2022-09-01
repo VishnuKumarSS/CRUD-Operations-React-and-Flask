@@ -9,7 +9,7 @@ function UpdateUser() {
 
   let navigate = useNavigate();
 
-  const [userJSON, setUserJSON] = useState(null);
+  const [userDataJSON, setUserDataJSON] = useState(null);
   const [loggedIn, setLoggedIn ] = useState(false)
   
   const [ userData, setUserData ] = useState([]);
@@ -19,6 +19,7 @@ function UpdateUser() {
   const [usercity, setUsercity] = useState("");
   const [usertype, setUsertype] = useState("normal");
   const [email, setEmail ] = useState("");
+  const [fullname, setFullname ] = useState("");
   // const [ password, setPassword ] = useState("");
 
   const [updateUsername, setUpdateUsername ] = useState("");
@@ -36,7 +37,7 @@ function UpdateUser() {
   useEffect(()=> {
     axios.get("/current_user")
     .then((res) => {
-      setUserJSON(res.data);
+      setUserDataJSON(res.data[1]);
       // setResponseData(res)
       setLoggedIn(true)
       console.log(res);
@@ -44,7 +45,7 @@ function UpdateUser() {
     .catch((err) => {
       console.log("error:", err);
       // setResponseData(err.response.status)
-      setUserJSON(null)
+      setUserDataJSON(null)
       setLoggedIn(false)
       console.log("Currently no users logged in.");
     });
@@ -75,7 +76,8 @@ function UpdateUser() {
       userage,
       usercity,
       usertype,
-      email
+      email,
+      fullname
       })
       .catch(error => {
         console.log(error);
@@ -90,7 +92,8 @@ function UpdateUser() {
         "age": userage, 
         "city": usercity,
         "type": usertype,
-        "email": email
+        "email": email,
+        "fullname": fullname
         // "password": password
       })
 
@@ -105,6 +108,7 @@ function UpdateUser() {
     setUsercity(localStorage.getItem('LocalStorageUserCity'));
     setUsertype(localStorage.getItem('LocalStorageUserType'));
     setEmail(localStorage.getItem('LocalStorageEmail'));
+    setFullname(localStorage.getItem('LocalStorageFullName'));
     // setPassword(localStorage.getItem('LocalStoragePassword'));
 
   }, [])
@@ -127,7 +131,7 @@ function UpdateUser() {
   return (
     <>
     {loggedIn ? 
-    userJSON.usertype === 'admin' || userJSON.usertype === 'superuser'?
+    userDataJSON.usertype === 'admin' || userDataJSON.usertype === 'superuser'?
     // ------------------------------------
     <div className='updateUser'>
         {
@@ -275,7 +279,15 @@ function UpdateUser() {
                   </Form.Control>
               </Form.Group>
 
-            { (username && userage && usercity && usertype && email)
+              <Form.Group className="mb-3" controlId="formBasicFullname">
+              <Form.Label style={{ marginLeft:5 }}>Fullname : </Form.Label>
+              <Form.Control required name="fullname" value={fullname || ""} maxLength="20" onBlur={(eve)=> setFullname(eve.target.value.trim())} onChange={(e)=> setFullname(e.target.value)}  placeholder="Enter your fullname here" style={{borderRadius: 16 }} />
+              <Form.Control.Feedback type="invalid" style={{ marginLeft:5 }}>
+                  Please provide a valid fullname.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            { (username && userage && usercity && usertype && email && fullname)
               // { (username && userage && usercity && !specialChar)
 
               ? 

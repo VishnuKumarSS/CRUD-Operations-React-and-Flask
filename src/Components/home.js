@@ -4,6 +4,7 @@ import "../styling/home.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import GoogleSignOut from "./googleSignOut";
+import GoogleSignIn from "./googleSignIn";
 
 export default function Home() {
   const [userDataJSON, setUserDataJSON] = useState(null);
@@ -74,8 +75,8 @@ export default function Home() {
               borderRadius: 16,
               marginTop: 30,
               color: "#000",
-              backgroundColor: "#ffdc7c",
-              border: "3px solid #ffc420",
+              backgroundColor: "#FFE0B2",
+              border: "3px solid #FFCC80",
             }}
           >
             DASHBOARD
@@ -94,8 +95,8 @@ export default function Home() {
               flexDirection: "column",
               borderRadius: 16,
               color: "#000",
-              backgroundColor: "#ffdc7c",
-              border: "3px solid #ffc420",
+              backgroundColor: "#FFE0B2",
+              border: "3px solid #FFCC80",
             }}
           >
             {loggedIn && (userDataJSON.usertype === 'admin' || userDataJSON.usertype === 'superuser' )?
@@ -117,8 +118,8 @@ export default function Home() {
               flexDirection: "column",
               borderRadius: 16,
               color: "#000",
-              backgroundColor: "#ffdc7c",
-              border: "3px solid #ffc420",
+              backgroundColor: "#FFE0B2",
+              border: "3px solid #FFCC80",
             }}
           >
             LOGIN
@@ -126,22 +127,23 @@ export default function Home() {
         </Link>
         }
         {!loggedIn &&
-        <Link style={{ textDecoration: "none" }} to="/googlepage">
-          <Button
-            className="homeButton"
-            style={{
-              marginBottom: 10,
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: 16,
-              color: "#000",
-              backgroundColor: "#B2DFDB",
-              border: "3px solid #4DB6AC",
-            }}
-          >
-            Continue with GOOGLE?
-          </Button>
-        </Link>
+        // <Link style={{ textDecoration: "none" }} to="/googlepage">
+        //   <Button
+        //     className="homeButton"
+        //     style={{
+        //       marginBottom: 10,
+        //       display: "flex",
+        //       flexDirection: "column",
+        //       borderRadius: 16,
+        //       color: "#000",
+        //       backgroundColor: "#B2DFDB",
+        //       border: "3px solid #4DB6AC",
+        //     }}
+        //   >
+        //     Continue with GOOGLE?
+        //   </Button>
+        // </Link>
+        <GoogleSignIn />
       
 
         }

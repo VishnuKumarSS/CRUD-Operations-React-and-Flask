@@ -1,5 +1,5 @@
 .allUsers {
-    background-color: #ffdc7c;
+    background-color: #FFE0B2;
     border-radius: 1.5rem;
     padding: 2rem;
     margin-bottom: 50px;
@@ -27,7 +27,8 @@ p {
     margin-bottom:30px;
 }
 .heading {
-    background-color:rgb(255, 244, 212);
+    /* background-color:rgb(255, 244, 212); */
+    background-color: #FFCC80;
     text-decoration: none;
     font-weight: 300;
 }

@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import { GoogleLogin } from 'react-google-login'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import "../styling/googleSignIn.css"
 
 const client_id = "830332678302-05c3q8bnjjbgmhh4drn86cv2l3e05dmu.apps.googleusercontent.com"
 
@@ -37,7 +36,7 @@ function GoogleSignIn() {
                 }
                 else{
                   console.log('User datas are already provided.')
-                  // navigate("/")
+                  navigate("/allusers")
                 }
               })
               .catch((err) => {
@@ -94,8 +93,9 @@ function GoogleSignIn() {
         </div>
 
         :
-        <div className='container' style={{margin: "auto", width: "500px",padding: "3rem", alignItems: "center", display: "flex", flexDirection: 'column'}}>
-          <h1 style={{ marginBottom: 30, textAlign: "center"}}>Click the below button to Continue</h1>
+        // <div className='container' style={{margin: "auto", width: "500px",padding: "3rem", alignItems: "center", display: "flex", flexDirection: 'column'}}>
+        //   <h1 style={{ marginBottom: 30, textAlign: "center"}}>Click the below button to Continue</h1>
+        <div>
           <GoogleLogin
             render={renderProps => (
               <button onClick={renderProps.onClick} style={{

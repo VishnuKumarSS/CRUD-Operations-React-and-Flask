@@ -1,5 +1,6 @@
 .createUser, .updateUser, .loginUser {
-    background-color: rgb(255, 220, 124);
+    /* background-color: rgb(255, 220, 124); */
+    background-color: #FFE0B2; /* FFCC80 */
     border-radius: 1rem;
     padding: 2rem;
     margin-bottom: 50px;

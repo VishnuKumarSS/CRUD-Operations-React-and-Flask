@@ -11,25 +11,39 @@ function NavBar() {
   const [ loggedIn, setLoggedIn ] = useState(false);
   const [userJSON, setUserJSON] = useState(null);
 
+  const [ addUserData, setAddUserData ] = useState(false);
+
   let navigate = useNavigate();
 
     useEffect(() => {
       axios.get("/current_user")
       .then((res) => {
-        setUserJSON(res.data);
+        // res.data[1] 
+          if (res.data[1]){
+            setUserJSON(res.data[1])
+            setAddUserData(false)
+          }
+          else{
+            setUserJSON({'usertype': 'normal'})
+            setAddUserData(true);
+          }
+          
+
         setLoggedIn(true)        
       })
       .catch((err) => {
         console.log("error:", err);
         setLoggedIn(false)
+        setAddUserData(false)
         console.log("Currently no users logged in.");
       });
     },[]);
     
-    // const logoutUser = async () => {
-      const logoutUser = () => {
+    const logoutUser = async () => {
+      // const logoutUser = () => {
         try{
-          axios.post("/logout");
+          await axios.post("/logout");
+          // axios.post("/logout");
           setLoggedOut(true)
           console.log('Logged Out.')
           navigate("/")
@@ -45,7 +59,7 @@ function NavBar() {
   return (
     <div style={{marginTop:-50}}>
         {/* <Navbar bg="dark" variant="dark"> */}
-        <Navbar variant="light" style={{ backgroundColor: "#ffdc7c" }}  >
+        <Navbar variant="light" style={{ backgroundColor: "#FFE0B2" }}  >
           {/* <Container > */}
             {/* <Navbar.Brand style={{ marginLeft: -90 }} href="#home">
               ADMIN PANEL
@@ -83,8 +97,8 @@ function NavBar() {
                     borderRadius: 16,
                     color: "#000",
                     // backgroundColor: "#ffdc7c",
-                    backgroundColor: "#ffc420",
-                    border: "3px solid #ffc420",
+                    backgroundColor: "#FFCC80",
+                    border: "3px solid #FFCC80",
                     width: "auto",
                     margin: 5
                   }}
@@ -103,15 +117,38 @@ function NavBar() {
                     flexDirection: "column",
                     borderRadius: 16,
                     color: "#000",
-                    backgroundColor: "#ffc420",
-                    border: "3px solid #ffc420",
+                    backgroundColor: "#FFCC80",
+                    border: "3px solid #FFCC80",
                     width: "auto",
                     margin: 5
                   }}
                 >
-                  Add User
+                  ADD_USER
                 </Button>
               </Link>
+              }
+              {
+                addUserData 
+                && 
+                <Link style={{ textDecoration: "none" }} to="/adduserdata">
+                <Button
+                  className="homeButton"
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 16,
+                    color: "#000",
+                    backgroundColor: "#FFCC80",
+                    border: "3px solid #FFCC80",
+                    width: "auto",
+                    margin: 5
+                  }}
+                >
+                  ADD_DATA
+                </Button>
+              </Link>
+
               }
               
               {!loggedOut && loggedIn &&
