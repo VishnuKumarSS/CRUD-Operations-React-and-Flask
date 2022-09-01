@@ -6,6 +6,7 @@ import redis
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -13,39 +14,32 @@ api = Api(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://starz1:starz1234@localhost/mydatabase"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ECHO"] = True  # to see all the raw queries on the CLI
+app.config["SQLALCHEMY_ECHO"] = True # to see all the raw queries on the CLI 
 
-# this secret key is created in the .env file
-app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
+app.config["SECRET_KEY"] = os.environ["SECRET_KEY"] # this secret key is created in the .env file
 
 app.config['SESSION_TYPE'] = "redis"
 app.config['SESSION_PERMANENT'] = False
-# we are gonna use secret key signer...so it's true
-app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_USE_SIGNER'] = True # we are gonna use secret key signer...so it's true
 app.config['SESSION_URL'] = redis.from_url("redis://127.0.0.1:6379")
 
 db = SQLAlchemy(app)
 
-
 def get_uuid():
-    # The UUID as a 32-character lowercase hexadecimal string.
-    return uuid4().hex
+    return uuid4().hex #The UUID as a 32-character lowercase hexadecimal string.
 
 
 class Users(db.Model):
     __tablename__ = 'users'
 
-    id = db.Column(db.String(32), unique=True,
-                   default=get_uuid, primary_key=True)
+    id = db.Column(db.String(32), unique=True, default=get_uuid, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     fullname = db.Column(db.String(50), nullable=False)
     google_id = db.Column(db.String(), unique=True)
     password = db.Column(db.String(512), nullable=True)
 
-    # without the uselist we cannot directly access the child table's attributes
-    user_data = db.relationship('UserData', backref='users', uselist=False)
+    user_data = db.relationship('UserData', backref='users', uselist=False) # without the uselist we cannot directly access the child table's attributes
     # user_data = db.relationship('UserData', backref='users')
-
     def __str__(self):
         return f"{self.email} - {self.fullname}"
 
@@ -53,17 +47,17 @@ class Users(db.Model):
 class UserData(db.Model):
     __tablename__ = "user_data"
 
-    id = db.Column(db.String(32), unique=True,
-                   default=get_uuid, primary_key=True)
+    id = db.Column(db.String(32), unique=True, default=get_uuid, primary_key=True)
     username = db.Column(db.String(50), nullable=False)
     userage = db.Column(db.Integer, nullable=False)
     usercity = db.Column(db.String(50), nullable=False)
     usertype = db.Column(db.String, nullable=False)
 
-    users_id = db.Column(db.String(32), db.ForeignKey('users.id'))
+    users_id = db.Column(db.String(32) , db.ForeignKey('users.id'))
 
     def __str__(self):
         return f"{self.username} - {self.userage} - {self.usercity} - {self.usertype}"
+        
 
 
 # db.init_app(app)
