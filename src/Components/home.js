@@ -76,7 +76,7 @@ export default function Home() {
               marginTop: 30,
               color: "#000",
               backgroundColor: "#FFE0B2",
-              border: "3px solid #FFCC80",
+              border: "3px solid #FFB74D",
             }}
           >
             DASHBOARD
@@ -96,7 +96,7 @@ export default function Home() {
               borderRadius: 16,
               color: "#000",
               backgroundColor: "#FFE0B2",
-              border: "3px solid #FFCC80",
+              border: "3px solid #FFB74D",
             }}
           >
             {loggedIn && (userDataJSON.usertype === 'admin' || userDataJSON.usertype === 'superuser' )?
@@ -119,7 +119,7 @@ export default function Home() {
               borderRadius: 16,
               color: "#000",
               backgroundColor: "#FFE0B2",
-              border: "3px solid #FFCC80",
+              border: "3px solid #FFB74D",
             }}
           >
             LOGIN

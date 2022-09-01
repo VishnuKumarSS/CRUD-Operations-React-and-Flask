@@ -80,6 +80,10 @@ add_user_data_field = {
 
 class ReactGoogleSignin(Resource):
     def post(self):
+        """
+        This method will create a user if not register and logs in the user if already registered.
+        """
+        
         # below we are getting the data's directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.
         email = request.json['email']
         fullname = request.json['name']
@@ -139,6 +143,9 @@ class AllUsers(Resource):
 
 class SearchUser(Resource):
     def get(self, username):
+        """
+        This get method will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
+        """
         try:
             userdata = db.engine.execute(
                 f"select * from user_data where username='{username}'").first()._asdict()
@@ -147,17 +154,6 @@ class SearchUser(Resource):
         except:
             abort(404, message='User Not Found.')
 
-        # resp = {}
-        # resp[user.id] = {
-        #         'email' : user.email ,
-        #         'fullname' : user.fullname,
-        #         'google_id' : user.google_id if user.google_id != None else None,
-        #         'password' : user.password if user.password != None else None,
-        #         'username' : user.user_data.username if user.user_data != None else None,
-        #         'userage' : user.user_data.userage if user.user_data != None else None,
-        #         'usercity' : user.user_data.usercity if user.user_data != None else None,
-        #         'usertype' : user.user_data.usertype if user.user_data != None else None
-        # }
         return ([user, userdata])
 
     def delete(self, username):
