@@ -79,42 +79,8 @@ add_user_data_field = {
 
 
 class ReactGoogleSignin(Resource):
-    """
-    Add up two integer numbers.
-
-    This function simply wraps the ``+`` operator, and does not
-    do anything interesting, except for illustrating what
-    the docstring of a very simple function looks like.
-
-    Parameters
-    ----------
-    num1 : int
-        First number to add.
-    num2 : int
-        Second number to add.
-
-    Returns
-    -------
-    int
-        The sum of ``num1`` and ``num2``.
-
-    See Also
-    --------
-    subtract : Subtract one integer from another.
-
-    Examples
-    --------
-    >>> add(2, 2)
-    4
-    >>> add(25, 0)
-    25
-    >>> add(10, -10)
-    0
-    """
     def post(self):
-        """
-        This method will create a user if not register and logs in the user if already registered.
-        """
+        """This method will create a user if not register and logs in the user if already registered."""
         
         # below we are getting the data's directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.
         email = request.json['email']
@@ -176,12 +142,14 @@ class AllUsers(Resource):
 class SearchUser(Resource):
     """SearchUser class will be responsible for searching, deleting, updating a particular user."""
 
-    def get(self, username):
-        """
-        This get method will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
+    def get(self, username):        
+        """This get method will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
 
-        :param username: str
-        :return: matching user
+        :param username: This is the name which is passed in the url route while calling api
+        :type username: int
+        
+        :rtype: ([dict, dict])
+        :return: ([user, userdata])
         """
         try:
             userdata = db.engine.execute(
@@ -192,7 +160,7 @@ class SearchUser(Resource):
             abort(404, message='User Not Found.')
 
         return ([user, userdata])
-
+# abc = SearchUser.get()
     def delete(self, username):
         # user_delete = UserData.query.filter_by(username=username).first()
         # if user_delete:
