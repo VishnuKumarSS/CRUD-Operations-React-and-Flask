@@ -5,12 +5,12 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-project = 'Flask Api'
+
+project = 'Flask API'
 copyright = '2022, Vishnu'
 author = 'Vishnu'
 release = '1.0.0'
@@ -27,7 +27,7 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
+print(sys.executable)
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

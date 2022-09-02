@@ -79,6 +79,38 @@ add_user_data_field = {
 
 
 class ReactGoogleSignin(Resource):
+    """
+    Add up two integer numbers.
+
+    This function simply wraps the ``+`` operator, and does not
+    do anything interesting, except for illustrating what
+    the docstring of a very simple function looks like.
+
+    Parameters
+    ----------
+    num1 : int
+        First number to add.
+    num2 : int
+        Second number to add.
+
+    Returns
+    -------
+    int
+        The sum of ``num1`` and ``num2``.
+
+    See Also
+    --------
+    subtract : Subtract one integer from another.
+
+    Examples
+    --------
+    >>> add(2, 2)
+    4
+    >>> add(25, 0)
+    25
+    >>> add(10, -10)
+    0
+    """
     def post(self):
         """
         This method will create a user if not register and logs in the user if already registered.
