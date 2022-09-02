@@ -254,40 +254,6 @@
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">ReactGoogleSignin</span></span><a class="reference internal" href="_modules/restapi.html#ReactGoogleSignin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.ReactGoogleSignin" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>Add up two integer numbers.</p>
-<p>This function simply wraps the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator, and does not
-do anything interesting, except for illustrating what
-the docstring of a very simple function looks like.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num1</strong> (<em>int</em>) – First number to add.</p></li>
-<li><p><strong>num2</strong> (<em>int</em>) – Second number to add.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The sum of <code class="docutils literal notranslate"><span class="pre">num1</span></code> and <code class="docutils literal notranslate"><span class="pre">num2</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">subtract</span></code></dt><dd><p>Subtract one integer from another.</p>
-</dd>
-</dl>
-</div>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="go">4</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="go">25</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">)</span>
-<span class="go">0</span>
-</pre></div>
-</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reactgooglesignin'</span></em><a class="headerlink" href="#restapi.ReactGoogleSignin.endpoint" title="Permalink to this definition"></a></dt>
@@ -332,9 +298,18 @@ the docstring of a very simple function looks like.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.SearchUser.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#SearchUser.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser.get" title="Permalink to this definition"></a></dt>
-<dd><p>This get method will search for the user and returns that user’s details in a dictionary format if exist, otherwise it will abort the request with User Not found.
-:param username: str
-:return: matching user</p>
+<dd><p>This get method will search for the user and returns that user’s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is passed in the url route while calling api</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>([dict, dict])</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>([user, userdata])</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

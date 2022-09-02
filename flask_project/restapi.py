@@ -146,7 +146,7 @@ class SearchUser(Resource):
         """This get method will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
 
         :param username: This is the name which is passed in the url route while calling api
-        :type username: int
+        :type username: str
         
         :rtype: ([dict, dict])
         :return: ([user, userdata])
@@ -160,7 +160,7 @@ class SearchUser(Resource):
             abort(404, message='User Not Found.')
 
         return ([user, userdata])
-# abc = SearchUser.get()
+
     def delete(self, username):
         # user_delete = UserData.query.filter_by(username=username).first()
         # if user_delete:

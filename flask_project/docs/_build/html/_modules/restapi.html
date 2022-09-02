@@ -146,42 +146,8 @@
 
 
 <div class="viewcode-block" id="ReactGoogleSignin"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin">[docs]</a><span class="k">class</span> <span class="nc">ReactGoogleSignin</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add up two integer numbers.</span>
-
-<span class="sd">    This function simply wraps the ``+`` operator, and does not</span>
-<span class="sd">    do anything interesting, except for illustrating what</span>
-<span class="sd">    the docstring of a very simple function looks like.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    num1 : int</span>
-<span class="sd">        First number to add.</span>
-<span class="sd">    num2 : int</span>
-<span class="sd">        Second number to add.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    int</span>
-<span class="sd">        The sum of ``num1`` and ``num2``.</span>
-
-<span class="sd">    See Also</span>
-<span class="sd">    --------</span>
-<span class="sd">    subtract : Subtract one integer from another.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; add(2, 2)</span>
-<span class="sd">    4</span>
-<span class="sd">    &gt;&gt;&gt; add(25, 0)</span>
-<span class="sd">    25</span>
-<span class="sd">    &gt;&gt;&gt; add(10, -10)</span>
-<span class="sd">    0</span>
-<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ReactGoogleSignin.post"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method will create a user if not register and logs in the user if already registered.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;This method will create a user if not register and logs in the user if already registered.&quot;&quot;&quot;</span>
         
         <span class="c1"># below we are getting the data&#39;s directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.</span>
         <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
@@ -243,11 +209,14 @@
 <div class="viewcode-block" id="SearchUser"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser">[docs]</a><span class="k">class</span> <span class="nc">SearchUser</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;SearchUser class will be responsible for searching, deleting, updating a particular user.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SearchUser.get"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This get method will search for the user and returns that user&#39;s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</span>
-<span class="sd">        :param username: str</span>
-<span class="sd">        :return: matching user</span>
+<div class="viewcode-block" id="SearchUser.get"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>        
+        <span class="sd">&quot;&quot;&quot;This get method will search for the user and returns that user&#39;s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</span>
+
+<span class="sd">        :param username: This is the name which is passed in the url route while calling api</span>
+<span class="sd">        :type username: str</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: ([dict, dict])</span>
+<span class="sd">        :return: ([user, userdata])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">userdata</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
