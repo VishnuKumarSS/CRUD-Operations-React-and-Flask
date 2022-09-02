@@ -179,6 +179,7 @@ class SearchUser(Resource):
     def get(self, username):
         """
         This get method will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
+
         :param username: str
         :return: matching user
         """
