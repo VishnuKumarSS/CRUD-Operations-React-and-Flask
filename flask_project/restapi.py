@@ -142,9 +142,13 @@ class AllUsers(Resource):
 
 
 class SearchUser(Resource):
+    """SearchUser class will be responsible for searching, deleting, updating a particular user."""
+
     def get(self, username):
         """
         This get method will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
+        :param username: str
+        :return: matching user
         """
         try:
             userdata = db.engine.execute(
