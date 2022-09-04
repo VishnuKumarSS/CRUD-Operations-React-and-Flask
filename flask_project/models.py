@@ -28,11 +28,17 @@ db = SQLAlchemy(app)
 
 
 def get_uuid():
+    """This function will return a random UUID as a 32-character lowercase haxadecimal string.
+    
+    :return: the 32-character string
+    :rtype: str"""
     # The UUID as a 32-character lowercase hexadecimal string.
     return uuid4().hex
 
 
 class Users(db.Model):
+    """This creates a users table on the database with he following fields."""
+
     __tablename__ = 'users'
 
     id = db.Column(db.String(32), unique=True,
@@ -47,10 +53,17 @@ class Users(db.Model):
     # user_data = db.relationship('UserData', backref='users')
 
     def __str__(self):
+        """This stringifies the email, fullname objects and returns. It helps while debugging the code.
+        
+        :return: string consisting of email and fullname
+        :rtype: str
+        """
         return f"{self.email} - {self.fullname}"
 
 
 class UserData(db.Model):
+    """This creates a users table on the database with he following fields."""
+
     __tablename__ = "user_data"
 
     id = db.Column(db.String(32), unique=True,
@@ -63,6 +76,11 @@ class UserData(db.Model):
     users_id = db.Column(db.String(32), db.ForeignKey('users.id'))
 
     def __str__(self):
+        """This stringifies the username, userage, usercity, usertype objects and returns. It helps while debugging the code.
+        
+        :return: string consisting of username, userage, usercity, usertype
+        :rtype: str
+        """
         return f"{self.username} - {self.userage} - {self.usercity} - {self.usertype}"
 
 
