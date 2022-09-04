@@ -1,3 +1,22 @@
+"""Spreadsheet Column Printer
+
+This script allows the user to print to the console all columns in the
+spreadsheet. It is assumed that the first row of the spreadsheet is the
+location of the columns.
+
+This tool accepts comma separated value files (.csv) as well as excel
+(.xls, .xlsx) files.
+
+This script requires that `pandas` be installed within the Python
+environment you are running this script in.
+
+This file can also be imported as a module and contains the following
+functions:
+
+    * get_spreadsheet_cols - returns the column headers of the file
+    * main - the main function of the script
+"""
+
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
@@ -79,8 +98,13 @@ add_user_data_field = {
 
 
 class ReactGoogleSignin(Resource):
+    """This will create a user if not registered and logs in the user if already registered with the post method."""
     def post(self):
-        """This method will create a user if not register and logs in the user if already registered."""
+        """This method will get the user information like email, fullname, googld_id from the frontend react component and store the data with few conditions.
+        
+        :return: the user is created or logged in or not
+        :rtype: str
+        """
         
         # below we are getting the data's directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.
         email = request.json['email']
@@ -111,7 +135,14 @@ class ReactGoogleSignin(Resource):
 
 
 class AllUsers(Resource):
+    """This has one method that gets the user data"""
     def get(self):
+        """This method will return all the users and users data stored in the database
+        
+        :return: list of users and users data with custom structure
+        :rtype: [dict, dict]
+        """
+
         allusers = Users.query.all()
 
         users = {}
@@ -143,13 +174,13 @@ class SearchUser(Resource):
     """SearchUser class will be responsible for searching, deleting, updating a particular user."""
 
     def get(self, username):        
-        """This get method will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
+        """This will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
 
-        :param username: This is the name which is passed in the url route while calling api
+        :param username: This is the name which is coming from the url route while calling api
         :type username: str
-        
-        :rtype: ([dict, dict])
-        :return: ([user, userdata])
+
+        :return: list of user and user data  
+        :rtype: [dict, dict]
         """
         try:
             userdata = db.engine.execute(
@@ -162,6 +193,14 @@ class SearchUser(Resource):
         return ([user, userdata])
 
     def delete(self, username):
+        """This will delete the whole user data with the username if exist, otherwise abort the request. If we try to delete the currently logged in user, it will abort. 
+
+        :param username: This is the name which is coming from the url route while calling api
+        :type username: str
+
+        :return: the user is deleted or not
+        :rtype: str
+        """
         # user_delete = UserData.query.filter_by(username=username).first()
         # if user_delete:
         #     db.session.delete(user_delete)
@@ -196,6 +235,14 @@ class SearchUser(Resource):
     # @marshal_with(create_user_field )
     # # Instead of the above line we can use .asdict() function or dict() to return in object format.
     def put(self, username):
+        """This will get the username, if any matching user exist then it will update that particular user data.
+
+        :param username: This is the name which is coming from the url route while calling api
+        :type username: str
+
+        :return: list of updated user and updated user data  
+        :rtype: [dict, dict]
+        """
         parsed_user = update_user_req.parse_args()
         try:
             userdata = db.engine.execute(
@@ -274,11 +321,17 @@ class SearchUser(Resource):
 
 
 class CreateUser(Resource):
+    """This has one method to create user and store the user data on the database and the firebase."""
     # The below line will help us to convert our python object to look like JSON
     # here the resource fields tells that the returned data's should be in the JSON format...
     # then @marshal_with actually injects that rule in our method.
     @marshal_with(create_user_field)
     def post(self):
+        """This method is used to create a user and store it on the database and the firebase for email and password login. 
+
+        :return: user details like id and email
+        :rtype: dict
+        """
         parsed_user = create_user_req.parse_args()
         # user = UserData.query.filter_by(username=parsed_user["username"]).first()
         email_exist = db.engine.execute(
@@ -313,8 +366,15 @@ class CreateUser(Resource):
 
 
 class AddUserData(Resource):
+    """This has one method to add user data and store the user data on the database."""
+
     @marshal_with(add_user_data_field)
     def post(self):
+        """This method is used to add user information to the current user and store it on the database. 
+
+        :return: all the data of the created user  
+        :rtype: dict
+        """
         parsed_user = add_user_data_req.parse_args()
         user_exist = db.engine.execute(
             f"select * from user_data where username='{parsed_user['username']}'").first()
@@ -368,7 +428,13 @@ class AddUserData(Resource):
 
 
 class Login(Resource):
+    """This will be responsible for logging in the manually created user."""
     def post(self):
+        """This method is used to login a particular user by verifying it on the database and the firebase for authentication.
+
+        :return: all the data of the logged in user  
+        :rtype: dict
+        """
         # instead we can use request.json['field_name'] for individual fields.
         parsed_user = user_login_req.parse_args()
         user = db.engine.execute(
@@ -405,7 +471,13 @@ class Login(Resource):
 
 
 class Logout(Resource):
+    """This has one method to logout user."""
     def post(self):
+        """This method will logout if any users are currently logged in by using session id.
+        
+        :return: logged out or not
+        :rtype: str
+        """
         try:
             session.pop("created_user_id")
         except:
@@ -415,7 +487,13 @@ class Logout(Resource):
 
 
 class CurrentUser(Resource):
+    """This has one method to get the currently logged in user."""
     def get(self):
+        """This method will get the currently logged in user by using the session id and returns the data.
+        
+        :return: the currently logged in user data
+        :rtype: dict
+        """
         user_id = session.get("created_user_id")
         if not user_id:
             abort(401, message='Unauthorized User or No Logged in users.')
