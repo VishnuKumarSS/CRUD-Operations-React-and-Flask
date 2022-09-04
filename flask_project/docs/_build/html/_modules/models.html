@@ -95,11 +95,17 @@
 
 
 <div class="viewcode-block" id="get_uuid"><a class="viewcode-back" href="../models.html#models.get_uuid">[docs]</a><span class="k">def</span> <span class="nf">get_uuid</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This function will return a random UUID as a 32-character lowercase haxadecimal string.</span>
+<span class="sd">    </span>
+<span class="sd">    :return: the 32-character string</span>
+<span class="sd">    :rtype: str&quot;&quot;&quot;</span>
     <span class="c1"># The UUID as a 32-character lowercase hexadecimal string.</span>
     <span class="k">return</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span></div>
 
 
 <div class="viewcode-block" id="Users"><a class="viewcode-back" href="../models.html#models.Users">[docs]</a><span class="k">class</span> <span class="nc">Users</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This creates a users table on the database with he following fields.&quot;&quot;&quot;</span>
+
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;users&#39;</span>
 
     <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -114,10 +120,17 @@
     <span class="c1"># user_data = db.relationship(&#39;UserData&#39;, backref=&#39;users&#39;)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This stringifies the email, fullname objects and returns. It helps while debugging the code.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: string consisting of email and fullname</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fullname</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="UserData"><a class="viewcode-back" href="../models.html#models.UserData">[docs]</a><span class="k">class</span> <span class="nc">UserData</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This creates a users table on the database with he following fields.&quot;&quot;&quot;</span>
+
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;user_data&quot;</span>
 
     <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -130,6 +143,11 @@
     <span class="n">users_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;users.id&#39;</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This stringifies the username, userage, usercity, usertype objects and returns. It helps while debugging the code.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: string consisting of username, userage, usercity, usertype</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">userage</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">usercity</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">usertype</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 

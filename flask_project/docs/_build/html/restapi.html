@@ -76,10 +76,27 @@
              
   <section id="module-restapi">
 <span id="restapi-module"></span><h1>restapi module<a class="headerlink" href="#module-restapi" title="Permalink to this heading"></a></h1>
+<p>Spreadsheet Column Printer</p>
+<p>This script allows the user to print to the console all columns in the
+spreadsheet. It is assumed that the first row of the spreadsheet is the
+location of the columns.</p>
+<p>This tool accepts comma separated value files (.csv) as well as excel
+(.xls, .xlsx) files.</p>
+<p>This script requires that <cite>pandas</cite> be installed within the Python
+environment you are running this script in.</p>
+<p>This file can also be imported as a module and contains the following
+functions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>get_spreadsheet_cols - returns the column headers of the file</p></li>
+<li><p>main - the main function of the script</p></li>
+</ul>
+</div></blockquote>
 <dl class="py class">
 <dt class="sig sig-object py" id="restapi.AddUserData">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">AddUserData</span></span><a class="reference internal" href="_modules/restapi.html#AddUserData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AddUserData" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
+<p>This has one method to add user data and store the user data on the database.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.AddUserData.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'adduserdata'</span></em><a class="headerlink" href="#restapi.AddUserData.endpoint" title="Permalink to this definition"></a></dt>
@@ -101,7 +118,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.AddUserData.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#AddUserData.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AddUserData.post" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method is used to add user information to the current user and store it on the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>all the data of the created user</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -109,6 +135,7 @@
 <dt class="sig sig-object py" id="restapi.AllUsers">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">AllUsers</span></span><a class="reference internal" href="_modules/restapi.html#AllUsers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AllUsers" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
+<p>This has one method that gets the user data</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.AllUsers.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'allusers'</span></em><a class="headerlink" href="#restapi.AllUsers.endpoint" title="Permalink to this definition"></a></dt>
@@ -117,7 +144,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.AllUsers.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#AllUsers.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AllUsers.get" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method will return all the users and users data stored in the database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of users and users data with custom structure</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>[dict, dict]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.AllUsers.mediatypes">
@@ -138,6 +174,7 @@
 <dt class="sig sig-object py" id="restapi.CreateUser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">CreateUser</span></span><a class="reference internal" href="_modules/restapi.html#CreateUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CreateUser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
+<p>This has one method to create user and store the user data on the database and the firebase.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.CreateUser.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'createuser'</span></em><a class="headerlink" href="#restapi.CreateUser.endpoint" title="Permalink to this definition"></a></dt>
@@ -159,7 +196,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.CreateUser.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#CreateUser.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CreateUser.post" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method is used to create a user and store it on the database and the firebase for email and password login.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>user details like id and email</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -167,6 +213,7 @@
 <dt class="sig sig-object py" id="restapi.CurrentUser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">CurrentUser</span></span><a class="reference internal" href="_modules/restapi.html#CurrentUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CurrentUser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
+<p>This has one method to get the currently logged in user.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.CurrentUser.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'currentuser'</span></em><a class="headerlink" href="#restapi.CurrentUser.endpoint" title="Permalink to this definition"></a></dt>
@@ -175,7 +222,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.CurrentUser.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#CurrentUser.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CurrentUser.get" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method will get the currently logged in user by using the session id and returns the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the currently logged in user data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.CurrentUser.mediatypes">
@@ -196,6 +252,7 @@
 <dt class="sig sig-object py" id="restapi.Login">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">Login</span></span><a class="reference internal" href="_modules/restapi.html#Login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Login" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
+<p>This will be responsible for logging in the manually created user.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.Login.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'login'</span></em><a class="headerlink" href="#restapi.Login.endpoint" title="Permalink to this definition"></a></dt>
@@ -217,7 +274,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.Login.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#Login.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Login.post" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method is used to login a particular user by verifying it on the database and the firebase for authentication.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>all the data of the logged in user</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -225,6 +291,7 @@
 <dt class="sig sig-object py" id="restapi.Logout">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">Logout</span></span><a class="reference internal" href="_modules/restapi.html#Logout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Logout" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
+<p>This has one method to logout user.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.Logout.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'logout'</span></em><a class="headerlink" href="#restapi.Logout.endpoint" title="Permalink to this definition"></a></dt>
@@ -246,7 +313,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.Logout.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#Logout.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Logout.post" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method will logout if any users are currently logged in by using session id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>logged out or not</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -254,6 +330,7 @@
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">ReactGoogleSignin</span></span><a class="reference internal" href="_modules/restapi.html#ReactGoogleSignin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.ReactGoogleSignin" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
+<p>This will create a user if not registered and logs in the user if already registered with the post method.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reactgooglesignin'</span></em><a class="headerlink" href="#restapi.ReactGoogleSignin.endpoint" title="Permalink to this definition"></a></dt>
@@ -275,7 +352,15 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#ReactGoogleSignin.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.ReactGoogleSignin.post" title="Permalink to this definition"></a></dt>
-<dd><p>This method will create a user if not register and logs in the user if already registered.</p>
+<dd><p>This method will get the user information like email, fullname, googld_id from the frontend react component and store the data with few conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the user is created or logged in or not</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -288,7 +373,19 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.SearchUser.delete">
 <span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#SearchUser.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser.delete" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This will delete the whole user data with the username if exist, otherwise abort the request. If we try to delete the currently logged in user, it will abort.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is coming from the url route while calling api</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the user is deleted or not</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.SearchUser.endpoint">
@@ -298,16 +395,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.SearchUser.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#SearchUser.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser.get" title="Permalink to this definition"></a></dt>
-<dd><p>This get method will search for the user and returns that user’s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</p>
+<dd><p>This will search for the user and returns that user’s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is passed in the url route while calling api</p>
+<dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is coming from the url route while calling api</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>([dict, dict])</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of user and user data</p>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>([user, userdata])</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[dict, dict]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -328,7 +425,19 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.SearchUser.put">
 <span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#SearchUser.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser.put" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This will get the username, if any matching user exist then it will update that particular user data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is coming from the url route while calling api</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of updated user and updated user data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[dict, dict]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

@@ -65,7 +65,26 @@
            <div itemprop="articleBody">
              
   <h1>Source code for restapi</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pdb</span>
+<span></span><span class="sd">&quot;&quot;&quot;Spreadsheet Column Printer</span>
+
+<span class="sd">This script allows the user to print to the console all columns in the</span>
+<span class="sd">spreadsheet. It is assumed that the first row of the spreadsheet is the</span>
+<span class="sd">location of the columns.</span>
+
+<span class="sd">This tool accepts comma separated value files (.csv) as well as excel</span>
+<span class="sd">(.xls, .xlsx) files.</span>
+
+<span class="sd">This script requires that `pandas` be installed within the Python</span>
+<span class="sd">environment you are running this script in.</span>
+
+<span class="sd">This file can also be imported as a module and contains the following</span>
+<span class="sd">functions:</span>
+
+<span class="sd">    * get_spreadsheet_cols - returns the column headers of the file</span>
+<span class="sd">    * main - the main function of the script</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pdb</span>
 <span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Resource</span><span class="p">,</span> <span class="n">reqparse</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">marshal_with</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">flask_bcrypt</span> <span class="kn">import</span> <span class="n">Bcrypt</span>
@@ -146,8 +165,13 @@
 
 
 <div class="viewcode-block" id="ReactGoogleSignin"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin">[docs]</a><span class="k">class</span> <span class="nc">ReactGoogleSignin</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This will create a user if not registered and logs in the user if already registered with the post method.&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ReactGoogleSignin.post"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method will create a user if not register and logs in the user if already registered.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;This method will get the user information like email, fullname, googld_id from the frontend react component and store the data with few conditions.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: the user is created or logged in or not</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="c1"># below we are getting the data&#39;s directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.</span>
         <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
@@ -178,7 +202,14 @@
 
 
 <div class="viewcode-block" id="AllUsers"><a class="viewcode-back" href="../restapi.html#restapi.AllUsers">[docs]</a><span class="k">class</span> <span class="nc">AllUsers</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This has one method that gets the user data&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="AllUsers.get"><a class="viewcode-back" href="../restapi.html#restapi.AllUsers.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method will return all the users and users data stored in the database</span>
+<span class="sd">        </span>
+<span class="sd">        :return: list of users and users data with custom structure</span>
+<span class="sd">        :rtype: [dict, dict]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">allusers</span> <span class="o">=</span> <span class="n">Users</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
         <span class="n">users</span> <span class="o">=</span> <span class="p">{}</span>
@@ -210,13 +241,13 @@
     <span class="sd">&quot;&quot;&quot;SearchUser class will be responsible for searching, deleting, updating a particular user.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SearchUser.get"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>        
-        <span class="sd">&quot;&quot;&quot;This get method will search for the user and returns that user&#39;s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</span>
+        <span class="sd">&quot;&quot;&quot;This will search for the user and returns that user&#39;s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</span>
 
-<span class="sd">        :param username: This is the name which is passed in the url route while calling api</span>
+<span class="sd">        :param username: This is the name which is coming from the url route while calling api</span>
 <span class="sd">        :type username: str</span>
-<span class="sd">        </span>
-<span class="sd">        :rtype: ([dict, dict])</span>
-<span class="sd">        :return: ([user, userdata])</span>
+
+<span class="sd">        :return: list of user and user data  </span>
+<span class="sd">        :rtype: [dict, dict]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">userdata</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -229,6 +260,14 @@
         <span class="k">return</span> <span class="p">([</span><span class="n">user</span><span class="p">,</span> <span class="n">userdata</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="SearchUser.delete"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This will delete the whole user data with the username if exist, otherwise abort the request. If we try to delete the currently logged in user, it will abort. </span>
+
+<span class="sd">        :param username: This is the name which is coming from the url route while calling api</span>
+<span class="sd">        :type username: str</span>
+
+<span class="sd">        :return: the user is deleted or not</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># user_delete = UserData.query.filter_by(username=username).first()</span>
         <span class="c1"># if user_delete:</span>
         <span class="c1">#     db.session.delete(user_delete)</span>
@@ -263,6 +302,14 @@
     <span class="c1"># @marshal_with(create_user_field )</span>
     <span class="c1"># # Instead of the above line we can use .asdict() function or dict() to return in object format.</span>
 <div class="viewcode-block" id="SearchUser.put"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This will get the username, if any matching user exist then it will update that particular user data.</span>
+
+<span class="sd">        :param username: This is the name which is coming from the url route while calling api</span>
+<span class="sd">        :type username: str</span>
+
+<span class="sd">        :return: list of updated user and updated user data  </span>
+<span class="sd">        :rtype: [dict, dict]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_user</span> <span class="o">=</span> <span class="n">update_user_req</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">userdata</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -341,11 +388,17 @@
 
 
 <div class="viewcode-block" id="CreateUser"><a class="viewcode-back" href="../restapi.html#restapi.CreateUser">[docs]</a><span class="k">class</span> <span class="nc">CreateUser</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This has one method to create user and store the user data on the database and the firebase.&quot;&quot;&quot;</span>
     <span class="c1"># The below line will help us to convert our python object to look like JSON</span>
     <span class="c1"># here the resource fields tells that the returned data&#39;s should be in the JSON format...</span>
     <span class="c1"># then @marshal_with actually injects that rule in our method.</span>
 <div class="viewcode-block" id="CreateUser.post"><a class="viewcode-back" href="../restapi.html#restapi.CreateUser.post">[docs]</a>    <span class="nd">@marshal_with</span><span class="p">(</span><span class="n">create_user_field</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method is used to create a user and store it on the database and the firebase for email and password login. </span>
+
+<span class="sd">        :return: user details like id and email</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_user</span> <span class="o">=</span> <span class="n">create_user_req</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
         <span class="c1"># user = UserData.query.filter_by(username=parsed_user[&quot;username&quot;]).first()</span>
         <span class="n">email_exist</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -380,8 +433,15 @@
 
 
 <div class="viewcode-block" id="AddUserData"><a class="viewcode-back" href="../restapi.html#restapi.AddUserData">[docs]</a><span class="k">class</span> <span class="nc">AddUserData</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This has one method to add user data and store the user data on the database.&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="AddUserData.post"><a class="viewcode-back" href="../restapi.html#restapi.AddUserData.post">[docs]</a>    <span class="nd">@marshal_with</span><span class="p">(</span><span class="n">add_user_data_field</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method is used to add user information to the current user and store it on the database. </span>
+
+<span class="sd">        :return: all the data of the created user  </span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_user</span> <span class="o">=</span> <span class="n">add_user_data_req</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
         <span class="n">user_exist</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;select * from user_data where username=&#39;</span><span class="si">{</span><span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
@@ -435,7 +495,13 @@
 
 
 <div class="viewcode-block" id="Login"><a class="viewcode-back" href="../restapi.html#restapi.Login">[docs]</a><span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This will be responsible for logging in the manually created user.&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Login.post"><a class="viewcode-back" href="../restapi.html#restapi.Login.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method is used to login a particular user by verifying it on the database and the firebase for authentication.</span>
+
+<span class="sd">        :return: all the data of the logged in user  </span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># instead we can use request.json[&#39;field_name&#39;] for individual fields.</span>
         <span class="n">parsed_user</span> <span class="o">=</span> <span class="n">user_login_req</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -472,7 +538,13 @@
 
 
 <div class="viewcode-block" id="Logout"><a class="viewcode-back" href="../restapi.html#restapi.Logout">[docs]</a><span class="k">class</span> <span class="nc">Logout</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This has one method to logout user.&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Logout.post"><a class="viewcode-back" href="../restapi.html#restapi.Logout.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method will logout if any users are currently logged in by using session id.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: logged out or not</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">session</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;created_user_id&quot;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
@@ -482,7 +554,13 @@
 
 
 <div class="viewcode-block" id="CurrentUser"><a class="viewcode-back" href="../restapi.html#restapi.CurrentUser">[docs]</a><span class="k">class</span> <span class="nc">CurrentUser</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This has one method to get the currently logged in user.&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="CurrentUser.get"><a class="viewcode-back" href="../restapi.html#restapi.CurrentUser.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method will get the currently logged in user by using the session id and returns the data.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: the currently logged in user data</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;created_user_id&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user_id</span><span class="p">:</span>
             <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Unauthorized User or No Logged in users.&#39;</span><span class="p">)</span>
