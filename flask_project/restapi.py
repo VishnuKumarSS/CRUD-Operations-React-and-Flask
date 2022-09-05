@@ -1,20 +1,24 @@
-"""Spreadsheet Column Printer
+"""Restful api created using flask_restful to perform CRUD operations and Login system with authentication.
 
-This script allows the user to print to the console all columns in the
-spreadsheet. It is assumed that the first row of the spreadsheet is the
-location of the columns.
+This script allows the user to perform the Create, Read, Update and Delete operations
+using the request methods like POST, GET, PUT, DELETE. 
+There are some methods to login and logout the users.
 
-This tool accepts comma separated value files (.csv) as well as excel
-(.xls, .xlsx) files.
+This module consist of several methods to perform CRUD and to login and logout the users.
+It requires parameters of string for some methods to perform the appropriate action.
 
-This script requires that `pandas` be installed within the Python
-environment you are running this script in.
+This module requires 'flask', 'flask_restful', 'flask_bcrypt', 'flask_session', 'flask_cors' be 
+installed within the python environment where we are running this module.
 
-This file can also be imported as a module and contains the following
-functions:
-
-    * get_spreadsheet_cols - returns the column headers of the file
-    * main - the main function of the script
+This file can also be imported as a module and contains the following classes:
+    * ReactGoogleSignin - This will create a user if not registered and logs in the user if already registered with the post method.
+    * CreateUser - This has one method to create user and store the user data on the database and the firebase.
+    * AddUserData - This has one method to add user data and store the user data on the database.
+    * SearchUser - SearchUser class will be responsible for searching, deleting, updating a particular user.
+    * AllUsers - This has one method that gets the user data
+    * Login - This will be responsible for logging in the manually created user.
+    * Logout - This has one method to logout user.
+    * CurrentUser - This has one method to get the currently logged in user.
 """
 
 import pdb
@@ -99,6 +103,7 @@ add_user_data_field = {
 
 class ReactGoogleSignin(Resource):
     """This will create a user if not registered and logs in the user if already registered with the post method."""
+
     def post(self):
         """This method will get the user information like email, fullname, googld_id from the frontend react component and store the data with few conditions.
         
@@ -136,6 +141,7 @@ class ReactGoogleSignin(Resource):
 
 class AllUsers(Resource):
     """This has one method that gets the user data"""
+
     def get(self):
         """This method will return all the users and users data stored in the database
         
@@ -401,34 +407,9 @@ class AddUserData(Resource):
         else:
             abort(401, message="No Users are currently created or logged in to add data.")
 
-# class Login(Resource):
-#     def post(self):
-#         parsed_user = user_login_req.parse_args() # instead we can use request.json['field_name'] for individual fields.
-#         userdata = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()
-#         user = db.engine.execute(f"select * from users where id='{userdata.users_id}'").first()
-#         # pdb.set_trace()
-#         if userdata is None:
-#             abort(401, message='Unauthorized User')
-#             # or
-#             # return jsonify({"message": 'Unauthorized User'}), 401
-
-#         if not bcrypt.check_password_hash(user['password'], parsed_user['password']): # means...if not True
-#             abort(401, message='Unauthorized User, password not matching.')
-
-#         if userdata:
-#             try:
-#                 user_email_password = db.engine.execute(f"select * from users where id='{userdata.users_id}'").first()
-#                 # here simply getting the current user details for using the email to verify because we are not using email for signin. But in firebase we are using email for verfitication. That's why
-#                 login_firebase = auth.sign_in_with_email_and_password(user_email_password['email'], user_email_password['password'])
-#                 session['created_user_id'] = user_email_password.id # or ... user_email_and_password['id']
-#             except:
-#                 abort(409, message='problem with Google firebase authentication.')
-
-#         return ([user._asdict(), userdata._asdict()])
-
-
 class Login(Resource):
     """This will be responsible for logging in the manually created user."""
+
     def post(self):
         """This method is used to login a particular user by verifying it on the database and the firebase for authentication.
 
@@ -472,6 +453,7 @@ class Login(Resource):
 
 class Logout(Resource):
     """This has one method to logout user."""
+
     def post(self):
         """This method will logout if any users are currently logged in by using session id.
         
@@ -488,6 +470,7 @@ class Logout(Resource):
 
 class CurrentUser(Resource):
     """This has one method to get the currently logged in user."""
+
     def get(self):
         """This method will get the currently logged in user by using the session id and returns the data.
         

@@ -1,4 +1,4 @@
-restapi module
+Restapi module
 ==============
 
 .. automodule:: restapi

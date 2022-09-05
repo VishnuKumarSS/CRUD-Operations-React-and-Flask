@@ -1,3 +1,16 @@
+"""This module models is the default module for out flask application consist of database tables with several constraints.
+
+This script allows the user to create tables in the database with the given fields.
+
+This module consist of several classes to create tables with the constraints.
+This module requires 'flask', 'flask_restful', 'flask_sqlalchemy', 'uuid', 'redis', 'dotenv' be 
+installed within the python environment where we are running this module.
+
+This file can also be imported as a module and contains the following classes:
+    * Users - This creates a users table on the database with the following fields and with some constraints.
+    * UserData - This creates a user_data table on the database with the following fields and with some constraints.
+"""
+
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -37,7 +50,7 @@ def get_uuid():
 
 
 class Users(db.Model):
-    """This creates a users table on the database with he following fields."""
+    """This creates a users table on the database with the following fields and with some constraints."""
 
     __tablename__ = 'users'
 
@@ -62,7 +75,7 @@ class Users(db.Model):
 
 
 class UserData(db.Model):
-    """This creates a users table on the database with he following fields."""
+    """This creates a user_data table on the database with the following fields and with some constraints."""
 
     __tablename__ = "user_data"
 
