@@ -29,7 +29,7 @@ function Login() {
       }
     catch(error){
       console.log(error)
-      if (error.response.status === 401) {
+      if (error.response.status) {
         alert(error.response.data.message);
     }
   };

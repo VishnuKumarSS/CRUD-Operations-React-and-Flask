@@ -50,7 +50,7 @@ function NavBar() {
         }
         catch(error){
           console.log(error)
-          if (error.response.status === 409) {
+          if (error.response.status) {
             alert(error.response.data.message);
         }
       };

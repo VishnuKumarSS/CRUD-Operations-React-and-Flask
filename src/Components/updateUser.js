@@ -9,6 +9,7 @@ function UpdateUser() {
 
   let navigate = useNavigate();
 
+  const [users, setUsers ] = useState(null);
   const [userDataJSON, setUserDataJSON] = useState(null);
   const [loggedIn, setLoggedIn ] = useState(false)
   
@@ -37,7 +38,9 @@ function UpdateUser() {
   useEffect(()=> {
     axios.get("/current_user")
     .then((res) => {
+      setUsers(res.data[0])
       setUserDataJSON(res.data[1]);
+      // setUser(res.data[0]);
       // setResponseData(res)
       setLoggedIn(true)
       console.log(res);
@@ -51,6 +54,7 @@ function UpdateUser() {
     });
     axios.get('/allusers')
     .then((getData)=> {
+      console.log("allusers : ", getData)
       setUserData(getData.data) // if we give 0 instead of one we will get all the user details json as an object. 1 is to get all the usernames array from the backend.
     })
     .catch(err => {
@@ -87,7 +91,7 @@ function UpdateUser() {
       
       setUpdated(true);
 
-   console.log('USER CREATED: ', {
+   console.log('USER Updated: ', {
         "name": username, 
         "age": userage, 
         "city": usercity,
@@ -308,7 +312,9 @@ function UpdateUser() {
                     // to check whether the username already exist or not
                     let usernameCount = 0
                     let emailCount = 0
-                    for ( let i in userData){
+
+
+                    for ( let i in userData[0]){
                       // we are skipping the current username to make it work properly.
                       if (updateUsername === username){
                         continue                      
@@ -316,13 +322,13 @@ function UpdateUser() {
                       if (updateEmail === email){
                         continue
                       }
-                      console.log(userData[i]['username'])
-                      console.log(userData[i]['email'])
-                      if (userData[i]['username'].toLowerCase() === username.toLowerCase()){
+                      console.log(userData[1][i]['username'])
+                      console.log(userData[0][i]['email'])
+                      if (userData[1][i]['username'].toLowerCase() === username.toLowerCase()){
                         setUsernameAlreadyExist(true)
                         usernameCount += 1
                       }
-                      if (userData[i]['email'].toLowerCase() === email){
+                      if (userData[0][i]['email'].toLowerCase() === email){
                         setEmailAlreadyExist(true)
                         usernameCount += 1
                       }

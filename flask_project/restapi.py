@@ -21,6 +21,7 @@ This file can also be imported as a module and contains the following classes:
     * CurrentUser - This has one method to get the currently logged in user.
 """
 
+from email import message
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
@@ -98,12 +99,7 @@ add_user_data_field = {
     'usertype': fields.String
 }
 
-# class ReactGoogleSignin(Resource, strict_slashes = False):
 
-@app.route("/test/test1")
-def hello_world():
-    return "<p>Hello, World!</p>"
-    
 class ReactGoogleSignin(Resource):
     """This will create a user if not registered and logs in the user if already registered with the post method."""
 
@@ -136,10 +132,12 @@ class ReactGoogleSignin(Resource):
             # logged_in_user = Users.query.filter_by(id=google_id).first()
             logged_in_user = db.engine.execute(
                 f"select * from users where google_id='{google_id}'").first()
-            session['created_user_id'] = logged_in_user.id
+            if logged_in_user is None:
+                abort(401, message={"Unauthorized user...Not found."})
+            else:
+                session['created_user_id'] = logged_in_user.id
             # pdb.set_trace()
-
-            return 'User already exist in Database...'
+            return logged_in_user._asdict(), 200
 
 
 class AllUsers(Resource):
@@ -151,7 +149,7 @@ class AllUsers(Resource):
         :return: list of users and users data with custom structure
         :rtype: [dict, dict]
         """
-
+        
         allusers = Users.query.all()
 
         users = {}
@@ -238,7 +236,7 @@ class SearchUser(Resource):
                 f"DELETE from user_data where username='{user_delete['username']}'")
             return ({"message": "User without having the users_id is deleted successfully."}), 200
         else:
-            abort(409, message='User not found to DELETE.')
+            abort(404, message='User not found to DELETE.')
         return 'User is deleted'
 
     # @marshal_with(create_user_field )
@@ -276,7 +274,7 @@ class SearchUser(Resource):
                     if user.email != email_exist['email']:
                         abort(409, message='Email already exist. It must be unique.')
             else:  # if user is not there, then...
-                abort(405, message='User is not there to update.')
+                abort(401, message='User is not there to update.')
 
             if not user.google_id:  # We should not update google's data, so...
                 if parsed_user['email']:
@@ -312,6 +310,7 @@ class SearchUser(Resource):
                 # """)
                 db.engine.execute(
                     f"Update user_data SET username='{parsed_user['username']}' WHERE username = '{username}'")
+
             if parsed_user['userage']:
                 db.engine.execute(
                     f"Update user_data SET userage='{parsed_user['userage']}' WHERE username = '{username}'")
@@ -322,10 +321,11 @@ class SearchUser(Resource):
                 db.engine.execute(
                     f"Update user_data SET usertype='{parsed_user['usertype']}' WHERE username = '{username}'")
 
-            updated_data = db.engine.execute(
-                f"select * from user_data where username='{parsed_user['username']}'").first()._asdict()
-            updated_user = db.engine.execute(
-                f" select * from users where id='{updated_data['users_id']}'").first()._asdict()
+            if not parsed_user['username']:
+                updated_data = db.engine.execute(f"select * from user_data where username='{username}'").first()._asdict()
+            elif parsed_user['username']:
+                updated_data = db.engine.execute(f"select * from user_data where username='{parsed_user['username']}'").first()._asdict()
+            updated_user = db.engine.execute(f"select * from users where id='{updated_data['users_id']}'").first()._asdict()
 
             return ([updated_user, updated_data])
 
@@ -426,7 +426,7 @@ class Login(Resource):
             f"select * from users where email='{parsed_user['email']}'").first()
         # pdb.set_trace()
         if user is None:
-            abort(401, message='Unauthorized User or Not found.')
+            abort(404, message='Email Not found or Unauthorized User')
             # or
             # return jsonify({"message": 'Unauthorized User'}), 401
 
@@ -436,14 +436,9 @@ class Login(Resource):
 
         if user:
             try:
-                # here we also can use the above user object.
-                user_email_password = db.engine.execute(
-                    f"select * from users where id='{user.id}'").first()
                 # here simply getting the current user details for using the email to verify because we are not using email for signin. But in firebase we are using email for verfitication. That's why
-                login_firebase = auth.sign_in_with_email_and_password(
-                    user_email_password['email'], user_email_password['password'])
-                # or ... user_email_and_password['id']
-                session['created_user_id'] = user_email_password.id
+                login_firebase = auth.sign_in_with_email_and_password(user['email'], user['password'])
+                session['created_user_id'] = user.id
             except:
                 abort(409, message='problem with Google firebase authentication.')
         if user:
@@ -467,7 +462,7 @@ class Logout(Resource):
         try:
             session.pop("created_user_id")
         except:
-            abort(409, message='No user found with the Session ID.')
+            abort(401, message='No user found with the Session ID.')
 
         return {'message': 'Successfully logged out'}, 200
 
