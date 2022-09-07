@@ -298,7 +298,10 @@
 
 <span class="c1"># class ReactGoogleSignin(Resource, strict_slashes = False):</span>
 
-
+<div class="viewcode-block" id="hello_world"><a class="viewcode-back" href="../restapi.html#restapi.hello_world">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/test/test1&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;&lt;p&gt;Hello, World!&lt;/p&gt;&quot;</span></div>
+    
 <div class="viewcode-block" id="ReactGoogleSignin"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin">[docs]</a><span class="k">class</span> <span class="nc">ReactGoogleSignin</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This will create a user if not registered and logs in the user if already registered with the post method.&quot;&quot;&quot;</span>
 
@@ -438,7 +441,7 @@
 
     <span class="c1"># @marshal_with(create_user_field )</span>
     <span class="c1"># # Instead of the above line we can use .asdict() function or dict() to return in object format.</span>
-<div class="viewcode-block" id="SearchUser.put"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+<div class="viewcode-block" id="SearchUser.put"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;This will get the username, if any matching user exist then it will update that particular user data.</span>
 
 <span class="sd">        :param username: This is the name which is coming from the url route while calling api</span>

@@ -100,7 +100,10 @@ add_user_data_field = {
 
 # class ReactGoogleSignin(Resource, strict_slashes = False):
 
-
+@app.route("/test/test1")
+def hello_world():
+    return "<p>Hello, World!</p>"
+    
 class ReactGoogleSignin(Resource):
     """This will create a user if not registered and logs in the user if already registered with the post method."""
 
@@ -240,7 +243,7 @@ class SearchUser(Resource):
 
     # @marshal_with(create_user_field )
     # # Instead of the above line we can use .asdict() function or dict() to return in object format.
-    def put(self, username):
+    def put(self, username: str):
         """This will get the username, if any matching user exist then it will update that particular user data.
 
         :param username: This is the name which is coming from the url route while calling api
@@ -249,6 +252,7 @@ class SearchUser(Resource):
         :return: list of updated user and updated user data  
         :rtype: [dict, dict]
         """
+
         parsed_user = update_user_req.parse_args()
         try:
             userdata = db.engine.execute(

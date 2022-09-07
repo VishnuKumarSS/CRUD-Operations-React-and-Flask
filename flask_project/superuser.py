@@ -6,7 +6,7 @@ This module requires 'click' be installed within the python environment where we
 And also it required custom modules like 'models' and 'restapi' to be imported.
 
 This file can also be imported as a module and contains the following functions:
-    * Users - This function creates a superuser for the admin dashboard application with the id set to 0
+    * super_user - This function creates a superuser for the admin dashboard application with the id set to 0
 """
 
 import click
@@ -27,7 +27,6 @@ from restapi import *
                 help='The age of the superuser.')
 @click.option('--usercity', prompt='Enter your city',
                 help='The city of the superuser.')
-
 def super_user(email, fullname, password, username, userage, usercity):
     """This function creates a superuser for the admin dashboard application with the id set to 0.
     
@@ -47,7 +46,6 @@ def super_user(email, fullname, password, username, userage, usercity):
     :return: whether the superuser is created or not
     :rtype: str
     """
-
     db.create_all()
     hashed_password = bcrypt.generate_password_hash(f'{password}').decode('utf-8')
     try:
@@ -70,6 +68,11 @@ def super_user(email, fullname, password, username, userage, usercity):
         else:
             click.echo('Failed to create superuser. Enter valid data.')
 
+def dummy():
+
+
+
+    pass
 
 if __name__ == '__main__':
     super_user()

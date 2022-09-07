@@ -97,6 +97,7 @@ class UserData(db.Model):
         return f"{self.username} - {self.userage} - {self.usercity} - {self.usertype}"
 
 
+
 # db.init_app(app)
 # db.drop_all()
 # db.create_all()
