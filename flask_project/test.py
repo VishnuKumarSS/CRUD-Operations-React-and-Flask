@@ -31,7 +31,7 @@ def test_login_200(client):
     assert response.status_code == 200 , res['message']
 
 def test_login_401(client):
-    """It should return status code as 200 because we passed all the credentials to login a authenticated user"""
+    """It should return status code as 401 because we passed all the credentials to login a authenticated user"""
     
     response = client.post("/login", 
     json={
@@ -90,18 +90,18 @@ def test_google_signin_type(client):
     response = client.get("/google_signin")
     assert response.content_type == "application/json"
 
-# def test_create_user_200(client):
-#     """It should return 200 when we pass the NEW email that is not found in database and firebase."""
+def test_create_user_200(client):
+    """It should return 200 when we pass the NEW email that is not found in database and firebase."""
 
-#     response = client.post("/create_user", 
-#     json = {
-#         "fullname": "fullname",
-#         "email": "newemail@email.com", # new email
-#         "password": "1234"
-#     })
-#     # pdb.set_trace()
-#     res = json.loads(response.data.decode('utf-8'))
-#     assert response.status_code == 200, res['message']
+    response = client.post("/create_user", 
+    json = {
+        "fullname": "fullname",
+        "email": "newemail@email.com", # new email
+        "password": "1234"
+    })
+    # pdb.set_trace()
+    res = json.loads(response.data.decode('utf-8'))
+    assert response.status_code == 200, res['message']
 
 
 def test_create_user_409(client):
@@ -228,11 +228,11 @@ def test_searchuser_get_type(client):
     response = client.get("/username")
     assert response.content_type == "application/json"
 
-# def test_searchuser_delete_200(client):
-#     """It should return status code 200 when we pass the existing username to delete the user."""
+def test_searchuser_delete_200(client):
+    """It should return status code 200 when we pass the existing username to delete the user."""
     
-#     response = client.delete("/<username_to_delete>")
-#     assert response.status_code == 200
+    response = client.delete("/<username_to_delete>")
+    assert response.status_code == 200
 
 def test_searchuser_delete_404(client):
     """It should return status code 404 when we pass the username which doesn't exist in db to delete."""
@@ -276,7 +276,6 @@ def test_searchuser_put_type(client):
 
     response = client.put("/dummy_username")
     assert response.content_type == "application/json"
-
 
 
 
