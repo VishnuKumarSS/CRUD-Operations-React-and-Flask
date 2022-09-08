@@ -73,27 +73,38 @@
              
   <section id="module-models">
 <span id="models-module"></span><h1>models module<a class="headerlink" href="#module-models" title="Permalink to this heading"></a></h1>
-<p>This module models is the default module for out flask application consist of database tables with several constraints.</p>
-<p>This script allows the user to create tables in the database with the given fields.</p>
-<p>This module consist of several classes to create tables with the constraints.
-This module requires <code class="docutils literal notranslate"><span class="pre">flask,</span> <span class="pre">flask_restful,</span> <span class="pre">flask_sqlalchemy,</span> <span class="pre">uuid,</span> <span class="pre">redis,</span> <span class="pre">dotenv</span></code> be
+<p>The module <code class="docutils literal notranslate"><span class="pre">models.py</span></code> is the main and default module for our flask application consist of several models to create database tables with several constraints.
+This models script allows the user to create tables in the database with the given fields.</p>
+<p>Models module consist of several classes to create tables with the constraints. This module requires the following package <code class="docutils literal notranslate"><span class="pre">flask,</span> <span class="pre">flask_restful,</span> <span class="pre">flask_sqlalchemy,</span> <span class="pre">uuid,</span> <span class="pre">redis,</span> <span class="pre">dotenv</span></code> be
 installed within the python environment where we are running this module.</p>
 <dl class="simple">
-<dt>This file can also be imported as a module and contains the following classes:</dt><dd><ul class="simple">
+<dt>This file <code class="docutils literal notranslate"><span class="pre">models.py</span></code> can also be imported as a module and contains the following:</dt><dd><dl class="simple">
+<dt>Classes <code class="docutils literal notranslate"><span class="pre">(model)</span></code>:</dt><dd><ul class="simple">
 <li><dl class="simple">
-<dt>Users -</dt><dd><p>The Users class inheriting from the <code class="docutils literal notranslate"><span class="pre">db.model</span></code> creates <code class="docutils literal notranslate"><span class="pre">users</span></code> table on the database with the following fields
+<dt><code class="docutils literal notranslate"><span class="pre">Users</span></code> -</dt><dd><p>The Users class inheriting from the <code class="docutils literal notranslate"><span class="pre">db.model</span></code> creates <code class="docutils literal notranslate"><span class="pre">users</span></code> table on the database with the following fields
 namely <code class="docutils literal notranslate"><span class="pre">id,</span> <span class="pre">email,</span> <span class="pre">fullname,</span> <span class="pre">google_id,</span> <span class="pre">password</span></code> and the field <code class="docutils literal notranslate"><span class="pre">user_data</span></code> as a relationship to the other table called ‘user_data’
 to create the connection or link between the ‘users’ table and the ‘user_data’ table.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>UserData -</dt><dd><p>The UserData class inheriting from the <code class="docutils literal notranslate"><span class="pre">db.model</span></code> creates <code class="docutils literal notranslate"><span class="pre">user_data</span></code> table on the database with the following fields namely
+<dt><code class="docutils literal notranslate"><span class="pre">UserData</span></code> -</dt><dd><p>The UserData class inheriting from the <code class="docutils literal notranslate"><span class="pre">db.model</span></code> creates <code class="docutils literal notranslate"><span class="pre">user_data</span></code> table on the database with the following fields namely
 <code class="docutils literal notranslate"><span class="pre">id,</span> <span class="pre">username,</span> <span class="pre">userage,</span> <span class="pre">usercity,</span> <span class="pre">usertype</span></code> and the <code class="docutils literal notranslate"><span class="pre">users_id</span></code> field as a Foreign Key of <code class="docutils literal notranslate"><span class="pre">users</span></code> table pointing <code class="docutils literal notranslate"><span class="pre">id</span></code> the primary key of users table.</p>
 </dd>
 </dl>
 </li>
 </ul>
+</dd>
+<dt>Functions:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">get_uuid</span></code> -</dt><dd><p>The <code class="docutils literal notranslate"><span class="pre">get_uuid</span></code> function will return a random UUID for 32-character lowercase hexadecimal string.
+get_uuid is used in two classes (i.e. models for creating tables) namely Users and UserData for creating unique id for ‘id’ field in tables namely users and user_data</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 <dl class="py class">

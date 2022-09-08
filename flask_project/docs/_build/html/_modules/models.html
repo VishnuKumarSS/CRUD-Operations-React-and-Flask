@@ -65,23 +65,26 @@
            <div itemprop="articleBody">
              
   <h1>Source code for models</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This module models is the default module for out flask application consist of database tables with several constraints.</span>
+<span></span><span class="sd">&quot;&quot;&quot;The module ``models.py`` is the main and default module for our flask application consist of several models to create database tables with several constraints.</span>
+<span class="sd">This models script allows the user to create tables in the database with the given fields.</span>
 
-<span class="sd">This script allows the user to create tables in the database with the given fields.</span>
-
-<span class="sd">This module consist of several classes to create tables with the constraints.</span>
-<span class="sd">This module requires ``flask, flask_restful, flask_sqlalchemy, uuid, redis, dotenv`` be </span>
+<span class="sd">Models module consist of several classes to create tables with the constraints. This module requires the following package ``flask, flask_restful, flask_sqlalchemy, uuid, redis, dotenv`` be </span>
 <span class="sd">installed within the python environment where we are running this module.</span>
 
-<span class="sd">This file can also be imported as a module and contains the following classes:</span>
-<span class="sd">    * Users - </span>
-<span class="sd">        The Users class inheriting from the ``db.model`` creates ``users`` table on the database with the following fields</span>
-<span class="sd">        namely ``id, email, fullname, google_id, password`` and the field ``user_data`` as a relationship to the other table called &#39;user_data&#39; </span>
-<span class="sd">        to create the connection or link between the &#39;users&#39; table and the &#39;user_data&#39; table.</span>
+<span class="sd">This file ``models.py`` can also be imported as a module and contains the following:</span>
+<span class="sd">    Classes ``(model)``:</span>
+<span class="sd">        * ``Users`` - </span>
+<span class="sd">            The Users class inheriting from the ``db.model`` creates ``users`` table on the database with the following fields</span>
+<span class="sd">            namely ``id, email, fullname, google_id, password`` and the field ``user_data`` as a relationship to the other table called &#39;user_data&#39; </span>
+<span class="sd">            to create the connection or link between the &#39;users&#39; table and the &#39;user_data&#39; table.</span>
 
-<span class="sd">    * UserData - </span>
-<span class="sd">        The UserData class inheriting from the ``db.model`` creates ``user_data`` table on the database with the following fields namely </span>
-<span class="sd">        ``id, username, userage, usercity, usertype`` and the ``users_id`` field as a Foreign Key of ``users`` table pointing ``id`` the primary key of users table.\n</span>
+<span class="sd">        * ``UserData`` - </span>
+<span class="sd">            The UserData class inheriting from the ``db.model`` creates ``user_data`` table on the database with the following fields namely </span>
+<span class="sd">            ``id, username, userage, usercity, usertype`` and the ``users_id`` field as a Foreign Key of ``users`` table pointing ``id`` the primary key of users table.\n</span>
+<span class="sd">    Functions:</span>
+<span class="sd">        * ``get_uuid`` - </span>
+<span class="sd">            The ``get_uuid`` function will return a random UUID for 32-character lowercase hexadecimal string. </span>
+<span class="sd">            get_uuid is used in two classes (i.e. models for creating tables) namely Users and UserData for creating unique id for &#39;id&#39; field in tables namely users and user_data</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>

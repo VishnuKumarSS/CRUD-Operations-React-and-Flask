@@ -1,20 +1,23 @@
-"""This module models is the default module for out flask application consist of database tables with several constraints.
+"""The module ``models.py`` is the main and default module for our flask application consist of several models to create database tables with several constraints.
+This models script allows the user to create tables in the database with the given fields.
 
-This script allows the user to create tables in the database with the given fields.
-
-This module consist of several classes to create tables with the constraints.
-This module requires ``flask, flask_restful, flask_sqlalchemy, uuid, redis, dotenv`` be 
+Models module consist of several classes to create tables with the constraints. This module requires the following package ``flask, flask_restful, flask_sqlalchemy, uuid, redis, dotenv`` be 
 installed within the python environment where we are running this module.
 
-This file can also be imported as a module and contains the following classes:
-    * Users - 
-        The Users class inheriting from the ``db.model`` creates ``users`` table on the database with the following fields
-        namely ``id, email, fullname, google_id, password`` and the field ``user_data`` as a relationship to the other table called 'user_data' 
-        to create the connection or link between the 'users' table and the 'user_data' table.
+This file ``models.py`` can also be imported as a module and contains the following:
+    Classes ``(model)``:
+        * ``Users`` - 
+            The Users class inheriting from the ``db.model`` creates ``users`` table on the database with the following fields
+            namely ``id, email, fullname, google_id, password`` and the field ``user_data`` as a relationship to the other table called 'user_data' 
+            to create the connection or link between the 'users' table and the 'user_data' table.
 
-    * UserData - 
-        The UserData class inheriting from the ``db.model`` creates ``user_data`` table on the database with the following fields namely 
-        ``id, username, userage, usercity, usertype`` and the ``users_id`` field as a Foreign Key of ``users`` table pointing ``id`` the primary key of users table.\n
+        * ``UserData`` - 
+            The UserData class inheriting from the ``db.model`` creates ``user_data`` table on the database with the following fields namely 
+            ``id, username, userage, usercity, usertype`` and the ``users_id`` field as a Foreign Key of ``users`` table pointing ``id`` the primary key of users table.\n
+    Functions:
+        * ``get_uuid`` - 
+            The ``get_uuid`` function will return a random UUID for 32-character lowercase hexadecimal string. 
+            get_uuid is used in two classes (i.e. models for creating tables) namely Users and UserData for creating unique id for 'id' field in tables namely users and user_data
 """
 
 from flask import Flask

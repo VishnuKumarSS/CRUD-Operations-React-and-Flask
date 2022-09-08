@@ -65,37 +65,71 @@
            <div itemprop="articleBody">
              
   <h1>Source code for restapi</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Restful api created using flask_restful to perform CRUD operations and Login system with authentication.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The module ``restapi.py`` created using flask_restful to perform all the restful api standard CRUD operations and Login system with the authentication.</span>
 
-<span class="sd">This script allows the user to perform the Create, Read, Update and Delete operations</span>
-<span class="sd">using the request methods like POST, GET, PUT, DELETE. </span>
-<span class="sd">There are some methods to login and logout the users.</span>
+<span class="sd">The restapi module allows the us to perform the Create, Read, Update and Delete operations using the request methods like ``POST, GET, PUT, DELETE``. </span>
+<span class="sd">There are methods to perform login and logout operation for normal and google authenticated user from firebase. </span>
 
-<span class="sd">This module consist of several methods to perform CRUD and to login and logout the users.</span>
-<span class="sd">It requires parameters of string for some methods to perform the appropriate action.</span>
-
-<span class="sd">This module requires &#39;flask&#39;, &#39;flask_restful&#39;, &#39;flask_bcrypt&#39;, &#39;flask_session&#39;, &#39;flask_cors&#39; be </span>
+<span class="sd">Restapi module consist of several methods to perform CRUD and to login and logout the users.</span>
+<span class="sd">It requires parameters of string for SearchUser method to perform the appropriate actions.</span>
+<span class="sd">This module requires ``flask, flask_restful, flask_bcrypt, flask_session, flask_cors`` be </span>
 <span class="sd">installed within the python environment where we are running this module.</span>
 
-<span class="sd">This file can also be imported as a module and contains the following classes:</span>
-<span class="sd">    * ReactGoogleSignin - This will create a user if not registered and logs in the user if already registered with the post method.</span>
-<span class="sd">    * CreateUser - This has one method to create user and store the user data on the database and the firebase.</span>
-<span class="sd">    * AddUserData - This has one method to add user data and store the user data on the database.</span>
-<span class="sd">    * SearchUser - SearchUser class will be responsible for searching, deleting, updating a particular user.</span>
-<span class="sd">    * AllUsers - This has one method that gets the user data</span>
-<span class="sd">    * Login - This will be responsible for logging in the manually created user.</span>
-<span class="sd">    * Logout - This has one method to logout user.</span>
-<span class="sd">    * CurrentUser - This has one method to get the currently logged in user.</span>
+<span class="sd">This file can also be imported as a module and contains the following:</span>
+<span class="sd">    Classes:</span>
+<span class="sd">        * ``ReactGoogleSignin`` - </span>
+<span class="sd">                ReactGoogleSignin class inheriting from Resource class from the flask_restful module used to create a user with google authenticated data coming from react application on the frontend.\n</span>
+<span class="sd">                It will Create a user if not registered or Logs In the user if already registered by using the post method.\n</span>
+<span class="sd">                ``POST``: </span>
+<span class="sd">                    Post method will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called ``created_user_id``.</span>
+<span class="sd">        * ``AllUsers`` -</span>
+<span class="sd">                AllUsers class inheriting from Resource class of the flask_restful module used to get all the available users and users data from the tables ``users`` and ``user_data`` on the database.\n</span>
+<span class="sd">                ``GET``:</span>
+<span class="sd">                    The get method of class AllUsers will return all the users and users data stored in the database.</span>
+<span class="sd">        * ``SearchUser`` - </span>
+<span class="sd">                SearchUser class inheriting from Resource class of the flask_restful module needs username of string type from the ``user_data`` to be passed in the url route for performing actions like searching, deleting and updating a particular user.</span>
+<span class="sd">                The table ``user_data`` should have the username of string type passed as a parameter on the url route to perform all the actions on the methods namely ``get, delete, put``.</span>
+<span class="sd">                Otherwise the actions will not be performed.\n</span>
+<span class="sd">                ``GET``:</span>
+<span class="sd">                    The get method of SearchUser class will search for the user and returns that user&#39;s details in a dictionary format if exist, otherwise it will abort the request with User Not found message.</span>
+<span class="sd">                ``DELETE``:</span>
+<span class="sd">                    The delete method of SearchUser class will delete the particular user and particular user&#39;s data if the username exist, otherwise abort the request.</span>
+<span class="sd">                    It will not delete when there is session id of currently LoggedIn user. Because we cannot delete when we are already LoggedIn.</span>
+<span class="sd">                ``PUT``:</span>
+<span class="sd">                    The put method of SearchUser class will get the username of string type, if any matching user exist then it can update that particular user&#39;s data otherwise it cannot perform action.</span>
+<span class="sd">        * ``CreateUser`` - </span>
+<span class="sd">                CreateUser class inheriting from Resource class of the flask_restful module used to create a particular user and to store all the data on the ``users`` and  table on the database and on the firebase for later authentication on the ``Login`` class.\n</span>
+<span class="sd">                ``POST``:</span>
+<span class="sd">                    The post method of the CreateUser class is used to create a user and store it on the database ``users`` table if not exist and on the firebase for email and password login. </span>
+<span class="sd">        * ``AddUserData`` - </span>
+<span class="sd">                AddUserData class inheriting from Resource class of the flask_restful module used to add data for the created user on the ``CreateUser`` class using the created session id from the CreateUser class.\n</span>
+<span class="sd">                ``POST``:</span>
+<span class="sd">                    The post method of AddUserData is used to add user information to the current user and store it on the database.</span>
+<span class="sd">                    This method exactly add up the data to the recently created user or logged in user, otherwise it cannot perform any action and will abort.</span>
+<span class="sd">        * ``Login`` - </span>
+<span class="sd">                Login class inheriting from Resource class of the flask_restful module used to login the ``user created by normal method`` not by google authenticated method. It can only login the user with data stored on database and the firebase.\n</span>
+<span class="sd">                ``POST``:</span>
+<span class="sd">                    The post method of Login class is used to login a particular user by verifying it on the database and the firebase for authentication.</span>
+
+<span class="sd">        * ``Logout`` - </span>
+<span class="sd">                Logout class inheriting from Resource class of the flask_restful module used to logout a particular user by using the available session id. If there is not session id then it will abort the request.\n</span>
+<span class="sd">                ``POST``:</span>
+<span class="sd">                    The post method of Logout class will logout if any users are currently logged in. Which is identified by using the available session id.</span>
+<span class="sd">                    It basically removes/pops the session id from the cookie so that the particular will get logged out.</span>
+
+<span class="sd">        * ``CurrentUser`` -</span>
+<span class="sd">                CurrentUser class inheriting from Resource class of the flask_restful module used to get all the data of a currently loggedin user, which is identified by using the session id.\n</span>
+<span class="sd">                ``GET``:</span>
+<span class="sd">                    This get method of CurrentUser class will return the currently logged in user data from both tables namely ``users`` and ``user_data`` by using the session id called ``created_user_id``, Otherwise will abort the request.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">email</span> <span class="kn">import</span> <span class="n">message</span>
 <span class="kn">import</span> <span class="nn">pdb</span>
 <span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Resource</span><span class="p">,</span> <span class="n">reqparse</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">marshal_with</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">flask_bcrypt</span> <span class="kn">import</span> <span class="n">Bcrypt</span>
 <span class="kn">from</span> <span class="nn">flask_session</span> <span class="kn">import</span> <span class="n">Session</span>
-<span class="c1"># this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">session</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">session</span> <span class="c1"># this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)</span>
 <span class="kn">from</span> <span class="nn">authentication</span> <span class="kn">import</span> <span class="n">firebase</span><span class="p">,</span> <span class="n">auth</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
 <span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
@@ -168,10 +202,13 @@
 
 
 <div class="viewcode-block" id="ReactGoogleSignin"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin">[docs]</a><span class="k">class</span> <span class="nc">ReactGoogleSignin</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This will create a user if not registered and logs in the user if already registered with the post method.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ReactGoogleSignin class inheriting from Resource class of the flask_restful module will  used to create a user with google authenticated data coming from react application on the frontend.\n</span>
+<span class="sd">    It will Create a user if not registered or Logs In the user if already registered by using the post method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ReactGoogleSignin.post"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method will get the user information like email, fullname, googld_id from the frontend react component and store the data with few conditions.</span>
+        <span class="sd">&quot;&quot;&quot;The Post method of class ReactGoogleSignin will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called ``created_user_id``.</span>
 <span class="sd">        </span>
 <span class="sd">        :return: the user is created or logged in or not</span>
 <span class="sd">        :rtype: str</span>
@@ -208,10 +245,12 @@
 
 
 <div class="viewcode-block" id="AllUsers"><a class="viewcode-back" href="../restapi.html#restapi.AllUsers">[docs]</a><span class="k">class</span> <span class="nc">AllUsers</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This has one method that gets the user data&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    AllUsers class inheriting from Resource class of the flask_restful module used to get all the available users and users data from the tables ``users`` and ``user_data`` on the database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AllUsers.get"><a class="viewcode-back" href="../restapi.html#restapi.AllUsers.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method will return all the users and users data stored in the database</span>
+        <span class="sd">&quot;&quot;&quot;The get method of class AllUsers will return all the users and users data stored in the database</span>
 <span class="sd">        </span>
 <span class="sd">        :return: list of users and users data with custom structure</span>
 <span class="sd">        :rtype: [dict, dict]</span>
@@ -245,10 +284,14 @@
 
 
 <div class="viewcode-block" id="SearchUser"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser">[docs]</a><span class="k">class</span> <span class="nc">SearchUser</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SearchUser class will be responsible for searching, deleting, updating a particular user.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SearchUser class inheriting from Resource class of the flask_restful module needs username of string type from the ``user_data`` to be passed in the url route for performing actions like searching, deleting and updating a particular user.</span>
+<span class="sd">    The table ``user_data`` should have the username of string type passed as a parameter on the url route to perform all the actions on the methods namely ``get, delete, put``.</span>
+<span class="sd">    Otherwise the actions will not be performed. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SearchUser.get"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>        
-        <span class="sd">&quot;&quot;&quot;This will search for the user and returns that user&#39;s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</span>
+        <span class="sd">&quot;&quot;&quot;The get method of SearchUser class will search for the user and returns that user&#39;s details in a dictionary format if exist, otherwise it will abort the request with User Not found message.</span>
 
 <span class="sd">        :param username: This is the name which is coming from the url route while calling api</span>
 <span class="sd">        :type username: str</span>
@@ -267,7 +310,8 @@
         <span class="k">return</span> <span class="p">([</span><span class="n">user</span><span class="p">,</span> <span class="n">userdata</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="SearchUser.delete"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This will delete the whole user data with the username if exist, otherwise abort the request. If we try to delete the currently logged in user, it will abort. </span>
+        <span class="sd">&quot;&quot;&quot;The delete method of SearchUser class will delete the particular user and particular user&#39;s data if the username exist, otherwise abort the request.</span>
+<span class="sd">        It will not delete when there is session id of currently LoggedIn user. Because we cannot delete when we are already LoggedIn.</span>
 
 <span class="sd">        :param username: This is the name which is coming from the url route while calling api</span>
 <span class="sd">        :type username: str</span>
@@ -309,7 +353,7 @@
     <span class="c1"># @marshal_with(create_user_field )</span>
     <span class="c1"># # Instead of the above line we can use .asdict() function or dict() to return in object format.</span>
 <div class="viewcode-block" id="SearchUser.put"><a class="viewcode-back" href="../restapi.html#restapi.SearchUser.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This will get the username, if any matching user exist then it will update that particular user data.</span>
+        <span class="sd">&quot;&quot;&quot;The put method of SearchUser class will get the username of string type, if any matching user exist then it can update that particular user&#39;s data otherwise it cannot perform action.</span>
 
 <span class="sd">        :param username: This is the name which is coming from the url route while calling api</span>
 <span class="sd">        :type username: str</span>
@@ -398,13 +442,15 @@
 
 
 <div class="viewcode-block" id="CreateUser"><a class="viewcode-back" href="../restapi.html#restapi.CreateUser">[docs]</a><span class="k">class</span> <span class="nc">CreateUser</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This has one method to create user and store the user data on the database and the firebase.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    CreateUser class inheriting from Resource class of the flask_restful module used to create a particular user and to store all the data on the ``users`` and  table on the database and on the firebase for later authentication on the ``Login`` class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># The below line will help us to convert our python object to look like JSON</span>
     <span class="c1"># here the resource fields tells that the returned data&#39;s should be in the JSON format...</span>
     <span class="c1"># then @marshal_with actually injects that rule in our method.</span>
 <div class="viewcode-block" id="CreateUser.post"><a class="viewcode-back" href="../restapi.html#restapi.CreateUser.post">[docs]</a>    <span class="nd">@marshal_with</span><span class="p">(</span><span class="n">create_user_field</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method is used to create a user and store it on the database and the firebase for email and password login. </span>
+        <span class="sd">&quot;&quot;&quot;The post method of the CreateUser class is used to create a user and store it on the database ``users`` table if not exist and on the firebase for email and password login. </span>
 
 <span class="sd">        :return: user details like id and email</span>
 <span class="sd">        :rtype: dict</span>
@@ -443,11 +489,14 @@
 
 
 <div class="viewcode-block" id="AddUserData"><a class="viewcode-back" href="../restapi.html#restapi.AddUserData">[docs]</a><span class="k">class</span> <span class="nc">AddUserData</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This has one method to add user data and store the user data on the database.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    AddUserData class inheriting from Resource class of the flask_restful module used to add data for the created user on the ``CreateUser`` class using the created session id from the CreateUser class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AddUserData.post"><a class="viewcode-back" href="../restapi.html#restapi.AddUserData.post">[docs]</a>    <span class="nd">@marshal_with</span><span class="p">(</span><span class="n">add_user_data_field</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method is used to add user information to the current user and store it on the database. </span>
+        <span class="sd">&quot;&quot;&quot;The post method of AddUserData is used to add user information to the current user and store it on the database.</span>
+<span class="sd">        This method exactly add up the data to the recently created user or logged in user, otherwise it cannot perform any action and will abort.</span>
 
 <span class="sd">        :return: all the data of the created user  </span>
 <span class="sd">        :rtype: dict</span>
@@ -479,10 +528,12 @@
             <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;No Users are currently created or logged in to add data.&quot;</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="Login"><a class="viewcode-back" href="../restapi.html#restapi.Login">[docs]</a><span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This will be responsible for logging in the manually created user.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Login class inheriting from Resource class of the flask_restful module used to login the ``user created by normal method`` not by google authenticated method. It can only login the user with data stored on database and the firebase.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Login.post"><a class="viewcode-back" href="../restapi.html#restapi.Login.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method is used to login a particular user by verifying it on the database and the firebase for authentication.</span>
+        <span class="sd">&quot;&quot;&quot;The post method of Login class is used to login a particular user by verifying it on the database and the firebase for authentication.</span>
 
 <span class="sd">        :return: all the data of the logged in user  </span>
 <span class="sd">        :rtype: dict</span>
@@ -518,10 +569,13 @@
 
 
 <div class="viewcode-block" id="Logout"><a class="viewcode-back" href="../restapi.html#restapi.Logout">[docs]</a><span class="k">class</span> <span class="nc">Logout</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This has one method to logout user.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Logout class inheriting from Resource class of the flask_restful module used to logout a particular user by using the available session id. If there is not session id then it will abort the request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Logout.post"><a class="viewcode-back" href="../restapi.html#restapi.Logout.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method will logout if any users are currently logged in by using session id.</span>
+        <span class="sd">&quot;&quot;&quot;The post method of Logout class will logout if any users are currently logged in. Which is identified by using the available session id.</span>
+<span class="sd">        It basically removes/pops the session id from the cookie so that the particular will get logged out.</span>
 <span class="sd">        </span>
 <span class="sd">        :return: logged out or not</span>
 <span class="sd">        :rtype: str</span>
@@ -535,10 +589,12 @@
 
 
 <div class="viewcode-block" id="CurrentUser"><a class="viewcode-back" href="../restapi.html#restapi.CurrentUser">[docs]</a><span class="k">class</span> <span class="nc">CurrentUser</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This has one method to get the currently logged in user.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    CurrentUser class inheriting from Resource class of the flask_restful module used to get all the data of a currently loggedin user, which is identified by using the session id.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CurrentUser.get"><a class="viewcode-back" href="../restapi.html#restapi.CurrentUser.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method will get the currently logged in user by using the session id and returns the data.</span>
+        <span class="sd">&quot;&quot;&quot;This get method of CurrentUser class will return the currently logged in user data from both tables namely ``users`` and ``user_data`` by using the session id called ``created_user_id``, Otherwise will abort the request.</span>
 <span class="sd">        </span>
 <span class="sd">        :return: the currently logged in user data</span>
 <span class="sd">        :rtype: dict</span>

@@ -1,34 +1,68 @@
-"""Restful api created using flask_restful to perform CRUD operations and Login system with authentication.
+"""
+The module ``restapi.py`` created using flask_restful to perform all the restful api standard CRUD operations and Login system with the authentication.
 
-This script allows the user to perform the Create, Read, Update and Delete operations
-using the request methods like POST, GET, PUT, DELETE. 
-There are some methods to login and logout the users.
+The restapi module allows the us to perform the Create, Read, Update and Delete operations using the request methods like ``POST, GET, PUT, DELETE``. 
+There are methods to perform login and logout operation for normal and google authenticated user from firebase. 
 
-This module consist of several methods to perform CRUD and to login and logout the users.
-It requires parameters of string for some methods to perform the appropriate action.
-
-This module requires 'flask', 'flask_restful', 'flask_bcrypt', 'flask_session', 'flask_cors' be 
+Restapi module consist of several methods to perform CRUD and to login and logout the users.
+It requires parameters of string for SearchUser method to perform the appropriate actions.
+This module requires ``flask, flask_restful, flask_bcrypt, flask_session, flask_cors`` be 
 installed within the python environment where we are running this module.
 
-This file can also be imported as a module and contains the following classes:
-    * ReactGoogleSignin - This will create a user if not registered and logs in the user if already registered with the post method.
-    * CreateUser - This has one method to create user and store the user data on the database and the firebase.
-    * AddUserData - This has one method to add user data and store the user data on the database.
-    * SearchUser - SearchUser class will be responsible for searching, deleting, updating a particular user.
-    * AllUsers - This has one method that gets the user data
-    * Login - This will be responsible for logging in the manually created user.
-    * Logout - This has one method to logout user.
-    * CurrentUser - This has one method to get the currently logged in user.
+This file can also be imported as a module and contains the following:
+    Classes:
+        * ``ReactGoogleSignin`` - 
+                ReactGoogleSignin class inheriting from Resource class from the flask_restful module used to create a user with google authenticated data coming from react application on the frontend.\n
+                It will Create a user if not registered or Logs In the user if already registered by using the post method.\n
+                ``POST``: 
+                    Post method will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called ``created_user_id``.
+        * ``AllUsers`` -
+                AllUsers class inheriting from Resource class of the flask_restful module used to get all the available users and users data from the tables ``users`` and ``user_data`` on the database.\n
+                ``GET``:
+                    The get method of class AllUsers will return all the users and users data stored in the database.
+        * ``SearchUser`` - 
+                SearchUser class inheriting from Resource class of the flask_restful module needs username of string type from the ``user_data`` to be passed in the url route for performing actions like searching, deleting and updating a particular user.
+                The table ``user_data`` should have the username of string type passed as a parameter on the url route to perform all the actions on the methods namely ``get, delete, put``.
+                Otherwise the actions will not be performed.\n
+                ``GET``:
+                    The get method of SearchUser class will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found message.
+                ``DELETE``:
+                    The delete method of SearchUser class will delete the particular user and particular user's data if the username exist, otherwise abort the request.
+                    It will not delete when there is session id of currently LoggedIn user. Because we cannot delete when we are already LoggedIn.
+                ``PUT``:
+                    The put method of SearchUser class will get the username of string type, if any matching user exist then it can update that particular user's data otherwise it cannot perform action.
+        * ``CreateUser`` - 
+                CreateUser class inheriting from Resource class of the flask_restful module used to create a particular user and to store all the data on the ``users`` and  table on the database and on the firebase for later authentication on the ``Login`` class.\n
+                ``POST``:
+                    The post method of the CreateUser class is used to create a user and store it on the database ``users`` table if not exist and on the firebase for email and password login. 
+        * ``AddUserData`` - 
+                AddUserData class inheriting from Resource class of the flask_restful module used to add data for the created user on the ``CreateUser`` class using the created session id from the CreateUser class.\n
+                ``POST``:
+                    The post method of AddUserData is used to add user information to the current user and store it on the database.
+                    This method exactly add up the data to the recently created user or logged in user, otherwise it cannot perform any action and will abort.
+        * ``Login`` - 
+                Login class inheriting from Resource class of the flask_restful module used to login the ``user created by normal method`` not by google authenticated method. It can only login the user with data stored on database and the firebase.\n
+                ``POST``:
+                    The post method of Login class is used to login a particular user by verifying it on the database and the firebase for authentication.
+
+        * ``Logout`` - 
+                Logout class inheriting from Resource class of the flask_restful module used to logout a particular user by using the available session id. If there is not session id then it will abort the request.\n
+                ``POST``:
+                    The post method of Logout class will logout if any users are currently logged in. Which is identified by using the available session id.
+                    It basically removes/pops the session id from the cookie so that the particular will get logged out.
+
+        * ``CurrentUser`` -
+                CurrentUser class inheriting from Resource class of the flask_restful module used to get all the data of a currently loggedin user, which is identified by using the session id.\n
+                ``GET``:
+                    This get method of CurrentUser class will return the currently logged in user data from both tables namely ``users`` and ``user_data`` by using the session id called ``created_user_id``, Otherwise will abort the request.
 """
 
-from email import message
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from models import *
 from flask_bcrypt import Bcrypt
 from flask_session import Session
-# this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
-from flask import jsonify, session
+from flask import jsonify, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
 from authentication import firebase, auth
 from flask import request
 from flask_cors import CORS
@@ -101,10 +135,13 @@ add_user_data_field = {
 
 
 class ReactGoogleSignin(Resource):
-    """This will create a user if not registered and logs in the user if already registered with the post method."""
+    """
+    ReactGoogleSignin class inheriting from Resource class of the flask_restful module will  used to create a user with google authenticated data coming from react application on the frontend.\n
+    It will Create a user if not registered or Logs In the user if already registered by using the post method.
+    """
 
     def post(self):
-        """This method will get the user information like email, fullname, googld_id from the frontend react component and store the data with few conditions.
+        """The Post method of class ReactGoogleSignin will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called ``created_user_id``.
         
         :return: the user is created or logged in or not
         :rtype: str
@@ -141,10 +178,12 @@ class ReactGoogleSignin(Resource):
 
 
 class AllUsers(Resource):
-    """This has one method that gets the user data"""
+    """
+    AllUsers class inheriting from Resource class of the flask_restful module used to get all the available users and users data from the tables ``users`` and ``user_data`` on the database.
+    """
 
     def get(self):
-        """This method will return all the users and users data stored in the database
+        """The get method of class AllUsers will return all the users and users data stored in the database
         
         :return: list of users and users data with custom structure
         :rtype: [dict, dict]
@@ -178,10 +217,14 @@ class AllUsers(Resource):
 
 
 class SearchUser(Resource):
-    """SearchUser class will be responsible for searching, deleting, updating a particular user."""
+    """
+    SearchUser class inheriting from Resource class of the flask_restful module needs username of string type from the ``user_data`` to be passed in the url route for performing actions like searching, deleting and updating a particular user.
+    The table ``user_data`` should have the username of string type passed as a parameter on the url route to perform all the actions on the methods namely ``get, delete, put``.
+    Otherwise the actions will not be performed. 
+    """
 
     def get(self, username):        
-        """This will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found.
+        """The get method of SearchUser class will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found message.
 
         :param username: This is the name which is coming from the url route while calling api
         :type username: str
@@ -200,7 +243,8 @@ class SearchUser(Resource):
         return ([user, userdata])
 
     def delete(self, username):
-        """This will delete the whole user data with the username if exist, otherwise abort the request. If we try to delete the currently logged in user, it will abort. 
+        """The delete method of SearchUser class will delete the particular user and particular user's data if the username exist, otherwise abort the request.
+        It will not delete when there is session id of currently LoggedIn user. Because we cannot delete when we are already LoggedIn.
 
         :param username: This is the name which is coming from the url route while calling api
         :type username: str
@@ -242,7 +286,7 @@ class SearchUser(Resource):
     # @marshal_with(create_user_field )
     # # Instead of the above line we can use .asdict() function or dict() to return in object format.
     def put(self, username: str):
-        """This will get the username, if any matching user exist then it will update that particular user data.
+        """The put method of SearchUser class will get the username of string type, if any matching user exist then it can update that particular user's data otherwise it cannot perform action.
 
         :param username: This is the name which is coming from the url route while calling api
         :type username: str
@@ -331,13 +375,15 @@ class SearchUser(Resource):
 
 
 class CreateUser(Resource):
-    """This has one method to create user and store the user data on the database and the firebase."""
+    """
+    CreateUser class inheriting from Resource class of the flask_restful module used to create a particular user and to store all the data on the ``users`` and  table on the database and on the firebase for later authentication on the ``Login`` class.
+    """
     # The below line will help us to convert our python object to look like JSON
     # here the resource fields tells that the returned data's should be in the JSON format...
     # then @marshal_with actually injects that rule in our method.
     @marshal_with(create_user_field)
     def post(self):
-        """This method is used to create a user and store it on the database and the firebase for email and password login. 
+        """The post method of the CreateUser class is used to create a user and store it on the database ``users`` table if not exist and on the firebase for email and password login. 
 
         :return: user details like id and email
         :rtype: dict
@@ -376,11 +422,14 @@ class CreateUser(Resource):
 
 
 class AddUserData(Resource):
-    """This has one method to add user data and store the user data on the database."""
+    """
+    AddUserData class inheriting from Resource class of the flask_restful module used to add data for the created user on the ``CreateUser`` class using the created session id from the CreateUser class.
+    """
 
     @marshal_with(add_user_data_field)
     def post(self):
-        """This method is used to add user information to the current user and store it on the database. 
+        """The post method of AddUserData is used to add user information to the current user and store it on the database.
+        This method exactly add up the data to the recently created user or logged in user, otherwise it cannot perform any action and will abort.
 
         :return: all the data of the created user  
         :rtype: dict
@@ -412,10 +461,12 @@ class AddUserData(Resource):
             abort(401, message="No Users are currently created or logged in to add data.")
 
 class Login(Resource):
-    """This will be responsible for logging in the manually created user."""
+    """
+    Login class inheriting from Resource class of the flask_restful module used to login the ``user created by normal method`` not by google authenticated method. It can only login the user with data stored on database and the firebase.
+    """
 
     def post(self):
-        """This method is used to login a particular user by verifying it on the database and the firebase for authentication.
+        """The post method of Login class is used to login a particular user by verifying it on the database and the firebase for authentication.
 
         :return: all the data of the logged in user  
         :rtype: dict
@@ -451,10 +502,13 @@ class Login(Resource):
 
 
 class Logout(Resource):
-    """This has one method to logout user."""
+    """
+    Logout class inheriting from Resource class of the flask_restful module used to logout a particular user by using the available session id. If there is not session id then it will abort the request.
+    """
 
     def post(self):
-        """This method will logout if any users are currently logged in by using session id.
+        """The post method of Logout class will logout if any users are currently logged in. Which is identified by using the available session id.
+        It basically removes/pops the session id from the cookie so that the particular will get logged out.
         
         :return: logged out or not
         :rtype: str
@@ -468,10 +522,12 @@ class Logout(Resource):
 
 
 class CurrentUser(Resource):
-    """This has one method to get the currently logged in user."""
+    """
+    CurrentUser class inheriting from Resource class of the flask_restful module used to get all the data of a currently loggedin user, which is identified by using the session id.
+    """
 
     def get(self):
-        """This method will get the currently logged in user by using the session id and returns the data.
+        """This get method of CurrentUser class will return the currently logged in user data from both tables namely ``users`` and ``user_data`` by using the session id called ``created_user_id``, Otherwise will abort the request.
         
         :return: the currently logged in user data
         :rtype: dict

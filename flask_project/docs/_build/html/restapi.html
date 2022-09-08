@@ -74,32 +74,108 @@
              
   <section id="module-restapi">
 <span id="restapi-module"></span><h1>Restapi module<a class="headerlink" href="#module-restapi" title="Permalink to this heading"></a></h1>
-<p>Restful api created using flask_restful to perform CRUD operations and Login system with authentication.</p>
-<p>This script allows the user to perform the Create, Read, Update and Delete operations
-using the request methods like POST, GET, PUT, DELETE.
-There are some methods to login and logout the users.</p>
-<p>This module consist of several methods to perform CRUD and to login and logout the users.
-It requires parameters of string for some methods to perform the appropriate action.</p>
-<p>This module requires ‘flask’, ‘flask_restful’, ‘flask_bcrypt’, ‘flask_session’, ‘flask_cors’ be
+<p>The module <code class="docutils literal notranslate"><span class="pre">restapi.py</span></code> created using flask_restful to perform all the restful api standard CRUD operations and Login system with the authentication.</p>
+<p>The restapi module allows the us to perform the Create, Read, Update and Delete operations using the request methods like <code class="docutils literal notranslate"><span class="pre">POST,</span> <span class="pre">GET,</span> <span class="pre">PUT,</span> <span class="pre">DELETE</span></code>.
+There are methods to perform login and logout operation for normal and google authenticated user from firebase.</p>
+<p>Restapi module consist of several methods to perform CRUD and to login and logout the users.
+It requires parameters of string for SearchUser method to perform the appropriate actions.
+This module requires <code class="docutils literal notranslate"><span class="pre">flask,</span> <span class="pre">flask_restful,</span> <span class="pre">flask_bcrypt,</span> <span class="pre">flask_session,</span> <span class="pre">flask_cors</span></code> be
 installed within the python environment where we are running this module.</p>
+<dl>
+<dt>This file can also be imported as a module and contains the following:</dt><dd><dl>
+<dt>Classes:</dt><dd><ul>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">ReactGoogleSignin</span></code> -</dt><dd><p>ReactGoogleSignin class inheriting from Resource class from the flask_restful module used to create a user with google authenticated data coming from react application on the frontend.</p>
+<p>It will Create a user if not registered or Logs In the user if already registered by using the post method.</p>
 <dl class="simple">
-<dt>This file can also be imported as a module and contains the following classes:</dt><dd><ul class="simple">
-<li><p>ReactGoogleSignin - This will create a user if not registered and logs in the user if already registered with the post method.</p></li>
-<li><p>CreateUser - This has one method to create user and store the user data on the database and the firebase.</p></li>
-<li><p>AddUserData - This has one method to add user data and store the user data on the database.</p></li>
-<li><p>SearchUser - SearchUser class will be responsible for searching, deleting, updating a particular user.</p></li>
-<li><p>AllUsers - This has one method that gets the user data</p></li>
-<li><p>Login - This will be responsible for logging in the manually created user.</p></li>
-<li><p>Logout - This has one method to logout user.</p></li>
-<li><p>CurrentUser - This has one method to get the currently logged in user.</p></li>
+<dt><code class="docutils literal notranslate"><span class="pre">POST</span></code>:</dt><dd><p>Post method will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called <code class="docutils literal notranslate"><span class="pre">created_user_id</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">AllUsers</span></code> -</dt><dd><p>AllUsers class inheriting from Resource class of the flask_restful module used to get all the available users and users data from the tables <code class="docutils literal notranslate"><span class="pre">users</span></code> and <code class="docutils literal notranslate"><span class="pre">user_data</span></code> on the database.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">GET</span></code>:</dt><dd><p>The get method of class AllUsers will return all the users and users data stored in the database.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">SearchUser</span></code> -</dt><dd><p>SearchUser class inheriting from Resource class of the flask_restful module needs username of string type from the <code class="docutils literal notranslate"><span class="pre">user_data</span></code> to be passed in the url route for performing actions like searching, deleting and updating a particular user.
+The table <code class="docutils literal notranslate"><span class="pre">user_data</span></code> should have the username of string type passed as a parameter on the url route to perform all the actions on the methods namely <code class="docutils literal notranslate"><span class="pre">get,</span> <span class="pre">delete,</span> <span class="pre">put</span></code>.
+Otherwise the actions will not be performed.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">GET</span></code>:</dt><dd><p>The get method of SearchUser class will search for the user and returns that user’s details in a dictionary format if exist, otherwise it will abort the request with User Not found message.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DELETE</span></code>:</dt><dd><p>The delete method of SearchUser class will delete the particular user and particular user’s data if the username exist, otherwise abort the request.
+It will not delete when there is session id of currently LoggedIn user. Because we cannot delete when we are already LoggedIn.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">PUT</span></code>:</dt><dd><p>The put method of SearchUser class will get the username of string type, if any matching user exist then it can update that particular user’s data otherwise it cannot perform action.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">CreateUser</span></code> -</dt><dd><p>CreateUser class inheriting from Resource class of the flask_restful module used to create a particular user and to store all the data on the <code class="docutils literal notranslate"><span class="pre">users</span></code> and  table on the database and on the firebase for later authentication on the <code class="docutils literal notranslate"><span class="pre">Login</span></code> class.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">POST</span></code>:</dt><dd><p>The post method of the CreateUser class is used to create a user and store it on the database <code class="docutils literal notranslate"><span class="pre">users</span></code> table if not exist and on the firebase for email and password login.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">AddUserData</span></code> -</dt><dd><p>AddUserData class inheriting from Resource class of the flask_restful module used to add data for the created user on the <code class="docutils literal notranslate"><span class="pre">CreateUser</span></code> class using the created session id from the CreateUser class.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">POST</span></code>:</dt><dd><p>The post method of AddUserData is used to add user information to the current user and store it on the database.
+This method exactly add up the data to the recently created user or logged in user, otherwise it cannot perform any action and will abort.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">Login</span></code> -</dt><dd><p>Login class inheriting from Resource class of the flask_restful module used to login the <code class="docutils literal notranslate"><span class="pre">user</span> <span class="pre">created</span> <span class="pre">by</span> <span class="pre">normal</span> <span class="pre">method</span></code> not by google authenticated method. It can only login the user with data stored on database and the firebase.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">POST</span></code>:</dt><dd><p>The post method of Login class is used to login a particular user by verifying it on the database and the firebase for authentication.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">Logout</span></code> -</dt><dd><p>Logout class inheriting from Resource class of the flask_restful module used to logout a particular user by using the available session id. If there is not session id then it will abort the request.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">POST</span></code>:</dt><dd><p>The post method of Logout class will logout if any users are currently logged in. Which is identified by using the available session id.
+It basically removes/pops the session id from the cookie so that the particular will get logged out.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">CurrentUser</span></code> -</dt><dd><p>CurrentUser class inheriting from Resource class of the flask_restful module used to get all the data of a currently loggedin user, which is identified by using the session id.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">GET</span></code>:</dt><dd><p>This get method of CurrentUser class will return the currently logged in user data from both tables namely <code class="docutils literal notranslate"><span class="pre">users</span></code> and <code class="docutils literal notranslate"><span class="pre">user_data</span></code> by using the session id called <code class="docutils literal notranslate"><span class="pre">created_user_id</span></code>, Otherwise will abort the request.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
 </ul>
+</dd>
+</dl>
 </dd>
 </dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="restapi.AddUserData">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">AddUserData</span></span><a class="reference internal" href="_modules/restapi.html#AddUserData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AddUserData" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>This has one method to add user data and store the user data on the database.</p>
+<p>AddUserData class inheriting from Resource class of the flask_restful module used to add data for the created user on the <code class="docutils literal notranslate"><span class="pre">CreateUser</span></code> class using the created session id from the CreateUser class.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.AddUserData.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'adduserdata'</span></em><a class="headerlink" href="#restapi.AddUserData.endpoint" title="Permalink to this definition"></a></dt>
@@ -121,7 +197,8 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.AddUserData.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#AddUserData.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AddUserData.post" title="Permalink to this definition"></a></dt>
-<dd><p>This method is used to add user information to the current user and store it on the database.</p>
+<dd><p>The post method of AddUserData is used to add user information to the current user and store it on the database.
+This method exactly add up the data to the recently created user or logged in user, otherwise it cannot perform any action and will abort.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>all the data of the created user</p>
@@ -138,7 +215,7 @@ installed within the python environment where we are running this module.</p>
 <dt class="sig sig-object py" id="restapi.AllUsers">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">AllUsers</span></span><a class="reference internal" href="_modules/restapi.html#AllUsers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AllUsers" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>This has one method that gets the user data</p>
+<p>AllUsers class inheriting from Resource class of the flask_restful module used to get all the available users and users data from the tables <code class="docutils literal notranslate"><span class="pre">users</span></code> and <code class="docutils literal notranslate"><span class="pre">user_data</span></code> on the database.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.AllUsers.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'allusers'</span></em><a class="headerlink" href="#restapi.AllUsers.endpoint" title="Permalink to this definition"></a></dt>
@@ -147,7 +224,7 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.AllUsers.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#AllUsers.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.AllUsers.get" title="Permalink to this definition"></a></dt>
-<dd><p>This method will return all the users and users data stored in the database</p>
+<dd><p>The get method of class AllUsers will return all the users and users data stored in the database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>list of users and users data with custom structure</p>
@@ -177,7 +254,7 @@ installed within the python environment where we are running this module.</p>
 <dt class="sig sig-object py" id="restapi.CreateUser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">CreateUser</span></span><a class="reference internal" href="_modules/restapi.html#CreateUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CreateUser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>This has one method to create user and store the user data on the database and the firebase.</p>
+<p>CreateUser class inheriting from Resource class of the flask_restful module used to create a particular user and to store all the data on the <code class="docutils literal notranslate"><span class="pre">users</span></code> and  table on the database and on the firebase for later authentication on the <code class="docutils literal notranslate"><span class="pre">Login</span></code> class.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.CreateUser.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'createuser'</span></em><a class="headerlink" href="#restapi.CreateUser.endpoint" title="Permalink to this definition"></a></dt>
@@ -199,7 +276,7 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.CreateUser.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#CreateUser.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CreateUser.post" title="Permalink to this definition"></a></dt>
-<dd><p>This method is used to create a user and store it on the database and the firebase for email and password login.</p>
+<dd><p>The post method of the CreateUser class is used to create a user and store it on the database <code class="docutils literal notranslate"><span class="pre">users</span></code> table if not exist and on the firebase for email and password login.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>user details like id and email</p>
@@ -216,7 +293,7 @@ installed within the python environment where we are running this module.</p>
 <dt class="sig sig-object py" id="restapi.CurrentUser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">CurrentUser</span></span><a class="reference internal" href="_modules/restapi.html#CurrentUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CurrentUser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>This has one method to get the currently logged in user.</p>
+<p>CurrentUser class inheriting from Resource class of the flask_restful module used to get all the data of a currently loggedin user, which is identified by using the session id.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.CurrentUser.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'currentuser'</span></em><a class="headerlink" href="#restapi.CurrentUser.endpoint" title="Permalink to this definition"></a></dt>
@@ -225,7 +302,7 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.CurrentUser.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#CurrentUser.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.CurrentUser.get" title="Permalink to this definition"></a></dt>
-<dd><p>This method will get the currently logged in user by using the session id and returns the data.</p>
+<dd><p>This get method of CurrentUser class will return the currently logged in user data from both tables namely <code class="docutils literal notranslate"><span class="pre">users</span></code> and <code class="docutils literal notranslate"><span class="pre">user_data</span></code> by using the session id called <code class="docutils literal notranslate"><span class="pre">created_user_id</span></code>, Otherwise will abort the request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the currently logged in user data</p>
@@ -255,7 +332,7 @@ installed within the python environment where we are running this module.</p>
 <dt class="sig sig-object py" id="restapi.Login">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">Login</span></span><a class="reference internal" href="_modules/restapi.html#Login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Login" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>This will be responsible for logging in the manually created user.</p>
+<p>Login class inheriting from Resource class of the flask_restful module used to login the <code class="docutils literal notranslate"><span class="pre">user</span> <span class="pre">created</span> <span class="pre">by</span> <span class="pre">normal</span> <span class="pre">method</span></code> not by google authenticated method. It can only login the user with data stored on database and the firebase.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.Login.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'login'</span></em><a class="headerlink" href="#restapi.Login.endpoint" title="Permalink to this definition"></a></dt>
@@ -277,7 +354,7 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.Login.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#Login.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Login.post" title="Permalink to this definition"></a></dt>
-<dd><p>This method is used to login a particular user by verifying it on the database and the firebase for authentication.</p>
+<dd><p>The post method of Login class is used to login a particular user by verifying it on the database and the firebase for authentication.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>all the data of the logged in user</p>
@@ -294,7 +371,7 @@ installed within the python environment where we are running this module.</p>
 <dt class="sig sig-object py" id="restapi.Logout">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">Logout</span></span><a class="reference internal" href="_modules/restapi.html#Logout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Logout" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>This has one method to logout user.</p>
+<p>Logout class inheriting from Resource class of the flask_restful module used to logout a particular user by using the available session id. If there is not session id then it will abort the request.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.Logout.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'logout'</span></em><a class="headerlink" href="#restapi.Logout.endpoint" title="Permalink to this definition"></a></dt>
@@ -316,7 +393,8 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.Logout.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#Logout.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.Logout.post" title="Permalink to this definition"></a></dt>
-<dd><p>This method will logout if any users are currently logged in by using session id.</p>
+<dd><p>The post method of Logout class will logout if any users are currently logged in. Which is identified by using the available session id.
+It basically removes/pops the session id from the cookie so that the particular will get logged out.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>logged out or not</p>
@@ -333,7 +411,8 @@ installed within the python environment where we are running this module.</p>
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">ReactGoogleSignin</span></span><a class="reference internal" href="_modules/restapi.html#ReactGoogleSignin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.ReactGoogleSignin" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>This will create a user if not registered and logs in the user if already registered with the post method.</p>
+<p>ReactGoogleSignin class inheriting from Resource class of the flask_restful module will  used to create a user with google authenticated data coming from react application on the frontend.</p>
+<p>It will Create a user if not registered or Logs In the user if already registered by using the post method.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin.endpoint">
 <span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reactgooglesignin'</span></em><a class="headerlink" href="#restapi.ReactGoogleSignin.endpoint" title="Permalink to this definition"></a></dt>
@@ -355,7 +434,7 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.ReactGoogleSignin.post">
 <span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#ReactGoogleSignin.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.ReactGoogleSignin.post" title="Permalink to this definition"></a></dt>
-<dd><p>This method will get the user information like email, fullname, googld_id from the frontend react component and store the data with few conditions.</p>
+<dd><p>The Post method of class ReactGoogleSignin will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called <code class="docutils literal notranslate"><span class="pre">created_user_id</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the user is created or logged in or not</p>
@@ -372,11 +451,14 @@ installed within the python environment where we are running this module.</p>
 <dt class="sig sig-object py" id="restapi.SearchUser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">restapi.</span></span><span class="sig-name descname"><span class="pre">SearchUser</span></span><a class="reference internal" href="_modules/restapi.html#SearchUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></p>
-<p>SearchUser class will be responsible for searching, deleting, updating a particular user.</p>
+<p>SearchUser class inheriting from Resource class of the flask_restful module needs username of string type from the <code class="docutils literal notranslate"><span class="pre">user_data</span></code> to be passed in the url route for performing actions like searching, deleting and updating a particular user.
+The table <code class="docutils literal notranslate"><span class="pre">user_data</span></code> should have the username of string type passed as a parameter on the url route to perform all the actions on the methods namely <code class="docutils literal notranslate"><span class="pre">get,</span> <span class="pre">delete,</span> <span class="pre">put</span></code>.
+Otherwise the actions will not be performed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.SearchUser.delete">
 <span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#SearchUser.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser.delete" title="Permalink to this definition"></a></dt>
-<dd><p>This will delete the whole user data with the username if exist, otherwise abort the request. If we try to delete the currently logged in user, it will abort.</p>
+<dd><p>The delete method of SearchUser class will delete the particular user and particular user’s data if the username exist, otherwise abort the request.
+It will not delete when there is session id of currently LoggedIn user. Because we cannot delete when we are already LoggedIn.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is coming from the url route while calling api</p>
@@ -398,7 +480,7 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.SearchUser.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#SearchUser.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser.get" title="Permalink to this definition"></a></dt>
-<dd><p>This will search for the user and returns that user’s details in a dictionary format if exist, otherwise it will abort the request with User Not found.</p>
+<dd><p>The get method of SearchUser class will search for the user and returns that user’s details in a dictionary format if exist, otherwise it will abort the request with User Not found message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is coming from the url route while calling api</p>
@@ -428,7 +510,7 @@ installed within the python environment where we are running this module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="restapi.SearchUser.put">
 <span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/restapi.html#SearchUser.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#restapi.SearchUser.put" title="Permalink to this definition"></a></dt>
-<dd><p>This will get the username, if any matching user exist then it will update that particular user data.</p>
+<dd><p>The put method of SearchUser class will get the username of string type, if any matching user exist then it can update that particular user’s data otherwise it cannot perform action.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – This is the name which is coming from the url route while calling api</p>
