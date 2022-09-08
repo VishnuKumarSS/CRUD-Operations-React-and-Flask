@@ -14,8 +14,8 @@ from models import *
 from restapi import *
 
 
-@click.command()
 # @click.option('--count', default=1, help='Number of times to print.')
+@click.command()
 @click.option('--email', prompt='Enter your Email',
                 help='This will be the superuser Email.')
 @click.option('--fullname', prompt='Enter fullname for superuser',
