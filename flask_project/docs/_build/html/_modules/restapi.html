@@ -219,6 +219,7 @@
 <span class="sd">    * CurrentUser - This has one method to get the currently logged in user.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">email</span> <span class="kn">import</span> <span class="n">message</span>
 <span class="kn">import</span> <span class="nn">pdb</span>
 <span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Resource</span><span class="p">,</span> <span class="n">reqparse</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">marshal_with</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="o">*</span>
@@ -296,12 +297,7 @@
     <span class="s1">&#39;usertype&#39;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span>
 <span class="p">}</span>
 
-<span class="c1"># class ReactGoogleSignin(Resource, strict_slashes = False):</span>
 
-<div class="viewcode-block" id="hello_world"><a class="viewcode-back" href="../restapi.html#restapi.hello_world">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/test/test1&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
-    <span class="k">return</span> <span class="s2">&quot;&lt;p&gt;Hello, World!&lt;/p&gt;&quot;</span></div>
-    
 <div class="viewcode-block" id="ReactGoogleSignin"><a class="viewcode-back" href="../restapi.html#restapi.ReactGoogleSignin">[docs]</a><span class="k">class</span> <span class="nc">ReactGoogleSignin</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This will create a user if not registered and logs in the user if already registered with the post method.&quot;&quot;&quot;</span>
 
@@ -334,10 +330,12 @@
             <span class="c1"># logged_in_user = Users.query.filter_by(id=google_id).first()</span>
             <span class="n">logged_in_user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;select * from users where google_id=&#39;</span><span class="si">{</span><span class="n">google_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-            <span class="n">session</span><span class="p">[</span><span class="s1">&#39;created_user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logged_in_user</span><span class="o">.</span><span class="n">id</span>
+            <span class="k">if</span> <span class="n">logged_in_user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Unauthorized user...Not found.&quot;</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">session</span><span class="p">[</span><span class="s1">&#39;created_user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logged_in_user</span><span class="o">.</span><span class="n">id</span>
             <span class="c1"># pdb.set_trace()</span>
-
-            <span class="k">return</span> <span class="s1">&#39;User already exist in Database...&#39;</span></div></div>
+            <span class="k">return</span> <span class="n">logged_in_user</span><span class="o">.</span><span class="n">_asdict</span><span class="p">(),</span> <span class="mi">200</span></div></div>
 
 
 <div class="viewcode-block" id="AllUsers"><a class="viewcode-back" href="../restapi.html#restapi.AllUsers">[docs]</a><span class="k">class</span> <span class="nc">AllUsers</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
@@ -349,7 +347,7 @@
 <span class="sd">        :return: list of users and users data with custom structure</span>
 <span class="sd">        :rtype: [dict, dict]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
+        
         <span class="n">allusers</span> <span class="o">=</span> <span class="n">Users</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
         <span class="n">users</span> <span class="o">=</span> <span class="p">{}</span>
@@ -436,7 +434,7 @@
                 <span class="sa">f</span><span class="s2">&quot;DELETE from user_data where username=&#39;</span><span class="si">{</span><span class="n">user_delete</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;User without having the users_id is deleted successfully.&quot;</span><span class="p">}),</span> <span class="mi">200</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">abort</span><span class="p">(</span><span class="mi">409</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;User not found to DELETE.&#39;</span><span class="p">)</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;User not found to DELETE.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;User is deleted&#39;</span></div>
 
     <span class="c1"># @marshal_with(create_user_field )</span>
@@ -450,6 +448,7 @@
 <span class="sd">        :return: list of updated user and updated user data  </span>
 <span class="sd">        :rtype: [dict, dict]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">parsed_user</span> <span class="o">=</span> <span class="n">update_user_req</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">userdata</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -473,7 +472,7 @@
                     <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">!=</span> <span class="n">email_exist</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]:</span>
                         <span class="n">abort</span><span class="p">(</span><span class="mi">409</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Email already exist. It must be unique.&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># if user is not there, then...</span>
-                <span class="n">abort</span><span class="p">(</span><span class="mi">405</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;User is not there to update.&#39;</span><span class="p">)</span>
+                <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;User is not there to update.&#39;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">google_id</span><span class="p">:</span>  <span class="c1"># We should not update google&#39;s data, so...</span>
                 <span class="k">if</span> <span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]:</span>
@@ -509,6 +508,7 @@
                 <span class="c1"># &quot;&quot;&quot;)</span>
                 <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Update user_data SET username=&#39;</span><span class="si">{</span><span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; WHERE username = &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;userage&#39;</span><span class="p">]:</span>
                 <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Update user_data SET userage=&#39;</span><span class="si">{</span><span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;userage&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; WHERE username = &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
@@ -519,10 +519,11 @@
                 <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Update user_data SET usertype=&#39;</span><span class="si">{</span><span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;usertype&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; WHERE username = &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
-            <span class="n">updated_data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;select * from user_data where username=&#39;</span><span class="si">{</span><span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
-            <span class="n">updated_user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot; select * from users where id=&#39;</span><span class="si">{</span><span class="n">updated_data</span><span class="p">[</span><span class="s1">&#39;users_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]:</span>
+                <span class="n">updated_data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select * from user_data where username=&#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]:</span>
+                <span class="n">updated_data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select * from user_data where username=&#39;</span><span class="si">{</span><span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+            <span class="n">updated_user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select * from users where id=&#39;</span><span class="si">{</span><span class="n">updated_data</span><span class="p">[</span><span class="s1">&#39;users_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
 
             <span class="k">return</span> <span class="p">([</span><span class="n">updated_user</span><span class="p">,</span> <span class="n">updated_data</span><span class="p">])</span></div></div>
 
@@ -623,7 +624,7 @@
             <span class="sa">f</span><span class="s2">&quot;select * from users where email=&#39;</span><span class="si">{</span><span class="n">parsed_user</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="c1"># pdb.set_trace()</span>
         <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Unauthorized User or Not found.&#39;</span><span class="p">)</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Email Not found or Unauthorized User&#39;</span><span class="p">)</span>
             <span class="c1"># or</span>
             <span class="c1"># return jsonify({&quot;message&quot;: &#39;Unauthorized User&#39;}), 401</span>
 
@@ -633,14 +634,9 @@
 
         <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="c1"># here we also can use the above user object.</span>
-                <span class="n">user_email_password</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;select * from users where id=&#39;</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
                 <span class="c1"># here simply getting the current user details for using the email to verify because we are not using email for signin. But in firebase we are using email for verfitication. That&#39;s why</span>
-                <span class="n">login_firebase</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">sign_in_with_email_and_password</span><span class="p">(</span>
-                    <span class="n">user_email_password</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">],</span> <span class="n">user_email_password</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
-                <span class="c1"># or ... user_email_and_password[&#39;id&#39;]</span>
-                <span class="n">session</span><span class="p">[</span><span class="s1">&#39;created_user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_email_password</span><span class="o">.</span><span class="n">id</span>
+                <span class="n">login_firebase</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">sign_in_with_email_and_password</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">],</span> <span class="n">user</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+                <span class="n">session</span><span class="p">[</span><span class="s1">&#39;created_user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">abort</span><span class="p">(</span><span class="mi">409</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;problem with Google firebase authentication.&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
@@ -664,7 +660,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">session</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;created_user_id&quot;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">abort</span><span class="p">(</span><span class="mi">409</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;No user found with the Session ID.&#39;</span><span class="p">)</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;No user found with the Session ID.&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Successfully logged out&#39;</span><span class="p">},</span> <span class="mi">200</span></div></div>
 
