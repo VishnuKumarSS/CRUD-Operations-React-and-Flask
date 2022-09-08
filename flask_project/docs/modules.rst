@@ -1,11 +1,9 @@
-flask_project
+Flask RestApi
 =============
 
 .. toctree::
    :maxdepth: 4
    :caption: Contents:
 
-   authentication
-   models
    restapi
-   superuser
+   models

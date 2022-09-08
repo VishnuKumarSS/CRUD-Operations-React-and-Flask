@@ -13,6 +13,7 @@ import click
 from models import *
 from restapi import *
 
+
 @click.command()
 # @click.option('--count', default=1, help='Number of times to print.')
 @click.option('--email', prompt='Enter your Email',
@@ -67,12 +68,6 @@ def super_user(email, fullname, password, username, userage, usercity):
             click.echo('Failed to create superuser. Superuser already exists.')
         else:
             click.echo('Failed to create superuser. Enter valid data.')
-
-def dummy():
-
-
-
-    pass
 
 if __name__ == '__main__':
     super_user()
