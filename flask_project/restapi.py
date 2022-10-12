@@ -63,7 +63,7 @@ from models import *
 from flask_bcrypt import Bcrypt
 from flask_session import Session
 from flask import jsonify, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
-from authentication import firebase, auth
+from authentication import auth
 from flask import request
 from flask_cors import CORS
 
