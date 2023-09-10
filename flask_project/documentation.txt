@@ -1,0 +1,3 @@
+# Link for the api documentation
+
+https://crud-operations-react-and-flask.readthedocs.io/en/latest/restapi.html
