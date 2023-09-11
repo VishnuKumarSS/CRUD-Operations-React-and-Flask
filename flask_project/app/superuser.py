@@ -12,7 +12,7 @@ This file can also be imported as a module and contains the following functions:
 import click
 from models import Users, UserData
 from authentication import auth
-from app import db, bcrypt
+from app import db, bcrypt, app
 
 
 # @click.option('--count', default=1, help='Number of times to print.')
@@ -48,27 +48,28 @@ def super_user(email, fullname, password, username, userage, usercity):
     :return: whether the superuser is created or not
     :rtype: str
     """
-    db.create_all()
-    hashed_password = bcrypt.generate_password_hash(f'{password}').decode('utf-8')
-    try:
-        # newuser = UserData(id=0, username=username, userage=userage, usercity=usercity, usertype="superuser", email=email, password = hashed_password) 
-        # db.session.add(newuser)
-        # db.session.commit()
-        register_firebase = auth.create_user_with_email_and_password(email, hashed_password)
-        # pdb.set_trace()
-        user = Users(id='0', email=email, fullname=fullname, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        userdata = UserData(username=username, userage=userage, usercity=usercity, usertype='superuser', users_id=user.id)
-        db.session.add(userdata)
-        db.session.commit()
-        click.echo('SuperUser Created Successfully.')
-    except:
-        id = db.engine.execute(f"select * from users where id='0'").first()
-        if id:
-            click.echo('Failed to create superuser. Superuser already exists.')
-        else:
-            click.echo('Failed to create superuser. Enter valid data.')
+    with app.app_context():
+        db.create_all()
+        hashed_password = bcrypt.generate_password_hash(f'{password}').decode('utf-8')
+        try:
+            # newuser = UserData(id=0, username=username, userage=userage, usercity=usercity, usertype="superuser", email=email, password = hashed_password) 
+            # db.session.add(newuser)
+            # db.session.commit()
+            register_firebase = auth.create_user_with_email_and_password(email, hashed_password)
+            # pdb.set_trace()
+            user = Users(id='0', email=email, fullname=fullname, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+            userdata = UserData(username=username, userage=userage, usercity=usercity, usertype='superuser', users_id=user.id)
+            db.session.add(userdata)
+            db.session.commit()
+            click.echo('SuperUser Created Successfully.')
+        except:
+            id = db.engine.execute(f"select * from users where id='0'").first()
+            if id:
+                click.echo('Failed to create superuser. Superuser already exists.')
+            else:
+                click.echo('Failed to create superuser. Enter valid data.')
 
 if __name__ == '__main__':
     super_user()
