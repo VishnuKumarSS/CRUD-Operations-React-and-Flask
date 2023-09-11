@@ -64,7 +64,7 @@ from models import *
 from flask import jsonify, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
 from authentication import auth
 from flask import request
-from . import bcrypt, db, api
+from app import bcrypt, db, api
 
 # # # CORS ( Cross-Origin Resource Sharing )
 # cors = CORS(app, supports_credentials=True)

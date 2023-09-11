@@ -9,7 +9,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 # Flask ENV variables
 DEBUG = os.environ.get('DEBUG', True)
-# FLASK_DEBUG = os.environ.get('FLASK_DEBUG', True)
+FLASK_DEBUG = os.environ.get('FLASK_DEBUG', True)
 FLASK_APP = os.environ.get('FLASK_APP')
 FLASK_ENV = os.environ.get('FLASK_ENV')
 

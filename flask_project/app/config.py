@@ -2,7 +2,7 @@ import redis
 import settings
 
 # Flask App settings
-DEBUG = settings.FLASK_DEBUG
+DEBUG = settings.DEBUG
 FLASK_APP = settings.FLASK_APP
 FLASK_ENV = settings.FLASK_ENV
 FLASK_DEBUG = settings.FLASK_DEBUG

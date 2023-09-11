@@ -19,13 +19,9 @@ This file ``models.py`` can also be imported as a module and contains the follow
             The ``get_uuid`` function will return a random UUID for 32-character lowercase hexadecimal string. 
             get_uuid is used in two classes (i.e. models for creating tables) namely Users and UserData for creating unique id for 'id' field in tables namely users and user_data
 """
-
-from flask import Flask
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
 from uuid import uuid4
 import config
-from . import db
+from app import db
 
 # load_dotenv()
 

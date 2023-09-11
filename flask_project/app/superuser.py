@@ -10,9 +10,9 @@ This file can also be imported as a module and contains the following functions:
 """
 
 import click
-from models import *
+from models import Users, UserData
 from authentication import auth
-from . import db, bcrypt
+from app import db, bcrypt
 
 
 # @click.option('--count', default=1, help='Number of times to print.')
