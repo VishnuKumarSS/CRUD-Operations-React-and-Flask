@@ -24,9 +24,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-flask-old": "cd flask_project && venv/bin/python app/main.py",
-    "start-flask": "cd flask_project && venv/bin/activate && python app/main.py",
-    "start-flask-windows": "cd flask_project && venv\\Scripts\\activate && python app\\main.py",
+    "start-flask-old": "cd flask_project && venv/bin/python main.py",
+    "start-flask": "cd flask_project && venv/bin/activate && python main.py",
+    "start-flask-windows": "cd flask_project && venv\\Scripts\\activate && python main.py",
     "flask-superuser-old": "cd flask_project && venv/bin/python app/superuser.py",
     "flask-superuser": "cd flask_project && venv/bin/activate && python app/superuser.py",
     "flask-superuser-windows": "cd flask_project && venv\\Scripts\\activate && python app\\superuser.py",

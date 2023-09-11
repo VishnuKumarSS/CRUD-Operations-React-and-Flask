@@ -1,5 +1,5 @@
 import redis
-import settings
+from . import settings
 
 # Flask App settings
 DEBUG = settings.DEBUG
