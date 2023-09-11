@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { GoogleLogin } from 'react-google-login'
+import { GoogleLogin } from '@leecheuk/react-google-login'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
