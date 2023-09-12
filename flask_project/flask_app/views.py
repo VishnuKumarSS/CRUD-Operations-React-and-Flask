@@ -138,14 +138,15 @@ class ReactGoogleSignin(Resource):
     ReactGoogleSignin class inheriting from Resource class of the flask_restful module will  used to create a user with google authenticated data coming from react application on the frontend.\n
     It will Create a user if not registered or Logs In the user if already registered by using the post method.
     """
-
+    pdb.set_trace()
     def post(self):
         """The Post method of class ReactGoogleSignin will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called ``created_user_id``.
         
         :return: the user is created or logged in or not
         :rtype: str
         """
-        
+        print('------------')
+        pdb.set_trace()
         # below we are getting the data's directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.
         email = request.json['email']
         fullname = request.json['name']
@@ -155,7 +156,7 @@ class ReactGoogleSignin(Resource):
 
         # check_table = db.engine.execute('select * from google_user_data')
 
-        # pdb.set_trace()
+        pdb.set_trace()
         try:
             google_user = Users(
                 email=email, fullname=fullname, google_id=google_id)
