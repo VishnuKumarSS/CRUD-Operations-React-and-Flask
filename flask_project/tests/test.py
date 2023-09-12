@@ -1,7 +1,37 @@
 from conftest import client
-from restapi import app
+from flask_project.app.models import Users, UserData 
+from flask_project.app.app import app
 from flask import request, json, session
-import pdb
+
+
+def test_db_model(app):
+    with app.app_context():
+        allusers = Users.query.all()
+
+        users = {}
+        for user in allusers:
+            users[user.id] = {
+                'email': user.email,
+                'fullname': user.fullname,
+                'google_id': user.google_id if user.google_id != None else None,
+                'password': user.password if user.password != None else None
+                # 'username' : user.user_data.username if user.user_data != None else None,
+                # 'userage' : user.user_data.userage if user.user_data != None else None,
+                # 'usercity' : user.user_data.usercity if user.user_data != None else None,
+                # 'usertype' : user.user_data.usertype if user.user_data != None else None
+            }
+
+        users_data = {}
+        for user in allusers:
+            users_data[user.id] = {
+                'username': user.user_data.username if user.user_data != None else None,
+                'userage': user.user_data.userage if user.user_data != None else None,
+                'usercity': user.user_data.usercity if user.user_data != None else None,
+                'usertype': user.user_data.usertype if user.user_data != None else None
+            }
+        # pdb.set_trace()
+        return ([users, users_data])
+    
 
 def test_allusers_200(client):
     """It should return status code 200 when we have working database. we are just getting data from the db."""

@@ -1,4 +1,4 @@
-from restapi import app as flask_app
+from ..app import app as flask_app
 import pytest
 
 @pytest.fixture()

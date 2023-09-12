@@ -19,34 +19,62 @@ This file ``models.py`` can also be imported as a module and contains the follow
             The ``get_uuid`` function will return a random UUID for 32-character lowercase hexadecimal string. 
             get_uuid is used in two classes (i.e. models for creating tables) namely Users and UserData for creating unique id for 'id' field in tables namely users and user_data
 """
-
-from flask import Flask
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
 from uuid import uuid4
-import redis
-import os
-from dotenv import load_dotenv
+import config
+from app import db
 
-load_dotenv()
+# load_dotenv()
 
-app = Flask(__name__)
-api = Api(app)
+# app = Flask(__name__)
+# api = Api(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://starz1:starz1234@localhost/mydatabase"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ECHO"] = True  # to see all the raw queries on the CLI
+# app.config['SQLALCHEMY_DATABASE_URI'] = (
+#     f"postgresql://"
+#     f"starz1:"
+#     f"starz1234@"
+#     f"localhost/"
+#     f"mydatabase"
+# )
 
-# this secret key is created in the .env file
-app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
+# app.config['SQLALCHEMY_DATABASE_URI'] = (
+#     f"{settings.DB_ENGINE}://"
+#     f"{settings.DB_USER}:{settings.DB_PASSWORD}@"
+#     f"{settings.DB_HOST}:{settings.DB_PORT}/" # DB Port is optional
+#     f"{settings.DB_NAME}"
+# )
 
-app.config['SESSION_TYPE'] = "redis"
-app.config['SESSION_PERMANENT'] = False
-# we are gonna use secret key signer...so it's true
-app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_URL'] = redis.from_url("redis://127.0.0.1:6379")
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# app.config["SQLALCHEMY_ECHO"] = True  # to see all the raw queries on the CLI
 
-db = SQLAlchemy(app)
+# # this secret key is created in the .env file
+# app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
+
+# app.config['SESSION_TYPE'] = "redis"
+# app.config['SESSION_PERMANENT'] = False
+# # we are gonna use secret key signer...so it's true
+# app.config['SESSION_USE_SIGNER'] = True
+# app.config['SESSION_URL'] = redis.from_url("redis://127.0.0.1:6379")
+
+# db = SQLAlchemy(app)
+
+
+
+# ------------------------
+
+
+
+# # Create Flask application instance
+# app = Flask(__name__)
+
+# # Initialize Flask-RESTful API
+# api = Api(app)
+
+# # Apply the configurations from config.py
+# app.config.from_object(config)
+
+# # Initialize SQLAlchemy for database interaction
+# db = SQLAlchemy(app)
+
 
 
 def get_uuid():
