@@ -59,12 +59,11 @@ This file can also be imported as a module and contains the following:
 
 import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
-from models import *
+from .models import Users, UserData, db
 
-from flask import jsonify, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
-from authentication import auth
-from flask import request
-from app import bcrypt, db, api
+from flask import jsonify, request, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
+from .authentication import auth
+from .app import bcrypt
 
 # # # CORS ( Cross-Origin Resource Sharing )
 # cors = CORS(app, supports_credentials=True)
@@ -138,7 +137,7 @@ class ReactGoogleSignin(Resource):
     ReactGoogleSignin class inheriting from Resource class of the flask_restful module will  used to create a user with google authenticated data coming from react application on the frontend.\n
     It will Create a user if not registered or Logs In the user if already registered by using the post method.
     """
-    pdb.set_trace()
+    # pdb.set_trace()
     def post(self):
         """The Post method of class ReactGoogleSignin will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called ``created_user_id``.
         
@@ -190,6 +189,7 @@ class AllUsers(Resource):
         """
         
         allusers = Users.query.all()
+        
 
         users = {}
         for user in allusers:
@@ -388,10 +388,11 @@ class CreateUser(Resource):
         :return: user details like id and email
         :rtype: dict
         """
+        # pdb.set_trace()
         parsed_user = create_user_req.parse_args()
-        # user = UserData.query.filter_by(username=parsed_user["username"]).first()
-        email_exist = db.engine.execute(
-            f"select * from users where email='{parsed_user['email']}'").first()
+        email_exist = Users.query.filter_by(email=parsed_user["email"]).first()
+        # email_exist = db.engine.execute(
+        #     f"select * from users where email='{parsed_user['email']}'").first()
 
         # if the email already exists, then
         if email_exist:
@@ -415,8 +416,9 @@ class CreateUser(Resource):
             session['created_user_id'] = create_user.id
 
         if create_user:
-            created_user = db.engine.execute(
-                f"select * from users where email='{parsed_user['email']}'").first()
+            created_user = Users(email=parsed_user['email'])
+            # created_user = db.engine.execute(
+                # f"select * from users where email='{parsed_user['email']}'").first()
 
         return created_user
 
@@ -553,16 +555,16 @@ class CurrentUser(Resource):
             return ({"message": "no current users"}), 200
 
 
-api.add_resource(CreateUser, '/create_user')
-api.add_resource(AddUserData, '/add_user_data')
-api.add_resource(SearchUser, '/<string:username>')
-api.add_resource(AllUsers, '/allusers')
+# api.add_resource(CreateUser, '/create_user')
+# api.add_resource(AddUserData, '/add_user_data')
+# api.add_resource(SearchUser, '/<string:username>')
+# api.add_resource(AllUsers, '/allusers')
 
-api.add_resource(Login, '/login')
-api.add_resource(Logout, '/logout')
-api.add_resource(CurrentUser, '/current_user')
+# api.add_resource(Login, '/login')
+# api.add_resource(Logout, '/logout')
+# api.add_resource(CurrentUser, '/current_user')
 
-api.add_resource(ReactGoogleSignin, '/google_signin')
+# api.add_resource(ReactGoogleSignin, '/google_signin')
 
 # if __name__ == '__main__':
 #     app.run(debug=True)

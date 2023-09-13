@@ -20,8 +20,12 @@ This file ``models.py`` can also be imported as a module and contains the follow
             get_uuid is used in two classes (i.e. models for creating tables) namely Users and UserData for creating unique id for 'id' field in tables namely users and user_data
 """
 from uuid import uuid4
-import config
-from app import db
+from . import config
+from .app import app
+from flask_sqlalchemy import SQLAlchemy
+
+# Initialize SQLAlchemy for database interaction
+db = SQLAlchemy(app)
 
 # load_dotenv()
 
