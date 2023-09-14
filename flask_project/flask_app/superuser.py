@@ -8,14 +8,12 @@ And also it required custom modules like 'models' and 'restapi' to be imported.
 This file can also be imported as a module and contains the following functions:
     * super_user - This function creates a superuser for the admin dashboard application with the id set to 0
 """
-
 import click
 from .models import Users, UserData, db
 from .authentication import auth
 from .app import bcrypt, app
 
 
-# @click.option('--count', default=1, help='Number of times to print.')
 @click.command()
 @click.option('--email', prompt='Enter your Email',
                 help='This will be the superuser Email.')
@@ -52,11 +50,10 @@ def super_user(email, fullname, password, username, userage, usercity):
         db.create_all()
         hashed_password = bcrypt.generate_password_hash(f'{password}').decode('utf-8')
         try:
-            # newuser = UserData(id=0, username=username, userage=userage, usercity=usercity, usertype="superuser", email=email, password = hashed_password) 
+            # newuser = UserData(id=0, username=username, userage=userage, usercity=usercity, usertype="superuser", email=email, password = hashed_password)
             # db.session.add(newuser)
             # db.session.commit()
             register_firebase = auth.create_user_with_email_and_password(email, hashed_password)
-            # pdb.set_trace()
             user = Users(id='0', email=email, fullname=fullname, password=hashed_password)
             db.session.add(user)
             db.session.commit()
@@ -71,9 +68,6 @@ def super_user(email, fullname, password, username, userage, usercity):
             else:
                 click.echo('Failed to create superuser. Enter valid data.')
 
+
 if __name__ == '__main__':
     super_user()
-
-# commands -
-# "flask-superuser": "cd flask_project && my-env/bin/python superuser.py",
-# "flask-superuser-help": "cd flask_project && my-env/bin/python superuser.py --help",

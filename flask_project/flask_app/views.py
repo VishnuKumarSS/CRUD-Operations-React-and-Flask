@@ -56,26 +56,12 @@ This file can also be imported as a module and contains the following:
                 ``GET``:
                     This get method of CurrentUser class will return the currently logged in user data from both tables namely ``users`` and ``user_data`` by using the session id called ``created_user_id``, Otherwise will abort the request.
 """
-
-import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from .models import Users, UserData, db
-
 from flask import jsonify, request, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
 from .authentication import auth
 from .app import bcrypt
 
-# # # CORS ( Cross-Origin Resource Sharing )
-# cors = CORS(app, supports_credentials=True)
-# # cors = CORS()
-# # cors.init_app(app)
-
-# # for password hashing
-# bcrypt = Bcrypt(app)
-
-# # passing our app to the server Session. So, that it will be safe.
-# # if we don't have the server sided session. Then this session will be the client side session. It could easily be  hacked.
-# server_session = Session(app)
 
 create_user_req = reqparse.RequestParser()
 create_user_req.add_argument(
@@ -97,7 +83,6 @@ add_user_data_req.add_argument(
 
 
 update_user_req = reqparse.RequestParser()
-
 update_user_req.add_argument('email', type=str)
 update_user_req.add_argument('fullname', type=str)
 update_user_req.add_argument('password', type=str)
@@ -137,15 +122,12 @@ class ReactGoogleSignin(Resource):
     ReactGoogleSignin class inheriting from Resource class of the flask_restful module will  used to create a user with google authenticated data coming from react application on the frontend.\n
     It will Create a user if not registered or Logs In the user if already registered by using the post method.
     """
-    # pdb.set_trace()
     def post(self):
         """The Post method of class ReactGoogleSignin will get the user information like email, fullname, google_id from the frontend react application and stores the data on the database with the if the user data is not there in database, Otherwise it just logs in the user by creating session id called ``created_user_id``.
         
         :return: the user is created or logged in or not
         :rtype: str
         """
-        print('------------')
-        pdb.set_trace()
         # below we are getting the data's directly from the frontend. So inside the []  make sure to type the spelling appropriately to the frontend returned data.
         email = request.json['email']
         fullname = request.json['name']
@@ -154,15 +136,12 @@ class ReactGoogleSignin(Resource):
         # we can do what we did in login class.
 
         # check_table = db.engine.execute('select * from google_user_data')
-
-        pdb.set_trace()
         try:
             google_user = Users(
                 email=email, fullname=fullname, google_id=google_id)
             db.session.add(google_user)
             db.session.commit()
             session['created_user_id'] = google_user.id
-            # pdb.set_trace()
             return 'Google User Created...'
         except:
             # logged_in_user = Users.query.filter_by(id=google_id).first()
@@ -172,7 +151,6 @@ class ReactGoogleSignin(Resource):
                 abort(401, message={"Unauthorized user...Not found."})
             else:
                 session['created_user_id'] = logged_in_user.id
-            # pdb.set_trace()
             return logged_in_user._asdict(), 200
 
 
@@ -180,16 +158,13 @@ class AllUsers(Resource):
     """
     AllUsers class inheriting from Resource class of the flask_restful module used to get all the available users and users data from the tables ``users`` and ``user_data`` on the database.
     """
-
     def get(self):
         """The get method of class AllUsers will return all the users and users data stored in the database
         
         :return: list of users and users data with custom structure
         :rtype: [dict, dict]
         """
-        
         allusers = Users.query.all()
-        
 
         users = {}
         for user in allusers:
@@ -222,7 +197,6 @@ class SearchUser(Resource):
     The table ``user_data`` should have the username of string type passed as a parameter on the url route to perform all the actions on the methods namely ``get, delete, put``.
     Otherwise the actions will not be performed. 
     """
-
     def get(self, username):        
         """The get method of SearchUser class will search for the user and returns that user's details in a dictionary format if exist, otherwise it will abort the request with User Not found message.
 
@@ -261,7 +235,7 @@ class SearchUser(Resource):
         user_id = session.get("created_user_id")
         user_delete = db.engine.execute(
             f"select * from user_data where username='{username}'").first()
-        # pdb.set_trace()
+
         if user_delete and user_delete['users_id']:
             if user_id != user_delete['users_id']:
                 # because the index 1 is the username field.
@@ -309,7 +283,6 @@ class SearchUser(Resource):
             email_exist = db.engine.execute(
                 f"select * from users where email='{parsed_user['email']}'").first()
             if userdata:
-                # pdb.set_trace()
                 if user_exist:
                     if userdata['username'] != user_exist['username']:
                         abort(
@@ -388,7 +361,6 @@ class CreateUser(Resource):
         :return: user details like id and email
         :rtype: dict
         """
-        # pdb.set_trace()
         parsed_user = create_user_req.parse_args()
         email_exist = Users.query.filter_by(email=parsed_user["email"]).first()
         # email_exist = db.engine.execute(
@@ -427,7 +399,6 @@ class AddUserData(Resource):
     """
     AddUserData class inheriting from Resource class of the flask_restful module used to add data for the created user on the ``CreateUser`` class using the created session id from the CreateUser class.
     """
-
     @marshal_with(add_user_data_field)
     def post(self):
         """The post method of AddUserData is used to add user information to the current user and store it on the database.
@@ -462,11 +433,11 @@ class AddUserData(Resource):
         else:
             abort(401, message="No Users are currently created or logged in to add data.")
 
+
 class Login(Resource):
     """
     Login class inheriting from Resource class of the flask_restful module used to login the ``user created by normal method`` not by google authenticated method. It can only login the user with data stored on database and the firebase.
     """
-
     def post(self):
         """The post method of Login class is used to login a particular user by verifying it on the database and the firebase for authentication.
 
@@ -477,7 +448,6 @@ class Login(Resource):
         parsed_user = user_login_req.parse_args()
         user = db.engine.execute(
             f"select * from users where email='{parsed_user['email']}'").first()
-        # pdb.set_trace()
         if user is None:
             abort(404, message='Email Not found or Unauthorized User')
             # or
@@ -507,7 +477,6 @@ class Logout(Resource):
     """
     Logout class inheriting from Resource class of the flask_restful module used to logout a particular user by using the available session id. If there is not session id then it will abort the request.
     """
-
     def post(self):
         """The post method of Logout class will logout if any users are currently logged in. Which is identified by using the available session id.
         It basically removes/pops the session id from the cookie so that the particular will get logged out.
@@ -527,7 +496,6 @@ class CurrentUser(Resource):
     """
     CurrentUser class inheriting from Resource class of the flask_restful module used to get all the data of a currently loggedin user, which is identified by using the session id.
     """
-
     def get(self):
         """This get method of CurrentUser class will return the currently logged in user data from both tables namely ``users`` and ``user_data`` by using the session id called ``created_user_id``, Otherwise will abort the request.
         
@@ -543,7 +511,7 @@ class CurrentUser(Resource):
             f"select * from users where id='{user_id}'").first()
         userdata = db.engine.execute(
             f"select * from user_data where users_id='{user_id}'").first()
-        # pdb.set_trace()
+        
         if userdata and user:
             return ([user._asdict(), userdata._asdict()])
         elif user or userdata:
@@ -553,18 +521,3 @@ class CurrentUser(Resource):
                 return ([userdata._asdict()])
         else:
             return ({"message": "no current users"}), 200
-
-
-# api.add_resource(CreateUser, '/create_user')
-# api.add_resource(AddUserData, '/add_user_data')
-# api.add_resource(SearchUser, '/<string:username>')
-# api.add_resource(AllUsers, '/allusers')
-
-# api.add_resource(Login, '/login')
-# api.add_resource(Logout, '/logout')
-# api.add_resource(CurrentUser, '/current_user')
-
-# api.add_resource(ReactGoogleSignin, '/google_signin')
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
