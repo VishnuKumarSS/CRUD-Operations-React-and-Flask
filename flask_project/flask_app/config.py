@@ -31,7 +31,3 @@ SESSION_USE_SIGNER = settings.REDIS_SESSION_USE_SIGNER
 SESSION_URL = redis.from_url(
     settings.REDIS_SESSION_URL
 )
-
-
-
-

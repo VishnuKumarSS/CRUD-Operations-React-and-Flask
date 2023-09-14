@@ -20,65 +20,12 @@ This file ``models.py`` can also be imported as a module and contains the follow
             get_uuid is used in two classes (i.e. models for creating tables) namely Users and UserData for creating unique id for 'id' field in tables namely users and user_data
 """
 from uuid import uuid4
-from . import config
 from .app import app
 from flask_sqlalchemy import SQLAlchemy
 
+
 # Initialize SQLAlchemy for database interaction
 db = SQLAlchemy(app)
-
-# load_dotenv()
-
-# app = Flask(__name__)
-# api = Api(app)
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = (
-#     f"postgresql://"
-#     f"starz1:"
-#     f"starz1234@"
-#     f"localhost/"
-#     f"mydatabase"
-# )
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = (
-#     f"{settings.DB_ENGINE}://"
-#     f"{settings.DB_USER}:{settings.DB_PASSWORD}@"
-#     f"{settings.DB_HOST}:{settings.DB_PORT}/" # DB Port is optional
-#     f"{settings.DB_NAME}"
-# )
-
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# app.config["SQLALCHEMY_ECHO"] = True  # to see all the raw queries on the CLI
-
-# # this secret key is created in the .env file
-# app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
-
-# app.config['SESSION_TYPE'] = "redis"
-# app.config['SESSION_PERMANENT'] = False
-# # we are gonna use secret key signer...so it's true
-# app.config['SESSION_USE_SIGNER'] = True
-# app.config['SESSION_URL'] = redis.from_url("redis://127.0.0.1:6379")
-
-# db = SQLAlchemy(app)
-
-
-
-# ------------------------
-
-
-
-# # Create Flask application instance
-# app = Flask(__name__)
-
-# # Initialize Flask-RESTful API
-# api = Api(app)
-
-# # Apply the configurations from config.py
-# app.config.from_object(config)
-
-# # Initialize SQLAlchemy for database interaction
-# db = SQLAlchemy(app)
-
 
 
 def get_uuid():
@@ -166,6 +113,7 @@ class UserData(db.Model):
         return f"{self.username} - {self.userage} - {self.usercity} - {self.usertype}"
 
 
+"""
 
 # db.init_app(app)
 # db.drop_all()
@@ -173,20 +121,22 @@ class UserData(db.Model):
 # db.engine.execute('drop table users')
 # db.engine.execute('drop table user_data')
 
-    # db.engine.execute(f"ALTER TABLE user_Data ADD id int NOT NULL if not exists id int, ADD username varchar(20) NOT NULL, ADD userage int NOT NULL, ADD usercity varchar(20) NOT NULL, ADD PRIMARY KEY (id)")
+# db.engine.execute(f"ALTER TABLE user_Data ADD id int NOT NULL if not exists id int, ADD username varchar(20) NOT NULL, ADD userage int NOT NULL, ADD usercity varchar(20) NOT NULL, ADD PRIMARY KEY (id)")
 
-    # try:
-    #     d = db.engine.execute(f"select * from user_data");
-    #     if not d:
-    #         db.engine.execute(
-    #             f'''
-    #             CREATE TABLE user_data(
-    #                 username VARCHAR(20) NOT NULL,
-    #                 userage int NOT NULL,
-    #                 usercity VARCHAR(20) NOT NULL,
-    #                 id int NOT NULL CONSTRAINT id_pk PRIMARY KEY
-    #             );
-    #             '''
-    #         )
-    # except:
-    #     print('Table not exist.')
+# try:
+#     d = db.engine.execute(f"select * from user_data");
+#     if not d:
+#         db.engine.execute(
+#             f'''
+#             CREATE TABLE user_data(
+#                 username VARCHAR(20) NOT NULL,
+#                 userage int NOT NULL,
+#                 usercity VARCHAR(20) NOT NULL,
+#                 id int NOT NULL CONSTRAINT id_pk PRIMARY KEY
+#             );
+#             '''
+#         )
+# except:
+#     print('Table not exist.')
+
+"""

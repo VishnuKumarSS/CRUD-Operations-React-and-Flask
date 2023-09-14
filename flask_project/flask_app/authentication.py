@@ -1,5 +1,6 @@
 import pyrebase
 
+
 config = {
     "apiKey": "AIzaSyD4alSm9Ju4uVCzxZgpUKIIjjwQPf70q8s",
     "authDomain": "auth-flask-e44f4.firebaseapp.com",
