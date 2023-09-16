@@ -56,6 +56,7 @@ This file can also be imported as a module and contains the following:
                 ``GET``:
                     This get method of CurrentUser class will return the currently logged in user data from both tables namely ``users`` and ``user_data`` by using the session id called ``created_user_id``, Otherwise will abort the request.
 """
+import pdb
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 from .models import Users, UserData, db
 from flask import jsonify, request, session # this session will be stored on the server side if we have Server sided session enabled...server_session = Session(app)
@@ -144,9 +145,9 @@ class ReactGoogleSignin(Resource):
             session['created_user_id'] = google_user.id
             return 'Google User Created...'
         except:
-            # logged_in_user = Users.query.filter_by(id=google_id).first()
-            logged_in_user = db.engine.execute(
-                f"select * from users where google_id='{google_id}'").first()
+            logged_in_user = Users.query.filter_by(google_id=google_id).first()
+            # logged_in_user = db.engine.execute(
+                # f"select * from users where google_id='{google_id}'").first()
             if logged_in_user is None:
                 abort(401, message={"Unauthorized user...Not found."})
             else:
@@ -207,10 +208,12 @@ class SearchUser(Resource):
         :rtype: [dict, dict]
         """
         try:
-            userdata = db.engine.execute(
-                f"select * from user_data where username='{username}'").first()._asdict()
-            user = db.engine.execute(
-                f"select * from users where id='{userdata['users_id']}'").first()._asdict()
+            # userdata = db.engine.execute(
+            #     f"select * from user_data where username='{username}'").first()._asdict()
+            # user = db.engine.execute(
+            #     f"select * from users where id='{userdata['users_id']}'").first()._asdict()
+            userdata = UserData.query.filter(username = username).first().__dict__
+            user = Users.query.filter(id = userdata['users_id']).first().__dict__
         except:
             abort(404, message='User Not Found.')
 
@@ -233,25 +236,30 @@ class SearchUser(Resource):
         # return 'User is deleted'
         # or
         user_id = session.get("created_user_id")
-        user_delete = db.engine.execute(
-            f"select * from user_data where username='{username}'").first()
+        # user_delete = db.engine.execute(
+        #     f"select * from user_data where username='{username}'").first()
+        user_delete = UserData.query.filter(username = username).first()
 
         if user_delete and user_delete['users_id']:
             if user_id != user_delete['users_id']:
                 # because the index 1 is the username field.
-                db.session.execute(
-                    f"DELETE from user_data where username='{user_delete['username']}'")
-                if user_delete.users_id:
-                    db.session.execute(
-                        f"DELETE from users where id='{user_delete.users_id}'")
+                # db.session.execute(
+                #     f"DELETE from user_data where username='{user_delete['username']}'")
+                db.session.delete(user_delete)
+                # if user_delete.users_id:
+                    # db.session.execute(
+                    #     f"DELETE from users where id='{user_delete.users_id}'")
+
                 db.session.commit()
             else:
                 abort(409, message="Can't delete yourself.")
 
         elif user_delete:  # to delete the users without havings users_id
             # because the index 1 is the username field.
-            db.engine.execute(
-                f"DELETE from user_data where username='{user_delete['username']}'")
+            # db.engine.execute(
+            #     f"DELETE from user_data where username='{user_delete['username']}'")
+            user = Users.query.filter(username = user_delete['username']).first().delete()
+            db.session.delete(user)
             return ({"message": "User without having the users_id is deleted successfully."}), 200
         else:
             abort(404, message='User not found to DELETE.')
@@ -271,17 +279,20 @@ class SearchUser(Resource):
 
         parsed_user = update_user_req.parse_args()
         try:
-            userdata = db.engine.execute(
-                f"select * from user_data where username='{username}'").first()
+            # userdata = db.engine.execute(
+            #     f"select * from user_data where username='{username}'").first()
+            userdata = UserData.query.filter(username = username).first()
             user = Users.query.filter_by(id=userdata.users_id).first()
         except:
             abort(
                 409, message='User is not there to update (or) No appropriate users found.')
         else:
-            user_exist = db.engine.execute(
-                f"select * from user_data where username='{parsed_user['username']}'").first()
-            email_exist = db.engine.execute(
-                f"select * from users where email='{parsed_user['email']}'").first()
+            # user_exist = db.engine.execute(
+            #     f"select * from user_data where username='{parsed_user['username']}'").first()
+            # email_exist = db.engine.execute(
+            #     f"select * from users where email='{parsed_user['email']}'").first()
+            user_exist = UserData.query.filter(username = parsed_user['username']).first()
+            email_exist = Users.query.filter(email = parsed_user['email']).first()
             if userdata:
                 if user_exist:
                     if userdata['username'] != user_exist['username']:
@@ -300,6 +311,7 @@ class SearchUser(Resource):
                     # fullname='{parsed_user['fullname']}'
                     # where id = '{user.id}'
                     # """)
+                    # user = Users.query.filter(email = parsed)
                     db.engine.execute(
                         f"Update users SET email='{parsed_user['email']}' WHERE id = '{user.id}'")
 
@@ -408,12 +420,15 @@ class AddUserData(Resource):
         :rtype: dict
         """
         parsed_user = add_user_data_req.parse_args()
-        user_exist = db.engine.execute(
-            f"select * from user_data where username='{parsed_user['username']}'").first()
+        # user_exist = db.engine.execute(
+        #     f"select * from user_data where username='{parsed_user['username']}'").first()
+        user_exist = UserData.query.filter(username = parsed_user['username']).first()
 
         created_user_id = session.get("created_user_id")
-        user_id_exist = db.engine.execute(
-            f"select * from user_data where users_id='{created_user_id}'").first()
+        # user_id_exist = db.engine.execute(
+        #     f"select * from user_data where users_id='{created_user_id}'").first()
+        user_id_exist = UserData.query.filter(users_id = created_user_id).first()
+
         # if the username already exists, then
         if user_exist:
             abort(409, message='User already exist with the username.')
@@ -426,8 +441,9 @@ class AddUserData(Resource):
             db.session.add(create_user_data)
             db.session.commit()
 
-            created_user_data = db.engine.execute(
-                f"select * from user_data where username='{parsed_user['username']}'").first()
+            # created_user_data = db.engine.execute(
+            #     f"select * from user_data where username='{parsed_user['username']}'").first()
+            created_user_data = UserData.query.filter(username = parsed_user['username']).first()
 
             return created_user_data
         else:
@@ -446,8 +462,9 @@ class Login(Resource):
         """
         # instead we can use request.json['field_name'] for individual fields.
         parsed_user = user_login_req.parse_args()
-        user = db.engine.execute(
-            f"select * from users where email='{parsed_user['email']}'").first()
+        # user = db.engine.execute(
+        #     f"select * from users where email='{parsed_user['email']}'").first()
+        user = Users.query.filter(email = parsed_user['email']).first()
         if user is None:
             abort(404, message='Email Not found or Unauthorized User')
             # or
@@ -465,8 +482,9 @@ class Login(Resource):
             except:
                 abort(409, message='problem with Google firebase authentication.')
         if user:
-            userdata = db.engine.execute(
-                f"select * from user_data where users_id='{user.id}'").first()
+            # userdata = db.engine.execute(
+            #     f"select * from user_data where users_id='{user.id}'").first()
+            userdata = UserData.query.filter(users_id = user.id).first()
             if userdata:
                 return ([user._asdict(), userdata._asdict()])
             else:
@@ -507,17 +525,22 @@ class CurrentUser(Resource):
             abort(401, message='Unauthorized User or No Logged in users.')
             # or
             # return jsonify({'error':"Unauthorized User or No Logged in users."}), 409
-        user = db.engine.execute(
-            f"select * from users where id='{user_id}'").first()
-        userdata = db.engine.execute(
-            f"select * from user_data where users_id='{user_id}'").first()
+
+        user = Users.query.filter_by(id = user_id).first()
+        userdata = UserData.query.filter_by(id = user_id).first()
+        # pdb.set_trace()
+        # user = db.engine.execute(
+        #     f"select * from users where id='{user_id}'").first()
+        # userdata = db.engine.execute(
+        #     f"select * from user_data where users_id='{user_id}'").first()
         
         if userdata and user:
-            return ([user._asdict(), userdata._asdict()])
+            return ([user.__dict__, userdata.__dict__])
+            # return ([user._asdict(), userdata._asdict()])
         elif user or userdata:
             if user:
-                return ([user._asdict()])
+                return ([user.__dict__])
             if userdata:
-                return ([userdata._asdict()])
+                return ([userdata.__dict__])
         else:
             return ({"message": "no current users"}), 200
