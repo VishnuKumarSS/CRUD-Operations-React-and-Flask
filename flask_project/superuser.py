@@ -9,9 +9,9 @@ This file can also be imported as a module and contains the following functions:
     * super_user - This function creates a superuser for the admin dashboard application with the id set to 0
 """
 import click
-from .models import Users, UserData, db
-from .authentication import auth
-from .app import bcrypt, app
+from flask_app.models import Users, UserData, db
+from flask_app.authentication import auth
+from flask_app.app import bcrypt, app
 
 
 @click.command()
@@ -27,7 +27,7 @@ from .app import bcrypt, app
                 help='The age of the superuser.')
 @click.option('--usercity', prompt='Enter your city',
                 help='The city of the superuser.')
-def super_user(email, fullname, password, username, userage, usercity):
+def create_super_user(email, fullname, password, username, userage, usercity):
     """This function creates a superuser for the admin dashboard application with the id set to 0.
     
     :param email: this is gonna be the email id for the superuser
@@ -53,7 +53,9 @@ def super_user(email, fullname, password, username, userage, usercity):
             # newuser = UserData(id=0, username=username, userage=userage, usercity=usercity, usertype="superuser", email=email, password = hashed_password)
             # db.session.add(newuser)
             # db.session.commit()
-            register_firebase = auth.create_user_with_email_and_password(email, hashed_password)
+
+            # No need to register superuser in firebase
+            # register_firebase = auth.create_user_with_email_and_password(email, hashed_password)
             user = Users(id='0', email=email, fullname=fullname, password=hashed_password)
             db.session.add(user)
             db.session.commit()
@@ -69,5 +71,5 @@ def super_user(email, fullname, password, username, userage, usercity):
                 click.echo('Failed to create superuser. Enter valid data.')
 
 
-if __name__ == '__main__':
-    super_user()
+if __name__ == "__main__":
+    create_super_user()
