@@ -10,8 +10,8 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 project = 'Flask API'
-copyright = '2022, Vishnu'
-author = 'Vishnu'
+copyright = '2023, Vishnu'
+author = 'Vishnu Kumar S S'
 release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------

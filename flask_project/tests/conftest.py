@@ -1,23 +1,23 @@
-from ..app import app as flask_app
+from flask_app.app import app as app_instance
 import pytest
 
 @pytest.fixture()
 def app():
     # app = flask_app()
-    flask_app.config.update({
+    app_instance.config.update({
         "TESTING": True,
     })
 
     # other setup can go here
-    yield flask_app
+    yield app_instance
     
     # clean up / reset resources here
 
 
 @pytest.fixture()
 def client(app):
-    return flask_app.test_client()
+    return app_instance.test_client()
 
 @pytest.fixture()
 def runner(app):
-    return flask_app.test_cli_runner()
+    return app_instance.test_cli_runner()

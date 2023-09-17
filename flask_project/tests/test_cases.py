@@ -1,9 +1,7 @@
-from urllib import response
-from conftest import client
-from restapi import CurrentUser, app
+from .conftest import client
 from flask import request, json, session
-import pdb
-from models import UserData, Users
+from flask_app.app import app
+from flask_app.models import Users, UserData
 
 def test_db_model(app):
     with app.app_context():
@@ -32,7 +30,7 @@ def test_db_model(app):
             }
         # pdb.set_trace()
         return ([users, users_data])
-
+    
 
 def test_allusers_200(client):
     """It should return status code 200 when we have working database. we are just getting data from the db."""
@@ -48,28 +46,25 @@ def test_allusers_type(client):
     response = client.get("/allusers")
     assert response.content_type == "application/json"
 
-# def test_request_type_allusers(client):
-    # response = client.get("/allusers")
-#     assert b'b172f2d7c98c4669896e2fd4a3d04c0c' in response.data == True
 
 def test_login_200(client):
     """It should return status code as 200 because we passed email and password correctly that is found in database and firebase."""
 
     response = client.post("/login", 
     json={
-        "email": "newsuperuser@gmail.com",
-        "password": "1234"
+        "email": "superuser@gmail.com",
+        "password": "starzzzz"
     })
     # pdb.set_trace()
     res = json.loads(response.data.decode('utf-8'))
     assert response.status_code == 200 , res['message']
 
 def test_login_401(client):
-    """It should return status code as 200 because we passed all the credentials to login a authenticated user"""
+    """It should return status code as 401 because we passed all the credentials to login a authenticated user"""
     
     response = client.post("/login", 
     json={
-        "email": "newsuperuser@gmail.com",
+        "email": "superuser@gmail.com",
         "password": "wrongpassword"
     })
     assert response.status_code == 401
@@ -124,18 +119,18 @@ def test_google_signin_type(client):
     response = client.get("/google_signin")
     assert response.content_type == "application/json"
 
-# def test_create_user_200(client):
-#     """It should return 200 when we pass the NEW email that is not found in database and firebase."""
+def test_create_user_200(client):
+    """It should return 200 when we pass the NEW email that is not found in database and firebase."""
 
-#     response = client.post("/create_user", 
-#     json = {
-#         "fullname": "fullname",
-#         "email": "newemail@email.com", # new email
-#         "password": "1234"
-#     })
-#     # pdb.set_trace()
-#     res = json.loads(response.data.decode('utf-8'))
-#     assert response.status_code == 200, res['message']
+    response = client.post("/create_user", 
+    json = {
+        "fullname": "testuser111",
+        "email": "newemail111@email.com", # new email
+        "password": "1234star"
+    })
+    # pdb.set_trace()
+    res = json.loads(response.data.decode('utf-8'))
+    assert response.status_code == 200, res['message']
 
 
 def test_create_user_409(client):
@@ -262,11 +257,11 @@ def test_searchuser_get_type(client):
     response = client.get("/username")
     assert response.content_type == "application/json"
 
-# def test_searchuser_delete_200(client):
-#     """It should return status code 200 when we pass the existing username to delete the user."""
+def test_searchuser_delete_200(client):
+    """It should return status code 200 when we pass the existing username to delete the user."""
     
-#     response = client.delete("/<username_to_delete>")
-#     assert response.status_code == 200
+    response = client.delete("/<username_to_delete>")
+    assert response.status_code == 200
 
 def test_searchuser_delete_404(client):
     """It should return status code 404 when we pass the username which doesn't exist in db to delete."""
@@ -305,13 +300,11 @@ def test_searchuser_put_409(client):
     })
     assert response.status_code == 409
 
-
 def test_searchuser_put_type(client):
     """The content_type that it's returning should be in application/json"""
 
     response = client.put("/dummy_username")
     assert response.content_type == "application/json"
-
 
 
 
