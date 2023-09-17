@@ -1,8 +1,7 @@
-from conftest import client
-from flask_project.app.models import Users, UserData 
-from flask_project.app.app import app
+from .conftest import client
 from flask import request, json, session
-
+from flask_app.app import app
+from flask_app.models import Users, UserData
 
 def test_db_model(app):
     with app.app_context():
@@ -53,8 +52,8 @@ def test_login_200(client):
 
     response = client.post("/login", 
     json={
-        "email": "newsuperuser@gmail.com",
-        "password": "1234"
+        "email": "superuser@gmail.com",
+        "password": "starzzzz"
     })
     # pdb.set_trace()
     res = json.loads(response.data.decode('utf-8'))
@@ -65,7 +64,7 @@ def test_login_401(client):
     
     response = client.post("/login", 
     json={
-        "email": "newsuperuser@gmail.com",
+        "email": "superuser@gmail.com",
         "password": "wrongpassword"
     })
     assert response.status_code == 401
@@ -125,9 +124,9 @@ def test_create_user_200(client):
 
     response = client.post("/create_user", 
     json = {
-        "fullname": "fullname",
-        "email": "newemail@email.com", # new email
-        "password": "1234"
+        "fullname": "testuser111",
+        "email": "newemail111@email.com", # new email
+        "password": "1234star"
     })
     # pdb.set_trace()
     res = json.loads(response.data.decode('utf-8'))
