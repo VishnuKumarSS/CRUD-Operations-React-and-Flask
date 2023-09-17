@@ -27,6 +27,6 @@ yarn-error.log*
 *.rdb
 
 # Python
-*venv
+*venv*
 *__pycache__
 *.env
