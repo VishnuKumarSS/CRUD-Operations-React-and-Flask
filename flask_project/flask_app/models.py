@@ -113,6 +113,20 @@ class UserData(db.Model):
         return f"{self.username} - {self.userage} - {self.usercity} - {self.usertype}"
 
 
+# Move this in separate file and call that file create tables or so ...
+with app.app_context():
+    # Not needed as we have already did in "db = SQLAlchemy(app)"
+    # db.init_app(app)
+
+    # To create all the model tables in DB
+    db.create_all()
+
+    # To delete all the tables in DB
+    # db.drop_all()
+
+
+
+
 """
 
 # db.init_app(app)
