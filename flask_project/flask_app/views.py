@@ -463,7 +463,7 @@ class AddUserData(Resource):
         elif user_id_exist:
             abort(409, message='User Data with current user id already exist. Cannot create it again. Try to update it.')
         
-        if parsed_user['username'] and created_user_id:
+        if parsed_user['username']:
             create_user_data = UserData(username=parsed_user["username"], userage=parsed_user['userage'],
                                         usercity=parsed_user['usercity'], usertype=parsed_user['usertype'], users_id=created_user_id)
             db.session.add(create_user_data)
