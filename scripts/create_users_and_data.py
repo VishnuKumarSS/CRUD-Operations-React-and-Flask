@@ -25,16 +25,14 @@ for i in range(1, 51):
     )
     print("\n", "Create User:", create_user, create_user.__dict__, "\n")
 
-
     update_user = requests.post(
         "http://localhost:3000/add_user_data",
         json={
             "userage": userage,
             "usercity": usercity,
             "username": username,
-            "usertype": usertype 
+            "usertype": usertype,
+            "useremail": email
         }
     )
     print("\n", "Update User:", update_user, update_user.__dict__, "\n")
-
-    
