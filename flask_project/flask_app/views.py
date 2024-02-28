@@ -81,6 +81,8 @@ add_user_data_req.add_argument(
     'usercity', type=str, required=True, help='City is needed.')
 add_user_data_req.add_argument(
     'usertype', type=str, required=True, help='UserType is needed.')
+add_user_data_req.add_argument(
+    'useremail', type=str, required=False, help='User email.')
 
 
 update_user_req = reqparse.RequestParser()
@@ -448,34 +450,38 @@ class AddUserData(Resource):
         :rtype: dict
         """
         parsed_user = add_user_data_req.parse_args()
-        user_exist = db.engine.execute(
-            f"select * from user_data where username='{parsed_user['username']}'").first()
-        # user_exist = UserData.query.filter_by(username = parsed_user['username']).first()
-
-        created_user_id = session.get("created_user_id")
-        user_id_exist = db.engine.execute(
-            f"select * from user_data where users_id='{created_user_id}'").first()
-        # user_id_exist = UserData.query.filter_by(users_id = created_user_id).first()
-
-        # if the username already exists, then
-        if user_exist:
-            abort(409, message='User already exist with the username.')
-        elif user_id_exist:
-            abort(409, message='User Data with current user id already exist. Cannot create it again. Try to update it.')
         
-        if parsed_user['username']:
-            create_user_data = UserData(username=parsed_user["username"], userage=parsed_user['userage'],
-                                        usercity=parsed_user['usercity'], usertype=parsed_user['usertype'], users_id=created_user_id)
-            db.session.add(create_user_data)
-            db.session.commit()
-
-            created_user_data = db.engine.execute(
-                f"select * from user_data where username='{parsed_user['username']}'").first()
-            # created_user_data = UserData(username = parsed_user['username'])
-
-            return created_user_data
+        if parsed_user['useremail']:
+            # This will be sent from the Scripts to update user data
+            # Using that ID to update that user data
+            created_user_id = db.engine.execute(f"select * from users where email='{parsed_user['useremail']}'").first()[0]
         else:
-            abort(401, message="No Users are currently created or logged in to add data.")
+            user_exist = db.engine.execute(
+                f"select * from user_data where username='{parsed_user['username']}'").first()
+            # user_exist = UserData.query.filter_by(username = parsed_user['username']).first()
+
+            created_user_id = session.get("created_user_id")
+            user_id_exist = db.engine.execute(
+                f"select * from user_data where users_id='{created_user_id}'").first()
+            # user_id_exist = UserData.query.filter_by(users_id = created_user_id).first()
+
+            # if the username already exists, then
+            if user_exist:
+                abort(409, message='User already exist with the username.')
+            elif user_id_exist:
+                abort(409, message='User Data with current user id already exist. Cannot create it again. Try to update it.')
+        
+    
+        create_user_data = UserData(username=parsed_user["username"], userage=parsed_user['userage'],
+                                    usercity=parsed_user['usercity'], usertype=parsed_user['usertype'], users_id=created_user_id)
+        db.session.add(create_user_data)
+        db.session.commit()
+
+        created_user_data = db.engine.execute(
+            f"select * from user_data where username='{parsed_user['username']}'").first()
+        # created_user_data = UserData(username = parsed_user['username'])
+
+        return created_user_data
 
 
 class Login(Resource):
