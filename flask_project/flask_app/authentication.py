@@ -1,15 +1,15 @@
 import pyrebase
-
+from . import settings
 
 config = {
-    "apiKey": "AIzaSyD4alSm9Ju4uVCzxZgpUKIIjjwQPf70q8s",
-    "authDomain": "auth-flask-e44f4.firebaseapp.com",
-    "projectId": "auth-flask-e44f4",
-    "storageBucket": "auth-flask-e44f4.appspot.com",
-    "messagingSenderId": "340617359930",
-    "appId": "1:340617359930:web:77a1fd729bc4e5422b3b03",
-    "measurementId": "G-LGE1T2L82F",
-    "databaseURL": ""
+    "apiKey": settings.FIREBASE_API_KEY,
+    "authDomain": settings.FIREBASE_AUTH_DOMAIN,
+    "projectId": settings.FIREBASE_PROJECT_ID,
+    "storageBucket": settings.FIREBASE_STORAGE_BUCKET,
+    "messagingSenderId": settings.FIREBASE_MESSAGING_SENDER_ID,
+    "appId": settings.FIREBASE_APP_ID,
+    "measurementId": settings.FIREBASE_MEASUREMENT_ID,
+    "databaseURL": settings.FIREBASE_DATABASE_URL
 }
 
 firebase = pyrebase.initialize_app(config)
