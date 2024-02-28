@@ -217,7 +217,7 @@ export default function GetUser() {
               style={{borderRadius:16}}
               type="Text" 
               label="Check me out" 
-              placeholder="Type something here..."
+              placeholder="Type user name"
               onChange={(e) => setSearchUser(e.target.value.toLowerCase())}
             />
           </Form.Group> 
