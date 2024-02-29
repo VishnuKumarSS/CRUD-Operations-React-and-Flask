@@ -77,7 +77,7 @@ function GoogleSignIn() {
         ?
         <div className='container' style={{width:"500px"}}>
           <div className='created' style={{ textAlign: 'center', padding:"2rem" }}>
-            <h1 style={{backgroundColor: "#c7ffe5", border:"3px solid #fff"}}>
+            <h1 style={{backgroundColor: "#C6C9E6", border:"3px solid #fff"}}>
               Successfully LoggedIN!
             </h1>
             <button onClick={(e)=>{
