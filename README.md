@@ -100,6 +100,15 @@ $ npm start
 **View the app:**
 > Open http://localhost:3000 (or the address shown in your console) in your web browser to view the app.
 
+**Create users data:**
+```bash
+# Run and create data
+python scripts/create_users_and_data.py
+```
+
+Then you can use the below dummy credentials to login and try out the application.
+> **Email:** admin_user_1@gmail.com<br>**Password:** adminuserpass1
+
 **Miscellaneous:**
 ```bash
 # Create superuser in windows
