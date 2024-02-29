@@ -1,14 +1,14 @@
-.createUser, .updateUser, .loginUser {
-    /* background-color: rgb(255, 220, 124); */
-    background-color: #FFE0B2; /* FFCC80 */
-    border-radius: 1rem;
-    padding: 2rem;
-    margin-bottom: 50px;
-    width: 500px;
-
+.createUser,
+.updateUser,
+.loginUser {
+  /* background-color: rgb(255, 220, 124); */
+  background-color: #e1e2ee; /* C6C9E6 */
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 50px;
+  width: 500px;
 }
 /* 
 .formField {
     background-color: rgb(255, 220, 124);
 } */
-

@@ -38,10 +38,10 @@ export default function Home() {
     axios
       .get("/current_user")
       .then((res) => {
-        res.data[1] 
-        ?
+        res.data[1]
+          ?
         setUserDataJSON(res.data[1])
-        :
+          :
         setUserDataJSON({'usertype': 'normal'}); // here setting all other users to "normal" usertype to avoid errors.
 
         console.log('home',res);
@@ -57,113 +57,113 @@ export default function Home() {
 
   return (
     <>
-    <div className="home"> 
-      <>
+      <div className="home">
+        <>
           {/* <GoogleSignIn />
           <GoogleSignOut /> */}
-      <h1 style={{marginBottom: 20}}>HOME PAGE</h1>
-      <nav>
-        {loggedIn &&
-        <>
-        <Link style={{ textDecoration: "none" }} to="/allusers">
-          <Button
-            className="homeButton"
-            style={{
-              marginBottom: 10,
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: 16,
-              marginTop: 30,
-              color: "#000",
-              backgroundColor: "#FFE0B2",
-              border: "3px solid #FFB74D",
-            }}
-          >
-            DASHBOARD
-          </Button>
-        </Link>
-        </>
-        }
-        {(!loggedIn || (loggedIn && userDataJSON.usertype!=='normal')) &&
-        <>
-        <Link style={{ textDecoration: "none" }} to="/adduser">
-          <Button
-            className="homeButton"
-            style={{
-              marginBottom: 10,
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: 16,
-              color: "#000",
-              backgroundColor: "#FFE0B2",
-              border: "3px solid #FFB74D",
-            }}
-          >
-            {loggedIn && (userDataJSON.usertype === 'admin' || userDataJSON.usertype === 'superuser' )?
+          <h1 style={{marginBottom: 20}}>HOME PAGE</h1>
+          <nav>
+            {loggedIn &&
+              <>
+                <Link style={{ textDecoration: "none" }} to="/allusers">
+                  <Button
+                    className="homeButton"
+                    style={{
+                      marginBottom: 10,
+                      display: "flex",
+                      flexDirection: "column",
+                      borderRadius: 16,
+                      marginTop: 30,
+                      color: "#000",
+                      backgroundColor: "#E1E2EE",
+                      border: "3px solid #C6C9E6",
+                    }}
+                  >
+                    DASHBOARD
+                  </Button>
+                </Link>
+              </>
+            }
+            {(!loggedIn || (loggedIn && userDataJSON.usertype!=='normal')) &&
+              <>
+                <Link style={{ textDecoration: "none" }} to="/adduser">
+                  <Button
+                    className="homeButton"
+                    style={{
+                      marginBottom: 10,
+                      display: "flex",
+                      flexDirection: "column",
+                      borderRadius: 16,
+                      color: "#000",
+                      backgroundColor: "#E1E2EE",
+                      border: "3px solid #C6C9E6",
+                    }}
+                  >
+                    {loggedIn && (userDataJSON.usertype === 'admin' || userDataJSON.usertype === 'superuser' )?
             "ADD USER"
-            :
+                      :
             "REGISTER"
           }
-          </Button>
-        </Link>
-        </>
+                  </Button>
+                </Link>
+              </>
+            }
+            {!loggedIn &&
+              <Link style={{ textDecoration: "none" }} to="/login">
+                <Button
+                  className="homeButton"
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 16,
+                    color: "#000",
+                    backgroundColor: "#E1E2EE",
+                    border: "3px solid #C6C9E6",
+                  }}
+                >
+                  LOGIN
+                </Button>
+              </Link>
+            }
+            {!loggedIn &&
+              // <Link style={{ textDecoration: "none" }} to="/googlepage">
+              //   <Button
+              //     className="homeButton"
+              //     style={{
+              //       marginBottom: 10,
+              //       display: "flex",
+              //       flexDirection: "column",
+              //       borderRadius: 16,
+              //       color: "#000",
+              //       backgroundColor: "#B2DFDB",
+              //       border: "3px solid #4DB6AC",
+              //     }}
+              //   >
+              //     Continue with GOOGLE?
+              //   </Button>
+              // </Link>
+              <div style={{marginTop: 20}}>
+                <GoogleSignIn />
+              </div>
+            
         }
-        {!loggedIn &&
-        <Link style={{ textDecoration: "none" }} to="/login">
-          <Button
-            className="homeButton"
-            style={{
-              marginBottom: 10,
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: 16,
-              color: "#000",
-              backgroundColor: "#FFE0B2",
-              border: "3px solid #FFB74D",
-            }}
-          >
-            LOGIN
-          </Button>
-        </Link>
-        }
-        {!loggedIn &&
-        // <Link style={{ textDecoration: "none" }} to="/googlepage">
-        //   <Button
-        //     className="homeButton"
-        //     style={{
-        //       marginBottom: 10,
-        //       display: "flex",
-        //       flexDirection: "column",
-        //       borderRadius: 16,
-        //       color: "#000",
-        //       backgroundColor: "#B2DFDB",
-        //       border: "3px solid #4DB6AC",
-        //     }}
-        //   >
-        //     Continue with GOOGLE?
-        //   </Button>
-        // </Link>
-        <div style={{marginTop: 20}}>
-        <GoogleSignIn />
-        </div>
-
-        }
-        {loggedIn &&
-          <div onClick={logoutUser} style={{marginTop: 20}}>
-            {/* //   <Button
+            {loggedIn &&
+              <div onClick={logoutUser} style={{marginTop: 20}}>
+                {/* //   <Button
             //     className="btn-sm"
             //     onClick={logoutUser}
             //     style={{ color:"#fff",fontSize:16, backgroundColor: "#E57373", borderRadius: 10, marginTop:10 , border: "2px solid #E57373" }}
             //   >
             //     LOGOUT
             //   </Button > */}
-            <GoogleSignOut />
+                <GoogleSignOut />
 
-            </div>
-          }
-      </nav>
-      </>
-    </div>
+              </div>
+            }
+          </nav>
+        </>
+      </div>
     </>
   );
 }

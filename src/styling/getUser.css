@@ -1,77 +1,75 @@
 .allUsers {
-    background-color: #FFE0B2;
-    border-radius: 1.5rem;
-    padding: 2rem;
-    margin-bottom: 50px;
-    width:fit-content;
-    align-items: center;
+  background-color: #e1e2ee;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 50px;
+  width: fit-content;
+  align-items: center;
 }
 p {
-    background-color: #ffe6b6;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    display: block;
-    margin: auto;
-    width:70%;
+  background-color: #e1e2ee;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: block;
+  margin: auto;
+  width: 70%;
 }
 
 .singleUser {
-    margin-bottom:30px;
-    font-weight: 300;
+  margin-bottom: 30px;
+  font-weight: 300;
 }
 
 .showMessage {
-    margin-bottom:30px;
+  margin-bottom: 30px;
 }
 .heading {
-    /* background-color:rgb(255, 244, 212); */
-    background-color: #FFCC80;
-    text-decoration: none;
-    font-weight: 300;
+  /* background-color:rgb(255, 244, 212); */
+  background-color: #c6c9e6;
+  text-decoration: none;
+  font-weight: 300;
 }
 
 .userNotFound {
-    display: none;
+  display: none;
 }
 
 .dontShowMessage {
-    display: none;
+  display: none;
 }
 
 .singleUserMessage {
-    margin-bottom:30px;
-    font-weight: 300;
+  margin-bottom: 30px;
+  font-weight: 300;
 }
 
-.carousel-indicators { 
-    visibility: hidden; 
-
+.carousel-indicators {
+  visibility: hidden;
 }
 
 .overlay {
-    background: rgb(49, 49, 49, 0.8);
-    width: 100vw; 
-    height: 100vh;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    position:fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  background: rgb(49, 49, 49, 0.8);
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .innerOverlay {
-    background: #ff8585;
-    padding: 3rem;
-    margin: auto;
-    border-radius: 2rem;
+  background: #ff8585;
+  padding: 3rem;
+  margin: auto;
+  border-radius: 2rem;
 
-    /* width: 100%; */
-    /* display: flex;
+  /* width: 100%; */
+  /* display: flex;
     align-items: center; */
-
 }
