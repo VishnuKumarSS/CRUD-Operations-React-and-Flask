@@ -101,29 +101,50 @@ function GoogleSignIn() {
         :
         // <div className='container' style={{margin: "auto", width: "500px",padding: "3rem", alignItems: "center", display: "flex", flexDirection: 'column'}}>
         //   <h1 style={{ marginBottom: 30, textAlign: "center"}}>Click the below button to Continue</h1>
-        <div>
-          <GoogleLogin
-            render={renderProps => (
-              <button onClick={renderProps.onClick} style={{
-                  // color:"#fff",fontSize:16, backgroundColor: "#E57373", borderRadius: 10, marginTop:10 , border: "2px solid #E57373", padding: "0.5rem"
-                  marginBottom: 10,
-                  flexDirection: "row",
-                  borderRadius: 8,
-                  padding: 8,
-                  color: "#000",
-                  backgroundColor: "#93c5fd",
-                  border: "3px solid #60a5fa",
-                }}
-              >Login with Google</button>
-            )}
-            clientId={client_id}
-            buttonText='signin'
-            onSuccess={handleOnSuccess}
-            onFailure={handleOnFailure}
-            cookiePolicy={'single_host_origin'}
-            isSignedIn={true}
-          >Login</GoogleLogin>
-        </div>
+        <div style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+        <GoogleLogin
+          render={renderProps => (
+            <div
+              onClick={renderProps.onClick}
+              style={{
+                // outline: "dashed",
+                marginBottom: 10,
+                width: "fit-content",
+                borderRadius: 8,
+                padding: 8,
+                color: "#000",
+                backgroundColor: "#93c5fd",
+                border: "3px solid #60a5fa",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <img
+                src="google-icon.png"
+                alt="Your Company"
+                style={{ height: "16px" }}
+              />
+              <span>Login with Google</span>
+            </div>
+          )}
+          clientId={client_id}
+          buttonText='signin'
+          onSuccess={handleOnSuccess}
+          onFailure={handleOnFailure}
+          cookiePolicy={'single_host_origin'}
+          isSignedIn={true}
+        >
+          Login
+        </GoogleLogin>
+      </div>
+      
       }
     </div>
   
