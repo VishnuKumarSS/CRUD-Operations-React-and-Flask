@@ -73,15 +73,15 @@ function NavBar() {
               flexDirection: "column",
               borderRadius: 16,
               color: "#000",
-              backgroundColor: "#fff",
-              border: "3px solid #fff",
+              backgroundColor: "#c6c9e6",
+              border: "3px solid #c6c9e6",
               width: "auto",
               margin: 5,
               marginRight: 30,
               marginLeft: 30,
             }}
           >
-            ADMIN PANEL
+            <span>ADMIN PANEL</span>
           </Button>
         </Link>
 
