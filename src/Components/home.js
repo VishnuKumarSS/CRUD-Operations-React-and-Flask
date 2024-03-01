@@ -61,7 +61,7 @@ export default function Home() {
         <>
           {/* <GoogleSignIn />
           <GoogleSignOut /> */}
-          <h1 style={{marginBottom: 20}}>HOME PAGE</h1>
+          <h1 style={{marginBottom: 20}}>ADMIN DASHBOARD</h1>
           <nav>
             {loggedIn &&
               <>
