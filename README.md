@@ -1,4 +1,4 @@
-# Vishnu - User Management Admin Dashboard ⤵️
+# User Management Admin Dashboard ⤵️
 User Management dashboard with Google signup/signin and Custom user registration with Session and Firebase authentication.
 
 LoggedIn Users can see the data in dashboard, But only the authenticated superuser and admin's will see the option to update, delete or manage the users data. Admins and Superuser can create new users within the dashboard.
